@@ -84,6 +84,7 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
 - Read `references/runtime-globals.md` first, then the specific runtime page you actually need.
 - Read `references/runtime-authority.md` for `TheWorld`, `TheNet`, and authority boundaries.
 - Read `references/runtime-local-ui.md` for `ThePlayer`, HUD, and local UI globals.
+- Read `references/input-patterns.md` for `TheInput`, keyboard, mouse, and control handlers.
 - Read `references/entity-query-patterns.md` for `TheSim:FindEntities(...)`.
 - Read `references/execution-contexts.md` before deciding whether code should be all-clients, client-only, or server-only.
 - Read `references/signatures.md` first, then the narrow signature page you need.

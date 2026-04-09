@@ -36,8 +36,9 @@ Use this file as a compact decision tree.
 ### Patch UI
 
 1. Read the concrete class under `scripts/widgets/` or `scripts/screens/`.
-2. Reach for `AddClassPostConstruct`.
-3. Patch the constructor or add listeners narrowly instead of replacing the whole widget.
+2. Read `references/input-patterns.md` if the patch listens to keyboard, mouse, or mapped controls.
+3. Reach for `AddClassPostConstruct`.
+4. Patch the constructor or add listeners narrowly instead of replacing the whole widget.
 
 ### Add Recipes, Actions, Or Stategraph Changes
 

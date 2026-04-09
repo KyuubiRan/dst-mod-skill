@@ -48,6 +48,9 @@ Use the worldgen or server-creation entry files only when the task is specific t
 - `scripts/mainfunctions.lua`
   - Prefab loading and asset resolution details.
   - Useful when asset paths or prefab registration behave unexpectedly.
+- `scripts/input.lua`
+  - Local input handler registration for keyboard, mouse, movement, text, and mapped controls.
+  - Read this when a mod needs hotkeys, mouse hooks, or local input interception.
 - `scripts/constants.lua`
   - Core constants, enums, and identifiers used throughout the codebase.
 - `scripts/tuning.lua`
