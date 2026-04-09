@@ -13,6 +13,13 @@ Use this file as a compact decision tree.
 
 ## Common Task Routes
 
+### Patch Worldgen Or Presets
+
+1. Read `references/worldgen-patterns.md` first.
+2. Decide whether the task belongs in `modworldgenmain.lua` or `modservercreationmain.lua`.
+3. Read the smallest official worldgen or server-creation file that matches the feature shape.
+4. Keep worldgen-time logic separate from normal gameplay bootstrap.
+
 ### Patch An Existing Prefab
 
 1. Read `scripts/prefabs/<prefab>.lua`.
@@ -49,6 +56,25 @@ Use this file as a compact decision tree.
 3. Read the target stategraph under `scripts/stategraphs/`.
 4. Reuse an existing official action flow whenever possible.
 5. Prefer `AddRecipe2` over deprecated recipe APIs.
+
+### Add Recipes Or Placers
+
+1. Read `references/recipe-patterns.md` first.
+2. Use `AddRecipe2` unless the task explicitly needs legacy behavior.
+3. Use `MakePlacer` for placeable structures or deployables.
+4. Keep recipe names, placer names, and prefab names aligned.
+
+### Add Strings Or Localization
+
+1. Read `references/string-patterns.md` first.
+2. Decide whether the text belongs in runtime `STRINGS` or in localized `modinfo.lua` metadata.
+3. Keep prefab and action keys aligned with uppercase `STRINGS` entries.
+
+### Add Assets Or Icons
+
+1. Read `references/asset-patterns.md` first.
+2. Decide whether the asset belongs in a prefab-local `assets` table or top-level mod `Assets`.
+3. Keep atlas and texture paths explicit when a recipe or UI element depends on them.
 
 ### Add RPC, Replica, Or Netvars
 

@@ -82,8 +82,12 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
 - Read `references/official-files.md` for file paths, entry points, and what each official file family is good for.
 - Read `references/mod-api-map.md` for the highest-value mod APIs and where they live.
 - Read `references/creation-patterns.md` when the task is about how prefabs, components, or helper modules are created and loaded.
+- Read `references/worldgen-patterns.md` when the task touches `modworldgenmain.lua`, `modservercreationmain.lua`, presets, or generation-time logic.
 - Read `references/ui-patterns.md` when the task creates or patches widgets, screens, HUD, or local UI flows.
 - Read `references/action-patterns.md` when the task adds custom actions or stategraph action routing.
+- Read `references/string-patterns.md` when the task adds names, inspect text, UI text, speech, or localized metadata.
+- Read `references/asset-patterns.md` when the task adds anim zips, atlases, inventory icons, or minimap assets.
+- Read `references/recipe-patterns.md` when the task adds recipes, crafting filters, or placers.
 - Read `references/runtime-globals.md` first, then the specific runtime page you actually need.
 - Read `references/runtime-authority.md` for `TheWorld`, `TheNet`, and authority boundaries.
 - Read `references/runtime-local-ui.md` for `ThePlayer`, HUD, and local UI globals.

@@ -30,6 +30,9 @@ Use the worldgen or server-creation entry files only when the task is specific t
 - `scripts/mods.lua`
   - Loader flow for `modmain.lua`, `modworldgenmain.lua`, `PrefabFiles`, and `Assets`.
   - Useful when behavior depends on load order or asset registration.
+- `scripts/prefabutil.lua`
+  - Helper constructors such as `MakePlacer(...)`.
+  - Read this when a mod adds placeable structures or deployable preview logic.
 - `scripts/modindex.lua`
   - `modinfo.lua` parsing, API-version checks, compatibility flags, and configuration option handling.
   - Useful for validating metadata assumptions.
@@ -65,6 +68,12 @@ Use the worldgen or server-creation entry files only when the task is specific t
 - `scripts/tuning.lua`
   - Tuning values and balance constants.
   - Read here first for balance changes.
+- `scripts/strings.lua`
+  - Core `STRINGS` tree and naming patterns.
+  - Read this when a mod adds or routes runtime text.
+- `scripts/recipe.lua`
+  - Recipe object behavior behind `AddRecipe2`.
+  - Read this when recipe config behavior is unclear.
 
 ## Pattern Directories
 
@@ -87,6 +96,8 @@ Use the worldgen or server-creation entry files only when the task is specific t
 2. Read `scripts/mods.lua` and `scripts/mainfunctions.lua` when the task is about how `modmain.lua`, `PrefabFiles`, or assets are loaded.
 3. Read `scripts/componentactions.lua` when the task adds custom action collection or input-to-action behavior.
 4. Read `scripts/networkclientrpc.lua` and `scripts/entityreplica.lua` when the task needs RPC or replica/netvar flow.
-5. Read the concrete official file that already does something similar.
-6. Read `scripts/entityscript.lua` or `scripts/standardcomponents.lua` if the concrete file calls deeper helpers.
-7. Read `scripts/tuning.lua` or `scripts/constants.lua` only when the task is mostly data or constants.
+5. Read `scripts/prefabutil.lua` and `scripts/recipe.lua` when the task adds placers or recipes.
+6. Read `scripts/strings.lua` when the task is mostly text or localization wiring.
+7. Read the concrete official file that already does something similar.
+8. Read `scripts/entityscript.lua` or `scripts/standardcomponents.lua` if the concrete file calls deeper helpers.
+9. Read `scripts/tuning.lua` or `scripts/constants.lua` only when the task is mostly data or constants.
