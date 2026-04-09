@@ -11,6 +11,16 @@ Use this file as a compact decision tree.
 5. Check whether the behavior is server-only, client-only, or replicated.
 6. Keep the implementation smaller than the official source you inspected.
 
+## When Debugging A Broken Feature
+
+1. Read `references/diagnostic-patterns.md` first.
+2. Classify the symptom before touching code:
+   - missing registration
+   - wrong runtime context
+   - missing client replication
+   - wrong UI/action wiring
+3. Inspect the smallest official file that matches the failing subsystem.
+
 ## Common Task Routes
 
 ### Patch Worldgen Or Presets

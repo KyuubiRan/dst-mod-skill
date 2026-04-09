@@ -100,6 +100,7 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
 - Read `references/signatures.md` first, then the narrow signature page you need.
 - Read `references/hook-signatures.md`, `references/entityscript-signatures.md`, `references/helper-signatures.md`, or `references/runtime-signatures.md` for exact signatures.
 - Read `references/pitfalls.md` first, then the narrow pitfalls page you need.
+- Read `references/diagnostic-patterns.md` when the task is mostly symptom-based debugging or feature triage.
 - Read `references/context-pitfalls.md`, `references/networking-pitfalls.md`, or `references/performance-pitfalls.md` for common mistakes.
 - Read `references/mod-bootstrap.md` when the task looks like a new mod scaffold.
 - Read `references/task-playbook.md` for a compact decision tree and validation checklist.
