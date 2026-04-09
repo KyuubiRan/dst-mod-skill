@@ -17,6 +17,10 @@ Read exact signatures from the official source before writing code.
   - Patch a brain definition.
 - `AddStategraphPostInit`
   - Patch a stategraph after it loads.
+- `AddStategraphState`
+  - Add a whole SG state object.
+- `AddStategraphEvent`
+  - Add an SG event handler.
 - `AddClassPostConstruct`
   - Patch a required class such as a widget or screen class by wrapping its constructor.
 - `AddAction`
@@ -120,6 +124,9 @@ Read this file before hand-rolling common prefab setup.
 - If the task starts with "why does this instance behave like this", start in `entityscript.lua` and the relevant component file.
 - If the task starts with "set up a new prefab", start in a similar official prefab and `standardcomponents.lua`.
 - If the task depends on server or client context, read `runtime-globals.md` before writing code.
+- If the task is mostly about SG routing, prediction, or performer states, also read `references/stategraph-patterns.md`.
+- If the task is mostly about replicated implementation shape, also read `references/networking-templates.md`.
+- If the task is mostly about lighting, FX prefabs, particles, or sound helpers, also read `references/effects-patterns.md`.
 
 ## High-Frequency Official Components
 

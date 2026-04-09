@@ -12,6 +12,8 @@ This page focuses on the common creation path:
 - replica-side component support
 
 If the task is specifically about common official components such as `health`, `hunger`, `sanity`, `combat`, `equippable`, `armor`, `weapon`, or `container`, also read `references/component-patterns.md`.
+If the prefab is mainly a light helper, FX prefab, particle effect, or sound proxy, also read `references/effects-patterns.md`.
+If the prefab also needs replicated client state, also read `references/networking-templates.md`.
 
 ## `modmain.lua` Is The Main Bootstrap
 
@@ -99,6 +101,7 @@ Many files also return:
 
 - multiple `Prefab(...)` values
 - `MakePlacer(...)` for placeable structures
+- short-lived local FX helpers with little or no gameplay-side component setup
 
 If a prefab task is mostly about `inst.AnimState`, also read `references/animstate-patterns.md`.
 
@@ -254,3 +257,4 @@ Practical rule:
 - If the behavior needs reusable stateful logic on an entity, start with a component.
 - If the code is just glue or registration, keep it in `modmain.lua` or split it with `modimport(...)`.
 - If clients need local reads, inspect replica patterns before writing net logic.
+- If the prefab is mostly presentation, verify whether it should be a full gameplay prefab, a short-lived local FX, or a network proxy that spawns local helpers.

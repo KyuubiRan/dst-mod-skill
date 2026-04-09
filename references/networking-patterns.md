@@ -1,6 +1,7 @@
 # Networking Patterns
 
 Use this file when the task needs RPC, client-readable replicated state, classified entities, or netvars.
+Use `references/networking-templates.md` when the task has already been classified and now needs the smallest practical implementation shape.
 
 ## Decide The Lowest Necessary Networking Tool
 
