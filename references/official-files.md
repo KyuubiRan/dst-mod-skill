@@ -75,6 +75,7 @@ Use the worldgen or server-creation entry files only when the task is specific t
 ## Practical Reading Order
 
 1. Read `scripts/modutil.lua` for the hook family you plan to use.
-2. Read the concrete official file that already does something similar.
-3. Read `scripts/entityscript.lua` or `scripts/standardcomponents.lua` if the concrete file calls deeper helpers.
-4. Read `scripts/tuning.lua` or `scripts/constants.lua` only when the task is mostly data or constants.
+2. Read `scripts/mods.lua` and `scripts/mainfunctions.lua` when the task is about how `modmain.lua`, `PrefabFiles`, or assets are loaded.
+3. Read the concrete official file that already does something similar.
+4. Read `scripts/entityscript.lua` or `scripts/standardcomponents.lua` if the concrete file calls deeper helpers.
+5. Read `scripts/tuning.lua` or `scripts/constants.lua` only when the task is mostly data or constants.

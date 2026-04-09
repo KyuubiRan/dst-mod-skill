@@ -28,10 +28,11 @@ Use this file as a compact decision tree.
 
 ### Add Or Extend A Component
 
-1. Read the official component with the closest lifecycle and networking shape.
-2. Reach for `AddComponentPostInit` for small extensions.
-3. If the component has a replica, inspect replica and classified patterns before writing net code.
-4. Register replica support with `AddReplicableComponent` when needed.
+1. Read `references/creation-patterns.md` for the base loading path first.
+2. Read the official component with the closest lifecycle and networking shape.
+3. Reach for `AddComponentPostInit` for small extensions.
+4. If the component has a replica, inspect replica and classified patterns before writing net code.
+5. Register replica support with `AddReplicableComponent` when needed.
 
 ### Patch UI
 
@@ -49,10 +50,11 @@ Use this file as a compact decision tree.
 
 ### Add A New Prefab Or Item
 
-1. Pick the closest official prefab.
-2. Read that prefab and any helper calls in `scripts/standardcomponents.lua`.
-3. Reuse helper constructors for burnable, freezable, physics, hauntable, floatable, and similar setup.
-4. Register the prefab in `PrefabFiles` and keep assets relative to the mod root.
+1. Read `references/creation-patterns.md` for the loader path from `modmain.lua` to `prefabs/*.lua`.
+2. Pick the closest official prefab.
+3. Read that prefab and any helper calls in `scripts/standardcomponents.lua`.
+4. Reuse helper constructors for burnable, freezable, physics, hauntable, floatable, and similar setup.
+5. Register the prefab in `PrefabFiles` and keep assets relative to the mod root.
 
 ### Adjust Numbers Or Balance
 

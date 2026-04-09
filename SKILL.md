@@ -81,6 +81,7 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
 
 - Read `references/official-files.md` for file paths, entry points, and what each official file family is good for.
 - Read `references/mod-api-map.md` for the highest-value mod APIs and where they live.
+- Read `references/creation-patterns.md` when the task is about how prefabs, components, or helper modules are created and loaded.
 - Read `references/runtime-globals.md` first, then the specific runtime page you actually need.
 - Read `references/runtime-authority.md` for `TheWorld`, `TheNet`, and authority boundaries.
 - Read `references/runtime-local-ui.md` for `ThePlayer`, HUD, and local UI globals.
