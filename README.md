@@ -19,7 +19,9 @@ This skill is designed to help with:
 - classifying a mod as `all-clients`, `client-only`, or `server-only`
 - tracing hooks such as `AddPrefabPostInit` and `AddComponentPostInit`
 - understanding prefabs, components, stategraphs, brains, widgets, and screens
+- mapping user intent to common component bundles and prefab tags
 - working with recipes, placers, assets, RPC, replica, classified entities, and netvars
+- organizing repeated prefab families with shared factory patterns
 - symptom-driven debugging and Lua debug techniques
 
 ## Principles
@@ -107,11 +109,23 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
 High-value docs under `references/` include:
 
 - `official-files.md`
+  - official file map and where to read first
+- `component-patterns.md`
+  - common official components, intent-to-component bundles, and negative constraints such as infinite durability
+- `tag-patterns.md`
+  - high-frequency prefab tags and the difference between prefab-added and component-managed tags
 - `task-playbook.md`
+  - compact task routing and validation order
 - `creation-patterns.md`
+  - prefab, component, replica, and shared factory structure
+- `animstate-patterns.md`
+  - `inst.AnimState` patterns, symbol overrides, layer versus symbol, and animation progress control
 - `template-patterns.md`
+  - minimal templates plus a shared `table + factory + unpack` prefab-family template
 - `diagnostic-patterns.md`
+  - symptom-driven debugging checklists
 - `debug-techniques.md`
+  - Lua `debug` techniques such as narrow upvalue patching
 
 ## Recommended Agent Flow
 

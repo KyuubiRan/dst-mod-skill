@@ -18,7 +18,9 @@
 - 判断 Mod 类型：`all-clients` / `client-only` / `server-only`
 - 查找和验证常用 Hook，如 `AddPrefabPostInit`、`AddComponentPostInit`
 - 分析 prefab / component / stategraph / brain / widget / screen
+- 把用户意图映射到常见组件组合与 prefab tag
 - 处理 recipe、placer、asset、RPC、replica、classified、netvar
+- 用共享工厂模式组织重复度高的 prefab 家族
 - 做症状驱动的排查和 Lua 调试
 
 ## 设计原则
@@ -107,12 +109,18 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
 
 - `official-files.md`
   - 先看哪些官方文件
+- `component-patterns.md`
+  - 高频组件、组件组合、反向约束
+- `tag-patterns.md`
+  - 高频 tag、tag 来源、tag 路由含义
 - `task-playbook.md`
   - 任务分流与排查顺序
 - `creation-patterns.md`
   - prefab / component / replica 的创建与加载
+- `animstate-patterns.md`
+  - `AnimState`、动画切换、图层与通道
 - `template-patterns.md`
-  - 常见最小模板
+  - 常见最小模板与变体 prefab 工厂模式
 - `diagnostic-patterns.md`
   - 按症状排查问题
 - `debug-techniques.md`
