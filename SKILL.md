@@ -22,11 +22,29 @@ Inspect official scripts before writing mod code and tie conclusions to concrete
 
 1. Classify the request.
 2. Confirm the local game path if it is not already known.
-3. If `modinfo.lua` or `modmain.lua` is missing, ask whether the user wants a new mod skeleton.
-4. Inspect the smallest official source that answers the question.
-5. Reuse official patterns instead of guessing signatures.
-6. Implement the change with the narrowest safe hook.
-7. Re-check server/client boundaries, replica usage, RPC direction, and file placement.
+3. Check whether `modinfo.lua` and `modmain.lua` exist in the target mod folder.
+4. If `modinfo.lua` exists, read it early and classify the mod as all-clients gameplay, client-only, or server-only before choosing hooks or reading runtime globals.
+5. If `modinfo.lua` is missing, ask whether the user wants a new mod skeleton.
+6. Inspect the smallest official source that answers the question.
+7. Reuse official patterns instead of guessing signatures.
+8. Implement the change with the narrowest safe hook.
+9. Re-check server/client boundaries, replica usage, RPC direction, and file placement.
+
+## Classify Existing Mods Early
+
+When a target mod already exists, do not only check whether `modinfo.lua` is present.
+Read the compatibility flags early and infer the mod shape before making implementation choices.
+
+Use this quick rule:
+
+- `client_only_mod = true` and `all_clients_require_mod = false`
+  - Treat it as client-only.
+- `client_only_mod = false` and `all_clients_require_mod = true`
+  - Treat it as all-clients gameplay.
+- `client_only_mod = false` and `all_clients_require_mod = false`
+  - Treat it as server-only unless the rest of the mod clearly contradicts that.
+
+If the flags and the code shape disagree, call out the mismatch explicitly before editing.
 
 ## Use The Helper Script
 

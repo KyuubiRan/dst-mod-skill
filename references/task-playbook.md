@@ -4,10 +4,12 @@ Use this file as a compact decision tree.
 
 ## Before Coding
 
-1. Identify the smallest official file that already matches the feature shape.
-2. Inspect the exact hook or helper definition in official code.
-3. Check whether the behavior is server-only, client-only, or replicated.
-4. Keep the implementation smaller than the official source you inspected.
+1. Check whether `modinfo.lua` and `modmain.lua` exist.
+2. If `modinfo.lua` exists, classify the mod as all-clients gameplay, client-only, or server-only from its flags before reading runtime-specific APIs.
+3. Identify the smallest official file that already matches the feature shape.
+4. Inspect the exact hook or helper definition in official code.
+5. Check whether the behavior is server-only, client-only, or replicated.
+6. Keep the implementation smaller than the official source you inspected.
 
 ## Common Task Routes
 

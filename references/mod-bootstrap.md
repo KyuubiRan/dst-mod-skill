@@ -10,11 +10,14 @@ Offer to scaffold a mod when:
 - The target folder has no `modmain.lua`
 - The user describes a new mod idea rather than an edit to an existing mod
 
+If `modinfo.lua` already exists, do not jump straight to scaffolding.
+Read the existing flags first and infer whether the mod is client-only, server-only, or all-clients gameplay.
+
 ## What To Ask First
 
 Ask only the minimum blocking questions:
 
-1. What type of mod is this:
+1. If `modinfo.lua` is missing, what type of mod is this:
    - all-clients gameplay
    - client-only
    - server-only
@@ -23,6 +26,8 @@ Ask only the minimum blocking questions:
 4. Should the scaffold include configuration options?
 
 Ask for author or version only if the user cares or if the task explicitly requests them.
+
+If `modinfo.lua` exists but the flags are incomplete or contradictory, ask only the missing classification question instead of re-asking everything.
 
 ## What To Generate
 

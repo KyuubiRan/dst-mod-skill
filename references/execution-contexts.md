@@ -2,6 +2,34 @@
 
 Use this file when deciding whether a mod is all-clients gameplay, client-only, or server-only.
 
+## For Existing Mods, Read `modinfo.lua` First
+
+When the target mod already has a `modinfo.lua`, classify it from the declared flags before writing code.
+
+Start with these fields:
+
+```lua
+client_only_mod = ...
+all_clients_require_mod = ...
+```
+
+Fast classification:
+
+- `client_only_mod = true`
+  - Treat as client-only.
+- `client_only_mod = false` and `all_clients_require_mod = true`
+  - Treat as all-clients gameplay.
+- `client_only_mod = false` and `all_clients_require_mod = false`
+  - Treat as server-only in most cases.
+
+Then sanity-check the rest of the mod:
+
+- Heavy HUD, `ThePlayer`, widget, or local input code supports client-only.
+- New prefabs, actions, recipes, RPC, replica code, or shared simulation changes support all-clients gameplay.
+- Pure world automation, server logic, or admin behavior supports server-only.
+
+If the declared flags and the actual code shape disagree, note the mismatch before making changes.
+
 ## The Three Common Mod Shapes
 
 ### All-Clients Gameplay Mod
@@ -103,6 +131,7 @@ If the feature is administrative, automation, or pure server logic, consider ser
 ## Bootstrap Guidance
 
 When creating a new mod, ask the user which of these three shapes they want before generating `modinfo.lua`.
+When editing an existing mod, infer the shape from `modinfo.lua` first and only ask follow-up questions if the flags are missing or inconsistent.
 If they are unsure:
 
 - Recommend all-clients gameplay for content mods.
