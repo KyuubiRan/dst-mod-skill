@@ -99,6 +99,7 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
 - Read `references/execution-contexts.md` before deciding whether code should be all-clients, client-only, or server-only.
 - Read `references/signatures.md` first, then the narrow signature page you need.
 - Read `references/hook-signatures.md`, `references/entityscript-signatures.md`, `references/helper-signatures.md`, or `references/runtime-signatures.md` for exact signatures.
+- Read `references/debug-techniques.md` when a task needs narrow closure patching or deeper Lua-side debugging.
 - Read `references/pitfalls.md` first, then the narrow pitfalls page you need.
 - Read `references/diagnostic-patterns.md` when the task is mostly symptom-based debugging or feature triage.
 - Read `references/context-pitfalls.md`, `references/networking-pitfalls.md`, or `references/performance-pitfalls.md` for common mistakes.

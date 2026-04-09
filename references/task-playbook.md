@@ -37,6 +37,8 @@ Use this file as a compact decision tree.
 3. Reach for `AddPrefabPostInit` unless the change clearly belongs elsewhere.
 4. Add only the missing behavior instead of replacing the prefab wholesale.
 
+If the only viable patch point is a closed-over helper function, read `references/debug-techniques.md` before copying a large outer function.
+
 ### Add Player-Wide Behavior
 
 1. Read `scripts/prefabs/player_common.lua` and any components involved.

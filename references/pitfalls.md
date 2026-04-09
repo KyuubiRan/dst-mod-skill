@@ -6,6 +6,8 @@ Read only the narrow page you need:
 
 - `diagnostic-patterns.md`
   - symptom-driven checklists for prefab, recipe, placer, UI, RPC, replica, and brain failures
+- `debug-techniques.md`
+  - advanced Lua debug helpers such as `getupvalue` and `setupvalue` for narrow closure patching
 - `context-pitfalls.md`
   - `ThePlayer`, local UI, `ismastersim` versus `IsDedicated()`
 - `networking-pitfalls.md`
