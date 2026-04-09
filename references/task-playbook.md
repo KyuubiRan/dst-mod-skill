@@ -64,6 +64,14 @@ Use this file as a compact decision tree.
 3. Use `MakePlacer` for placeable structures or deployables.
 4. Keep recipe names, placer names, and prefab names aligned.
 
+### Add Or Patch Brain AI
+
+1. Read `references/brain-patterns.md` first.
+2. Read the closest official prefab and note which brain file it requires.
+3. Read the matching file under `scripts/brains/`.
+4. If the change is small, prefer `AddBrainPostInit`.
+5. If the AI shape is mod-owned, create a dedicated brain file under `scripts/brains/`.
+
 ### Add Strings Or Localization
 
 1. Read `references/string-patterns.md` first.

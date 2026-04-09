@@ -39,6 +39,9 @@ Use the worldgen or server-creation entry files only when the task is specific t
 - `scripts/networkclientrpc.lua`
   - Mod RPC registration tables, send helpers, and namespace/id routing.
   - Read this when a task needs custom RPC flow.
+- `scripts/brain.lua`
+  - Base brain lifecycle and behavior-tree ownership.
+  - Read this when a mod adds or patches NPC brains.
 - `scripts/entityscript.lua`
   - Core instance methods for tags, components, tasks, events, buffered actions, children, SG, and brain assignment.
   - Read when a prefab method or lifecycle detail is unclear.
@@ -54,9 +57,6 @@ Use the worldgen or server-creation entry files only when the task is specific t
 - `scripts/componentutil.lua`
   - Shared component-side helper functions and utility logic used across the game.
   - Read when behavior seems to rely on utility wrappers rather than a single component method.
-- `scripts/prefabutil.lua`
-  - Smaller prefab-side helpers.
-  - Read when the relevant pattern is prefab-centric but not in `standardcomponents.lua`.
 - `scripts/mainfunctions.lua`
   - Prefab loading and asset resolution details.
   - Useful when asset paths or prefab registration behave unexpectedly.
@@ -96,8 +96,9 @@ Use the worldgen or server-creation entry files only when the task is specific t
 2. Read `scripts/mods.lua` and `scripts/mainfunctions.lua` when the task is about how `modmain.lua`, `PrefabFiles`, or assets are loaded.
 3. Read `scripts/componentactions.lua` when the task adds custom action collection or input-to-action behavior.
 4. Read `scripts/networkclientrpc.lua` and `scripts/entityreplica.lua` when the task needs RPC or replica/netvar flow.
-5. Read `scripts/prefabutil.lua` and `scripts/recipe.lua` when the task adds placers or recipes.
-6. Read `scripts/strings.lua` when the task is mostly text or localization wiring.
-7. Read the concrete official file that already does something similar.
-8. Read `scripts/entityscript.lua` or `scripts/standardcomponents.lua` if the concrete file calls deeper helpers.
-9. Read `scripts/tuning.lua` or `scripts/constants.lua` only when the task is mostly data or constants.
+5. Read `scripts/brain.lua` and the matching file under `scripts/brains/` when the task adds NPC AI.
+6. Read `scripts/prefabutil.lua` and `scripts/recipe.lua` when the task adds placers or recipes.
+7. Read `scripts/strings.lua` when the task is mostly text or localization wiring.
+8. Read the concrete official file that already does something similar.
+9. Read `scripts/entityscript.lua` or `scripts/standardcomponents.lua` if the concrete file calls deeper helpers.
+10. Read `scripts/tuning.lua` or `scripts/constants.lua` only when the task is mostly data or constants.
