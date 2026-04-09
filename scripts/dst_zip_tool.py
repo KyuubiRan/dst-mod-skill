@@ -15,9 +15,34 @@ import zipfile
 from pathlib import Path
 
 
-DEFAULT_ZIP_PATH = Path(
-    r"D:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together\data\databundles\scripts.zip"
-)
+DEFAULT_ZIP_PATHS = [
+    Path(
+        r"C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together\data\databundles\scripts.zip"
+    ),
+    Path(
+        r"D:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together\data\databundles\scripts.zip"
+    ),
+    Path.home()
+    / ".local"
+    / "share"
+    / "Steam"
+    / "steamapps"
+    / "common"
+    / "Don't Starve Together"
+    / "data"
+    / "databundles"
+    / "scripts.zip",
+    Path.home()
+    / "Library"
+    / "Application Support"
+    / "Steam"
+    / "steamapps"
+    / "common"
+    / "Don't Starve Together"
+    / "data"
+    / "databundles"
+    / "scripts.zip",
+]
 TEXT_SUFFIXES = {".lua", ".txt", ".json", ".xml", ".po"}
 
 
@@ -85,13 +110,32 @@ def parse_args() -> argparse.Namespace:
 
 def resolve_zip_path(candidate: Path | None) -> Path:
     env_value = os.environ.get("DST_SCRIPTS_ZIP")
-    path = candidate or (Path(env_value) if env_value else DEFAULT_ZIP_PATH)
-    path = path.expanduser()
-    if not path.is_file():
+    if candidate is not None:
+        path = candidate.expanduser()
+        if path.is_file():
+            return path
         raise FileNotFoundError(
-            f"scripts.zip not found at {path}. Pass --zip-path or set DST_SCRIPTS_ZIP."
+            f"scripts.zip not found at {path}. Pass a valid --zip-path."
         )
-    return path
+
+    if env_value:
+        path = Path(env_value).expanduser()
+        if path.is_file():
+            return path
+        raise FileNotFoundError(
+            f"scripts.zip not found at {path}. Fix DST_SCRIPTS_ZIP or pass --zip-path."
+        )
+
+    for path in DEFAULT_ZIP_PATHS:
+        expanded = path.expanduser()
+        if expanded.is_file():
+            return expanded
+
+    tried = "\n".join(f"- {path.expanduser()}" for path in DEFAULT_ZIP_PATHS)
+    raise FileNotFoundError(
+        "scripts.zip not found in common locations. Pass --zip-path or set "
+        f"DST_SCRIPTS_ZIP.\nTried:\n{tried}"
+    )
 
 
 def is_text_entry(name: str) -> bool:

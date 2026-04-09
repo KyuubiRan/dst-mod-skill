@@ -96,6 +96,14 @@ If the only viable patch point is a closed-over helper function, read `reference
 2. Decide whether the asset belongs in a prefab-local `assets` table or top-level mod `Assets`.
 3. Keep atlas and texture paths explicit when a recipe or UI element depends on them.
 
+### Add Or Patch Animation State
+
+1. Read `references/animstate-patterns.md` first.
+2. Identify whether the task is about startup animation, SG-driven animation flow, symbol override, layer toggling, or progress-driven UI animation.
+3. Read the closest official prefab, stategraph, widget, or screen that already uses the same animation pattern.
+4. Verify bank, build, animation, symbol, and layer names before changing code.
+5. Keep animation patches narrow; prefer a small post-init or stategraph patch over replacing a whole prefab.
+
 ### Add RPC, Replica, Or Netvars
 
 1. Read `references/networking-patterns.md` first.
@@ -107,10 +115,11 @@ If the only viable patch point is a closed-over helper function, read `reference
 ### Add A New Prefab Or Item
 
 1. Read `references/creation-patterns.md` for the loader path from `modmain.lua` to `prefabs/*.lua`.
-2. Pick the closest official prefab.
-3. Read that prefab and any helper calls in `scripts/standardcomponents.lua`.
-4. Reuse helper constructors for burnable, freezable, physics, hauntable, floatable, and similar setup.
-5. Register the prefab in `PrefabFiles` and keep assets relative to the mod root.
+2. Read `references/animstate-patterns.md` if the prefab has any custom `AnimState` behavior beyond a basic idle clip.
+3. Pick the closest official prefab.
+4. Read that prefab and any helper calls in `scripts/standardcomponents.lua`.
+5. Reuse helper constructors for burnable, freezable, physics, hauntable, floatable, and similar setup.
+6. Register the prefab in `PrefabFiles` and keep assets relative to the mod root.
 
 ### Adjust Numbers Or Balance
 

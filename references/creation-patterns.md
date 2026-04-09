@@ -98,6 +98,8 @@ Many files also return:
 - multiple `Prefab(...)` values
 - `MakePlacer(...)` for placeable structures
 
+If a prefab task is mostly about `inst.AnimState`, also read `references/animstate-patterns.md`.
+
 ## How Components Are Defined
 
 Official components are typically classes under `scripts/components/<name>.lua`.

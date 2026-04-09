@@ -4,10 +4,17 @@ Use the local DST install as the source of truth.
 
 ## Local Paths
 
-- Game root: `D:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together`
-- Script bundle: `data\databundles\scripts.zip`
+- Common Windows game root: `C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together`
+- Common Windows script bundle: `C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together\data\databundles\scripts.zip`
+- Common Linux game root: `~/.local/share/Steam/steamapps/common/Don't Starve Together`
+- Common Linux script bundle: `~/.local/share/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
+- Common macOS game root: `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together`
+- Common macOS script bundle: `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
 - Version file: `version.txt`
 - Official mod note: `mods\MAKING_MODS.txt`
+
+Use the real local install path when it is already known.
+Do not assume the common Windows path is correct on every machine.
 
 ## Confirmed Mod Entry Points
 
@@ -89,6 +96,22 @@ Use the worldgen or server-creation entry files only when the task is specific t
   - Widget classes used by UI patches.
 - `scripts/screens/`
   - Screen-level UI flow.
+
+## `AnimState` Reality Check
+
+`AnimState` is engine-side.
+You will not find a normal Lua implementation such as `scripts/animstate.lua` inside `scripts.zip`.
+
+For animation work, inspect script-level usage instead:
+
+- `scripts/prefabs/`
+  - prefab startup animation, symbol swaps, build overrides
+- `scripts/stategraphs/`
+  - actor-driven animation flow and transition sequencing
+- `scripts/widgets/`
+  - progress bars and UI `SetPercent(...)` usage
+- `scripts/screens/`
+  - screen-local animation state updates
 
 ## Practical Reading Order
 

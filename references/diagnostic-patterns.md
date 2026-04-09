@@ -107,6 +107,24 @@ Common misses:
 - registering input on a non-local path
 - handler gets lost with the owning widget or screen
 
+## Animation Does Not Play Or Looks Wrong
+
+Check in this order:
+
+1. Does the prefab or widget actually create an `AnimState`?
+2. Do `SetBank(...)`, `SetBuild(...)`, and the animation name match real asset names?
+3. If this is a transition, should `PushAnimation(...)` queue the idle or loop clip?
+4. If a symbol swap is involved, do the `OverrideSymbol(...)` build and symbol names really exist?
+5. If the code calls `Hide(...)` or `Show(...)`, is the target a layer name rather than a symbol name?
+6. If the animation was speed-adjusted, did code restore `SetDeltaTimeMultiplier(1)` afterward?
+
+Common misses:
+
+- wrong bank and build pairing
+- wrong clip name
+- using `HideSymbol(...)` when the target is actually a layer
+- forgetting `ClearOverrideSymbol(...)` after a temporary swap
+
 ## Action Never Appears In The Action Picker
 
 Check in this order:

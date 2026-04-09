@@ -12,8 +12,12 @@ Inspect official scripts before writing mod code and tie conclusions to concrete
 
 ## Use Official Sources First
 
-- Default game root: `D:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together`
-- Default script bundle: `D:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together\data\databundles\scripts.zip`
+- Common Windows game root: `C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together`
+- Common Windows script bundle: `C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together\data\databundles\scripts.zip`
+- Common Linux game root: `~/.local/share/Steam/steamapps/common/Don't Starve Together`
+- Common Linux script bundle: `~/.local/share/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
+- Common macOS game root: `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together`
+- Common macOS script bundle: `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
 - Prefer a user-provided game path when the path is not already known.
 - If the user refuses to provide it, say that accuracy may be lower without reading the local official scripts.
 - Treat official game files as authoritative. Do not learn default behavior from third-party mods unless the user explicitly asks for comparison.
@@ -89,6 +93,7 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
 - Read `references/action-patterns.md` when the task adds custom actions or stategraph action routing.
 - Read `references/string-patterns.md` when the task adds names, inspect text, UI text, speech, or localized metadata.
 - Read `references/asset-patterns.md` when the task adds anim zips, atlases, inventory icons, or minimap assets.
+- Read `references/animstate-patterns.md` when the task touches `inst.AnimState`, animation playback flow, symbol overrides, or animation-driven UI state.
 - Read `references/recipe-patterns.md` when the task adds recipes, crafting filters, or placers.
 - Read `references/runtime-globals.md` first, then the specific runtime page you actually need.
 - Read `references/runtime-authority.md` for `TheWorld`, `TheNet`, and authority boundaries.
