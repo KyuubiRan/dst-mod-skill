@@ -36,17 +36,27 @@ Use this file as a compact decision tree.
 
 ### Patch UI
 
-1. Read the concrete class under `scripts/widgets/` or `scripts/screens/`.
-2. Read `references/input-patterns.md` if the patch listens to keyboard, mouse, or mapped controls.
-3. Reach for `AddClassPostConstruct`.
-4. Patch the constructor or add listeners narrowly instead of replacing the whole widget.
+1. Read `references/ui-patterns.md` first.
+2. Read the concrete class under `scripts/widgets/` or `scripts/screens/`.
+3. Read `references/input-patterns.md` if the patch listens to keyboard, mouse, or mapped controls.
+4. Reach for `AddClassPostConstruct`.
+5. Patch the constructor or add listeners narrowly instead of replacing the whole widget.
 
 ### Add Recipes, Actions, Or Stategraph Changes
 
-1. Read the relevant registration function in `scripts/modutil.lua`.
-2. Read the target stategraph under `scripts/stategraphs/`.
-3. Reuse an existing official action flow whenever possible.
-4. Prefer `AddRecipe2` over deprecated recipe APIs.
+1. Read `references/action-patterns.md` first.
+2. Read the relevant registration function in `scripts/modutil.lua`.
+3. Read the target stategraph under `scripts/stategraphs/`.
+4. Reuse an existing official action flow whenever possible.
+5. Prefer `AddRecipe2` over deprecated recipe APIs.
+
+### Add RPC, Replica, Or Netvars
+
+1. Read `references/networking-patterns.md` first.
+2. Decide whether the need is RPC intent, replicated state, or both.
+3. Read `scripts/networkclientrpc.lua` for RPC routing.
+4. Read `scripts/entityreplica.lua` and a similar official prefab or component before adding replica or classified logic.
+5. Keep client reads on replica or netvars, not server-only components.
 
 ### Add A New Prefab Or Item
 

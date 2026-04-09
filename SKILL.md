@@ -82,10 +82,13 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
 - Read `references/official-files.md` for file paths, entry points, and what each official file family is good for.
 - Read `references/mod-api-map.md` for the highest-value mod APIs and where they live.
 - Read `references/creation-patterns.md` when the task is about how prefabs, components, or helper modules are created and loaded.
+- Read `references/ui-patterns.md` when the task creates or patches widgets, screens, HUD, or local UI flows.
+- Read `references/action-patterns.md` when the task adds custom actions or stategraph action routing.
 - Read `references/runtime-globals.md` first, then the specific runtime page you actually need.
 - Read `references/runtime-authority.md` for `TheWorld`, `TheNet`, and authority boundaries.
 - Read `references/runtime-local-ui.md` for `ThePlayer`, HUD, and local UI globals.
 - Read `references/input-patterns.md` for `TheInput`, keyboard, mouse, and control handlers.
+- Read `references/networking-patterns.md` when the task needs RPC, replica, classified entities, or netvars.
 - Read `references/entity-query-patterns.md` for `TheSim:FindEntities(...)`.
 - Read `references/execution-contexts.md` before deciding whether code should be all-clients, client-only, or server-only.
 - Read `references/signatures.md` first, then the narrow signature page you need.

@@ -33,12 +33,21 @@ Use the worldgen or server-creation entry files only when the task is specific t
 - `scripts/modindex.lua`
   - `modinfo.lua` parsing, API-version checks, compatibility flags, and configuration option handling.
   - Useful for validating metadata assumptions.
+- `scripts/networkclientrpc.lua`
+  - Mod RPC registration tables, send helpers, and namespace/id routing.
+  - Read this when a task needs custom RPC flow.
 - `scripts/entityscript.lua`
   - Core instance methods for tags, components, tasks, events, buffered actions, children, SG, and brain assignment.
   - Read when a prefab method or lifecycle detail is unclear.
+- `scripts/entityreplica.lua`
+  - Replica-component setup and `AddReplicableComponent` behavior.
+  - Read this when a custom component needs client-readable replica state.
 - `scripts/standardcomponents.lua`
   - Reusable helper constructors such as burnable, freezable, physics, hauntable, floatable, and other common setup helpers.
   - Read before writing low-level setup by hand.
+- `scripts/componentactions.lua`
+  - Official action collector definitions and action-type routing such as `SCENE`, `USEITEM`, and `POINT`.
+  - Read this before inventing custom action collection logic.
 - `scripts/componentutil.lua`
   - Shared component-side helper functions and utility logic used across the game.
   - Read when behavior seems to rely on utility wrappers rather than a single component method.
@@ -76,6 +85,8 @@ Use the worldgen or server-creation entry files only when the task is specific t
 
 1. Read `scripts/modutil.lua` for the hook family you plan to use.
 2. Read `scripts/mods.lua` and `scripts/mainfunctions.lua` when the task is about how `modmain.lua`, `PrefabFiles`, or assets are loaded.
-3. Read the concrete official file that already does something similar.
-4. Read `scripts/entityscript.lua` or `scripts/standardcomponents.lua` if the concrete file calls deeper helpers.
-5. Read `scripts/tuning.lua` or `scripts/constants.lua` only when the task is mostly data or constants.
+3. Read `scripts/componentactions.lua` when the task adds custom action collection or input-to-action behavior.
+4. Read `scripts/networkclientrpc.lua` and `scripts/entityreplica.lua` when the task needs RPC or replica/netvar flow.
+5. Read the concrete official file that already does something similar.
+6. Read `scripts/entityscript.lua` or `scripts/standardcomponents.lua` if the concrete file calls deeper helpers.
+7. Read `scripts/tuning.lua` or `scripts/constants.lua` only when the task is mostly data or constants.
