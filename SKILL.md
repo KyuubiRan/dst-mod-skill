@@ -86,6 +86,8 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
 - Read `references/official-files.md` for file paths, entry points, and what each official file family is good for.
 - Read `references/mod-api-map.md` for the highest-value mod APIs and where they live.
 - Read `references/creation-patterns.md` when the task is about how prefabs, components, or helper modules are created and loaded.
+- Read `references/component-patterns.md` when the task is mainly about high-frequency official components such as `inspectable`, `inventoryitem`, `stackable`, `finiteuses`, `inventory`, `container`, `edible`, `cookable`, `fuel`, `tool`, `pickable`, `workable`, `timer`, `talker`, `health`, `hunger`, `sanity`, `combat`, `equippable`, `armor`, or `weapon`.
+- Read `references/tag-patterns.md` when the task depends on prefab tags, action filters, `FindEntities(...)` queries, AI targeting, or helper-entity interaction rules such as `NOCLICK`, `FX`, or `structure`.
 - Read `references/template-patterns.md` when the task needs a practical starter skeleton for common mod code.
 - Read `references/brain-patterns.md` when the task creates or patches NPC AI behavior.
 - Read `references/worldgen-patterns.md` when the task touches `modworldgenmain.lua`, `modservercreationmain.lua`, presets, or generation-time logic.

@@ -64,6 +64,11 @@ Use the worldgen or server-creation entry files only when the task is specific t
 - `scripts/componentutil.lua`
   - Shared component-side helper functions and utility logic used across the game.
   - Read when behavior seems to rely on utility wrappers rather than a single component method.
+- `scripts/components/`
+  - High-frequency official component implementations such as `health.lua`, `hunger.lua`, `sanity.lua`, `combat.lua`, `equippable.lua`, `armor.lua`, `weapon.lua`, and `container.lua`.
+  - Read these first when the task is stat, combat, equipment, or storage centered.
+- `scripts/prefabs/`
+  - Also the main place to verify prefab-authored tags such as `structure`, `backpack`, `NOCLICK`, `FX`, or `hostile`.
 - `scripts/mainfunctions.lua`
   - Prefab loading and asset resolution details.
   - Useful when asset paths or prefab registration behave unexpectedly.

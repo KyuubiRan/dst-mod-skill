@@ -120,3 +120,52 @@ Read this file before hand-rolling common prefab setup.
 - If the task starts with "why does this instance behave like this", start in `entityscript.lua` and the relevant component file.
 - If the task starts with "set up a new prefab", start in a similar official prefab and `standardcomponents.lua`.
 - If the task depends on server or client context, read `runtime-globals.md` before writing code.
+
+## High-Frequency Official Components
+
+Read the exact component file first when the task is centered on one of these:
+
+- `inspectable`
+  - `scripts/components/inspectable.lua`
+- `inventoryitem`
+  - `scripts/components/inventoryitem.lua`
+- `stackable`
+  - `scripts/components/stackable.lua`
+- `finiteuses`
+  - `scripts/components/finiteuses.lua`
+- `inventory`
+  - `scripts/components/inventory.lua`
+- `container`
+  - `scripts/components/container.lua`
+- `edible`
+  - `scripts/components/edible.lua`
+- `cookable`
+  - `scripts/components/cookable.lua`
+- `fuel`
+  - `scripts/components/fuel.lua`
+- `tool`
+  - `scripts/components/tool.lua`
+- `pickable`
+  - `scripts/components/pickable.lua`
+- `workable`
+  - `scripts/components/workable.lua`
+- `timer`
+  - `scripts/components/timer.lua`
+- `talker`
+  - `scripts/components/talker.lua`
+- `health`
+  - `scripts/components/health.lua`
+- `hunger`
+  - `scripts/components/hunger.lua`
+- `sanity`
+  - `scripts/components/sanity.lua`
+- `combat`
+  - `scripts/components/combat.lua`
+- `equippable`
+  - `scripts/components/equippable.lua`
+- `armor`
+  - `scripts/components/armor.lua`
+- `weapon`
+  - `scripts/components/weapon.lua`
+
+Also read `references/component-patterns.md` for practical routing and common combinations.

@@ -45,13 +45,23 @@ If the only viable patch point is a closed-over helper function, read `reference
 2. Reach for `AddPlayerPostInit` or a component hook.
 3. Guard master-sim and client logic explicitly.
 
+### Patch Survival, Combat, Equipment, Or Container Behavior
+
+1. Read `references/component-patterns.md` first.
+2. Open the exact official component file under `scripts/components/`.
+3. Read the closest official prefab that uses the same component pattern.
+4. If the behavior also depends on tags or action routing, read `references/tag-patterns.md`.
+5. If the behavior also touches animation, input, or SG flow, read the matching narrow reference page too.
+6. Prefer a small component post-init or prefab-local setup change over rewriting the whole system.
+
 ### Add Or Extend A Component
 
 1. Read `references/creation-patterns.md` for the base loading path first.
-2. Read the official component with the closest lifecycle and networking shape.
-3. Reach for `AddComponentPostInit` for small extensions.
-4. If the component has a replica, inspect replica and classified patterns before writing net code.
-5. Register replica support with `AddReplicableComponent` when needed.
+2. Read `references/component-patterns.md` if the task targets a common official component.
+3. Read the official component with the closest lifecycle and networking shape.
+4. Reach for `AddComponentPostInit` for small extensions.
+5. If the component has a replica, inspect replica and classified patterns before writing net code.
+6. Register replica support with `AddReplicableComponent` when needed.
 
 ### Patch UI
 
@@ -120,6 +130,9 @@ If the only viable patch point is a closed-over helper function, read `reference
 4. Read that prefab and any helper calls in `scripts/standardcomponents.lua`.
 5. Reuse helper constructors for burnable, freezable, physics, hauntable, floatable, and similar setup.
 6. Register the prefab in `PrefabFiles` and keep assets relative to the mod root.
+
+If the mod owns a whole family of near-identical prefab variants, prefer a shared factory pattern over copying the same constructor repeatedly.
+Use `scripts/prefabs/staff.lua` as the official shape reference and use a mod-owned `table + factory + unpack` return when it keeps the file cleaner.
 
 ### Adjust Numbers Or Balance
 

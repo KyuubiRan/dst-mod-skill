@@ -11,6 +11,8 @@ This page focuses on the common creation path:
 - `scripts/components/*.lua`
 - replica-side component support
 
+If the task is specifically about common official components such as `health`, `hunger`, `sanity`, `combat`, `equippable`, `armor`, `weapon`, or `container`, also read `references/component-patterns.md`.
+
 ## `modmain.lua` Is The Main Bootstrap
 
 The official loader executes `modmain.lua` for enabled gameplay mods from `scripts/mods.lua`.
@@ -99,6 +101,54 @@ Many files also return:
 - `MakePlacer(...)` for placeable structures
 
 If a prefab task is mostly about `inst.AnimState`, also read `references/animstate-patterns.md`.
+
+## Repeated Variant Prefabs Should Usually Share A Factory
+
+When many prefabs share most of their setup and only differ by a few fields:
+
+- do not copy the whole prefab constructor repeatedly
+- pull the shared setup into a common constructor helper
+- keep the per-variant function focused on only the differences
+- return all generated prefabs together at the bottom of the file
+
+Official reference:
+
+- `scripts/prefabs/staff.lua`
+
+Observed pattern in `staff.lua`:
+
+- shared assets and spawned-prefab dependency tables near the top
+- a shared constructor helper `commonfn(...)`
+- variant-specific wrappers such as `blue_common(...)`, `orange()`, `green()`
+- one grouped return section that returns many `Prefab(...)` values
+
+Practical rule:
+
+- if the repeated code is mostly "same prefab, different tuning, build, tags, or callbacks", use a factory pattern
+- if each variant diverges heavily in behavior, separate files may still be clearer
+
+## `table + factory + unpack` Is A Good Mod-Owned Pattern
+
+For mod code, a clean pattern is:
+
+1. declare a variant config table
+2. write one factory that builds a prefab from one config
+3. populate a `prefabs` array
+4. `return unpack(prefabs)` at the bottom
+
+This is especially useful for:
+
+- food families
+- weapon tiers
+- colored gem tools
+- several reskins with the same behavior
+- status-effect item families
+
+Common pitfalls:
+
+- do not hide real behavioral differences inside a giant unreadable config table
+- keep the factory narrow and explicit about which fields are variant-driven
+- if a variant needs a one-off branch everywhere, it may no longer belong in the same factory
 
 ## How Components Are Defined
 

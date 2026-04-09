@@ -210,6 +210,85 @@ inst:SetBrain(brain)
 inst:SetStateGraph("SGmycreature")
 ```
 
+## Variant Prefab Factory
+
+Use this when many prefabs share the same setup and only differ by a small config table.
+
+```lua
+local assets =
+{
+    Asset("ANIM", "anim/my_weapons.zip"),
+    Asset("ANIM", "anim/swap_my_weapons.zip"),
+}
+
+local variants =
+{
+    {
+        prefab = "my_blade_red",
+        anim = "red",
+        damage = 34,
+        uses = 100,
+    },
+    {
+        prefab = "my_blade_blue",
+        anim = "blue",
+        damage = 42,
+        uses = nil, -- infinite durability
+    },
+}
+
+local function MakeWeaponVariant(data)
+    local function fn()
+        local inst = CreateEntity()
+
+        inst.entity:AddTransform()
+        inst.entity:AddAnimState()
+        inst.entity:AddNetwork()
+
+        inst.AnimState:SetBank("my_weapons")
+        inst.AnimState:SetBuild("my_weapons")
+        inst.AnimState:PlayAnimation(data.anim)
+
+        inst.entity:SetPristine()
+
+        if not TheWorld.ismastersim then
+            return inst
+        end
+
+        inst:AddComponent("inspectable")
+        inst:AddComponent("inventoryitem")
+        inst:AddComponent("equippable")
+        inst:AddComponent("weapon")
+        inst.components.weapon:SetDamage(data.damage)
+
+        if data.uses ~= nil then
+            inst:AddComponent("finiteuses")
+            inst.components.finiteuses:SetMaxUses(data.uses)
+            inst.components.finiteuses:SetUses(data.uses)
+        end
+
+        return inst
+    end
+
+    return Prefab(data.prefab, fn, assets)
+end
+
+local prefabs = {}
+for _, data in ipairs(variants) do
+    table.insert(prefabs, MakeWeaponVariant(data))
+end
+
+return unpack(prefabs)
+```
+
+This pattern is recommended when:
+
+- most setup is shared
+- the differences are cleanly table-driven
+- you want one file to own a whole item family
+
+If the variants start needing many unrelated branches, split the file or move the shared helper down one level instead.
+
 ## Rule Of Thumb
 
 - Start from the smallest template that fits.
