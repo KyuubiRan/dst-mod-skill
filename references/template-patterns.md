@@ -147,6 +147,127 @@ local function fn()
 end
 ```
 
+## Minimal One-Shot FX Prefab
+
+Use this for a short visual effect that should not persist or be directly clickable.
+
+```lua
+local assets =
+{
+    Asset("ANIM", "anim/my_fx.zip"),
+}
+
+local function fn()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+
+    inst:AddTag("FX")
+    inst:AddTag("NOCLICK")
+
+    inst.entity:SetCanSleep(false)
+    inst.persists = false
+
+    inst.AnimState:SetBank("my_fx")
+    inst.AnimState:SetBuild("my_fx")
+    inst.AnimState:PlayAnimation("idle")
+
+    inst:ListenForEvent("animover", inst.Remove)
+
+    return inst
+end
+
+return Prefab("my_fx", fn, assets)
+```
+
+## Minimal Lit Prefab
+
+Use this for a normal gameplay prefab that owns a simple light source.
+
+```lua
+local assets =
+{
+    Asset("ANIM", "anim/my_lamp.zip"),
+}
+
+local function fn()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddLight()
+    inst.entity:AddNetwork()
+
+    inst.AnimState:SetBank("my_lamp")
+    inst.AnimState:SetBuild("my_lamp")
+    inst.AnimState:PlayAnimation("idle")
+
+    inst.Light:SetFalloff(0.7)
+    inst.Light:SetIntensity(0.8)
+    inst.Light:SetRadius(2)
+    inst.Light:SetColour(180 / 255, 195 / 255, 150 / 255)
+    inst.Light:EnableClientModulation(true)
+
+    inst.entity:SetPristine()
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst:AddComponent("inspectable")
+
+    return inst
+end
+
+return Prefab("my_lamp", fn, assets)
+```
+
+## Minimal Sound-Only Proxy
+
+Use this when the server should trigger a cue but the actual sound can be spawned locally on clients.
+
+```lua
+local function PlayLocalSound(proxy, sound)
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddSoundEmitter()
+    inst.entity:SetParent(TheFocalPoint.entity)
+
+    inst.SoundEmitter:PlaySound(sound)
+    inst:Remove()
+end
+
+local function fn()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddNetwork()
+
+    inst:AddTag("FX")
+    inst:AddTag("NOCLICK")
+
+    if not TheNet:IsDedicated() then
+        inst:DoTaskInTime(0, PlayLocalSound, "dontstarve/common/click_stone")
+    end
+
+    inst.entity:SetPristine()
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst.entity:SetCanSleep(false)
+    inst.persists = false
+    inst:DoTaskInTime(1, inst.Remove)
+
+    return inst
+end
+
+return Prefab("my_sound_proxy", fn)
+```
+
 ## Minimal Recipe And Placer
 
 ```lua

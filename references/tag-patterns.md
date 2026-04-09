@@ -13,6 +13,7 @@ They are routing signals used by:
 - world-system exclusion lists
 
 Read this page together with the closest official prefab or component file.
+If the task is specifically about lighting, visual FX prefabs, or sound helpers, also read `references/effects-patterns.md`.
 
 ## Two Sources Of Tags
 
@@ -175,6 +176,9 @@ Use this as a quick tag checklist after choosing components.
 
 - visual helper, reticule, projectile visualizer, placement ghost
   - think `FX`, `NOCLICK`, often `NOBLOCK`
+- local light or sound helper
+  - think `FX`, often `NOCLICK`
+  - add `NOBLOCK` when it should not interfere with placement or movement
 - chest or machine structure
   - think `structure`
   - add identity tags like `chest` only when it matches an official pattern

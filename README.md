@@ -114,6 +114,14 @@ High-value docs under `references/` include:
   - common official components, intent-to-component bundles, and negative constraints such as infinite durability
 - `tag-patterns.md`
   - high-frequency prefab tags and the difference between prefab-added and component-managed tags
+- `world-system-patterns.md`
+  - common world-system combinations such as `fueled`, `burnable`, `freezable`, `lootdropper`, `trader`, `hauntable`, and `deployable`
+- `networking-templates.md`
+  - small implementation templates for netvars, replica, classified entities, and RPC
+- `stategraph-patterns.md`
+  - SG object shape, `wilson` versus `wilson_client`, prediction clues, and SG hook routing
+- `effects-patterns.md`
+  - official light, FX prefab, particle, and sound patterns
 - `task-playbook.md`
   - compact task routing and validation order
 - `creation-patterns.md`

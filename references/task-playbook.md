@@ -74,10 +74,19 @@ If the only viable patch point is a closed-over helper function, read `reference
 ### Add Recipes, Actions, Or Stategraph Changes
 
 1. Read `references/action-patterns.md` first.
-2. Read the relevant registration function in `scripts/modutil.lua`.
-3. Read the target stategraph under `scripts/stategraphs/`.
-4. Reuse an existing official action flow whenever possible.
-5. Prefer `AddRecipe2` over deprecated recipe APIs.
+2. Read `references/stategraph-patterns.md` when the task touches performer states, events, prediction, or SG timing.
+3. Read the relevant registration function in `scripts/modutil.lua`.
+4. Read the target stategraph under `scripts/stategraphs/`.
+5. Reuse an existing official action flow whenever possible.
+6. Prefer `AddRecipe2` over deprecated recipe APIs.
+
+### Patch Common World Systems
+
+1. Read `references/world-system-patterns.md` first.
+2. Open the exact official component files under `scripts/components/`.
+3. Check `scripts/standardcomponents.lua` for an existing helper before hand-rolling setup.
+4. Read the closest official prefab that combines the same systems.
+5. If player interaction or placement is involved, also inspect action or recipe routing.
 
 ### Add Recipes Or Placers
 
@@ -114,13 +123,23 @@ If the only viable patch point is a closed-over helper function, read `reference
 4. Verify bank, build, animation, symbol, and layer names before changing code.
 5. Keep animation patches narrow; prefer a small post-init or stategraph patch over replacing a whole prefab.
 
+### Add Lighting, FX, Or Sound
+
+1. Read `references/effects-patterns.md` first.
+2. Decide whether the task is a lit gameplay prefab, a local-only helper, a network proxy, a particle effect, or SG-timed sound.
+3. Read the closest official prefab that already matches that shape.
+4. If the task also changes interaction, inspect `references/tag-patterns.md`.
+5. If the task also depends on animation timing, inspect `references/stategraph-patterns.md`.
+6. If the task needs new textures, shaders, or sound assets, inspect `references/asset-patterns.md`.
+
 ### Add RPC, Replica, Or Netvars
 
 1. Read `references/networking-patterns.md` first.
-2. Decide whether the need is RPC intent, replicated state, or both.
-3. Read `scripts/networkclientrpc.lua` for RPC routing.
-4. Read `scripts/entityreplica.lua` and a similar official prefab or component before adding replica or classified logic.
-5. Keep client reads on replica or netvars, not server-only components.
+2. Read `references/networking-templates.md` for the smallest implementation shape that fits.
+3. Decide whether the need is RPC intent, replicated state, or both.
+4. Read `scripts/networkclientrpc.lua` for RPC routing.
+5. Read `scripts/entityreplica.lua` and a similar official prefab or component before adding replica or classified logic.
+6. Keep client reads on replica or netvars, not server-only components.
 
 ### Add A New Prefab Or Item
 

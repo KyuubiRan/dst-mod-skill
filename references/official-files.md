@@ -61,6 +61,12 @@ Use the worldgen or server-creation entry files only when the task is specific t
 - `scripts/componentactions.lua`
   - Official action collector definitions and action-type routing such as `SCENE`, `USEITEM`, and `POINT`.
   - Read this before inventing custom action collection logic.
+- `scripts/stategraph.lua`
+  - Core SG object model: `State`, `ActionHandler`, `EventHandler`, `TimeEvent`, and timeline behavior.
+  - Read this when SG object shape or prediction-side fields are unclear.
+- `scripts/stategraphs/commonstates.lua`
+  - Reusable helper constructors for locomotion, combat, sleep, frozen, hit, and death state families.
+  - Read this before hand-writing a whole common state family.
 - `scripts/componentutil.lua`
   - Shared component-side helper functions and utility logic used across the game.
   - Read when behavior seems to rely on utility wrappers rather than a single component method.
@@ -95,6 +101,12 @@ Use the worldgen or server-creation entry files only when the task is specific t
   - Official component logic. Read this first when behavior is component-driven.
 - `scripts/stategraphs/`
   - State transitions, action handling, and animation logic.
+- `scripts/prefabs/*fx*.lua`
+  - High-value references for one-shot FX, sound proxies, light helpers, and presentation-only prefabs.
+- `scripts/prefabs/lighterfire_common.lua`
+  - Practical light-helper and netvar-driven portable light pattern.
+- `scripts/prefabs/torchfire_barber.lua`
+  - Practical `AddVFXEffect()` particle-system reference.
 - `scripts/brains/`
   - AI decision logic.
 - `scripts/widgets/`
@@ -123,10 +135,11 @@ For animation work, inspect script-level usage instead:
 1. Read `scripts/modutil.lua` for the hook family you plan to use.
 2. Read `scripts/mods.lua` and `scripts/mainfunctions.lua` when the task is about how `modmain.lua`, `PrefabFiles`, or assets are loaded.
 3. Read `scripts/componentactions.lua` when the task adds custom action collection or input-to-action behavior.
-4. Read `scripts/networkclientrpc.lua` and `scripts/entityreplica.lua` when the task needs RPC or replica/netvar flow.
-5. Read `scripts/brain.lua` and the matching file under `scripts/brains/` when the task adds NPC AI.
-6. Read `scripts/prefabutil.lua` and `scripts/recipe.lua` when the task adds placers or recipes.
-7. Read `scripts/strings.lua` when the task is mostly text or localization wiring.
-8. Read the concrete official file that already does something similar.
-9. Read `scripts/entityscript.lua` or `scripts/standardcomponents.lua` if the concrete file calls deeper helpers.
-10. Read `scripts/tuning.lua` or `scripts/constants.lua` only when the task is mostly data or constants.
+4. Read `scripts/stategraph.lua` and `scripts/stategraphs/commonstates.lua` when the task adds or patches SG flow.
+5. Read `scripts/networkclientrpc.lua` and `scripts/entityreplica.lua` when the task needs RPC or replica/netvar flow.
+6. Read `scripts/brain.lua` and the matching file under `scripts/brains/` when the task adds NPC AI.
+7. Read `scripts/prefabutil.lua` and `scripts/recipe.lua` when the task adds placers or recipes.
+8. Read `scripts/strings.lua` when the task is mostly text or localization wiring.
+9. Read the concrete official file that already does something similar.
+10. Read `scripts/entityscript.lua` or `scripts/standardcomponents.lua` if the concrete file calls deeper helpers.
+11. Read `scripts/tuning.lua` or `scripts/constants.lua` only when the task is mostly data or constants.

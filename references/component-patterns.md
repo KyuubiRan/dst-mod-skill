@@ -3,6 +3,7 @@
 Use this file when a task is primarily about common official components rather than a whole subsystem.
 
 If the task also depends on prefab tags or action/query routing, read `references/tag-patterns.md` too.
+If the task also depends on lighting, FX prefabs, or sound playback, read `references/effects-patterns.md` too.
 
 This page is a routing guide for the most frequently touched components in DST modding:
 

@@ -113,6 +113,14 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
   - 高频组件、组件组合、反向约束
 - `tag-patterns.md`
   - 高频 tag、tag 来源、tag 路由含义
+- `world-system-patterns.md`
+  - 高频世界系统组合，如 `fueled`、`burnable`、`freezable`、`lootdropper`、`trader`、`hauntable`、`deployable`
+- `networking-templates.md`
+  - netvar、replica、classified、RPC 的小型实现模板
+- `stategraph-patterns.md`
+  - stategraph 结构、`wilson` / `wilson_client`、预测相关线索、SG Hook 路由
+- `effects-patterns.md`
+  - 灯光、FX prefab、粒子特效、音效触发的官方模式
 - `task-playbook.md`
   - 任务分流与排查顺序
 - `creation-patterns.md`

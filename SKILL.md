@@ -93,15 +93,19 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
 - Read `references/worldgen-patterns.md` when the task touches `modworldgenmain.lua`, `modservercreationmain.lua`, presets, or generation-time logic.
 - Read `references/ui-patterns.md` when the task creates or patches widgets, screens, HUD, or local UI flows.
 - Read `references/action-patterns.md` when the task adds custom actions or stategraph action routing.
+- Read `references/stategraph-patterns.md` when the task adds or patches states, SG events, player action performer states, prediction flow, or `wilson` versus `wilson_client` behavior.
+- Read `references/world-system-patterns.md` when the task combines common world systems such as `fueled`, `burnable`, `freezable`, `lootdropper`, `trader`, `hauntable`, or `deployable`.
 - Read `references/string-patterns.md` when the task adds names, inspect text, UI text, speech, or localized metadata.
 - Read `references/asset-patterns.md` when the task adds anim zips, atlases, inventory icons, or minimap assets.
 - Read `references/animstate-patterns.md` when the task touches `inst.AnimState`, animation playback flow, symbol overrides, or animation-driven UI state.
+- Read `references/effects-patterns.md` when the task adds lighting, a visual FX prefab, particle FX, or sound playback.
 - Read `references/recipe-patterns.md` when the task adds recipes, crafting filters, or placers.
 - Read `references/runtime-globals.md` first, then the specific runtime page you actually need.
 - Read `references/runtime-authority.md` for `TheWorld`, `TheNet`, and authority boundaries.
 - Read `references/runtime-local-ui.md` for `ThePlayer`, HUD, and local UI globals.
 - Read `references/input-patterns.md` for `TheInput`, keyboard, mouse, and control handlers.
 - Read `references/networking-patterns.md` when the task needs RPC, replica, classified entities, or netvars.
+- Read `references/networking-templates.md` when the task needs implementation-ready netvar, replica, classified, or RPC templates.
 - Read `references/entity-query-patterns.md` for `TheSim:FindEntities(...)`.
 - Read `references/execution-contexts.md` before deciding whether code should be all-clients, client-only, or server-only.
 - Read `references/signatures.md` first, then the narrow signature page you need.

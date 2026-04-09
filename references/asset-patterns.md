@@ -1,6 +1,7 @@
 # Asset Patterns
 
 Use this file when the task adds animation zips, inventory icons, minimap images, frontend assets, or atlas references.
+If the task is specifically about lighting, FX prefabs, particle FX, or sound playback logic, also read `references/effects-patterns.md`.
 
 ## Prefab Assets
 
