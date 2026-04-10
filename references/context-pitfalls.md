@@ -17,6 +17,20 @@ if ThePlayer ~= nil and ThePlayer.HUD ~= nil then
 end
 ```
 
+Wrong shape:
+
+```lua
+local target = ThePlayer
+```
+
+Safer shape:
+
+```lua
+local target = doer or owner or inst
+```
+
+Then use `ThePlayer` only if the behavior is intentionally local-player-specific.
+
 ## `ThePlayer` Is Not The Same As `doer` Or `owner`
 
 - In gameplay callbacks, use actual callback parameters such as `inst`, `doer`, `owner`, `giver`, or `attacker`.
@@ -30,3 +44,50 @@ end
   - process has no local frontend
 
 Both checks matter, but for different reasons.
+
+Wrong shape:
+
+```lua
+if TheWorld.ismastersim then
+    -- assume HUD or ThePlayer exists
+end
+```
+
+Safer shape:
+
+```lua
+if not TheNet:IsDedicated() then
+    -- local presentation path
+end
+```
+
+```lua
+if not TheWorld.ismastersim then
+    return inst
+end
+```
+
+## Listen Host Confusion
+
+A listen server can be:
+
+- authoritative simulation
+- a local player process
+- a frontend/UI process
+
+At the same time.
+
+That means code can accidentally appear to work on host while still being wrong for:
+
+- remote clients
+- dedicated servers
+- pure client-local UI flows
+
+## Fast Router
+
+- if the bug is "works on host but not on remote client"
+  - read `networking-pitfalls.md`
+- if the bug is "works on host but crashes on dedicated"
+  - read `runtime-local-ui.md`
+- if the bug is "I used `ThePlayer` where gameplay passed me `doer`"
+  - fix callback ownership first
