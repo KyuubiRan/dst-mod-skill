@@ -47,6 +47,8 @@ For prefab and action identifiers, uppercase keys are the safest default when wr
 
 ## `modinfo.lua` Localization Is A Separate Case
 
+For broader `modinfo.lua` rules such as config grouping and environment limits, also read `references/modinfo-patterns.md`.
+
 Observed official `modinfo.lua` environment includes:
 
 - `locale`
@@ -56,6 +58,8 @@ Practical consequence:
 
 - mod metadata can choose localized strings inside `modinfo.lua`
 - this is separate from runtime `STRINGS` mutation
+- for standardized new code, prefer explicit names such as `MODINFO_TRANSLATIONS` and `Translate(key)`
+- do not reuse the modinfo translation helper as the default runtime i18n approach
 
 Typical modinfo-side shape:
 

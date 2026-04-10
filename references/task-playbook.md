@@ -5,11 +5,20 @@ Use this file as a compact decision tree.
 ## Before Coding
 
 1. Check whether `modinfo.lua` and `modmain.lua` exist.
-2. If `modinfo.lua` exists, classify the mod as all-clients gameplay, client-only, or server-only from its flags before reading runtime-specific APIs.
-3. Identify the smallest official file that already matches the feature shape.
-4. Inspect the exact hook or helper definition in official code.
-5. Check whether the behavior is server-only, client-only, or replicated.
-6. Keep the implementation smaller than the official source you inspected.
+2. If `modinfo.lua` exists, read `references/modinfo-patterns.md` when metadata, dependencies, or config layout may matter.
+3. If `modinfo.lua` exists, classify the mod as all-clients gameplay, client-only, or server-only from its flags before reading runtime-specific APIs.
+4. Identify the smallest official file that already matches the feature shape.
+5. Inspect the exact hook or helper definition in official code.
+6. Check whether the behavior is server-only, client-only, or replicated.
+7. Keep the implementation smaller than the official source you inspected.
+
+### Edit `modinfo.lua`
+
+1. Read `references/modinfo-patterns.md` first.
+2. Classify the mod from `client_only_mod` and `all_clients_require_mod`.
+3. Keep metadata localization inside `modinfo.lua`, not in runtime `STRINGS`.
+4. Keep config helpers tiny and avoid Lua standard-library assumptions.
+5. If the config needs visual grouping, use a section-header helper such as `MakeConfigSectionHeader(...)`.
 
 ## When Debugging A Broken Feature
 

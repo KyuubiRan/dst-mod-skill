@@ -1,6 +1,7 @@
 # Mod Bootstrap
 
 Use this file when `modinfo.lua` or `modmain.lua` is missing and the task looks like a new mod.
+Read `references/modinfo-patterns.md` too when the scaffold should include dependencies or non-trivial `configuration_options`.
 
 ## When To Offer Scaffolding
 

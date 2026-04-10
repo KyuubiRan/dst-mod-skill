@@ -110,6 +110,8 @@ High-value docs under `references/` include:
 
 - `official-files.md`
   - official file map and where to read first
+- `modinfo-patterns.md`
+  - `modinfo.lua` metadata, dependencies, configuration layout, and its constrained execution environment
 - `component-patterns.md`
   - common official components, intent-to-component bundles, and negative constraints such as infinite durability
 - `tag-patterns.md`

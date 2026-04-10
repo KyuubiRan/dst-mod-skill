@@ -53,7 +53,22 @@ def build_modinfo(args: argparse.Namespace) -> str:
     config_block = ""
     if args.with_config:
         config_block = """
+local function MakeConfigSectionHeader(label)
+    return {
+        name = "",
+        label = label,
+        options = {
+            {
+                description = "",
+                data = false,
+            },
+        },
+        default = false,
+    }
+end
+
 configuration_options = {
+    MakeConfigSectionHeader("General"),
     {
         name = "example_toggle",
         label = "Example Toggle",

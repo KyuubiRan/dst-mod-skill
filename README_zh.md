@@ -109,6 +109,8 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
 
 - `official-files.md`
   - 先看哪些官方文件
+- `modinfo-patterns.md`
+  - `modinfo.lua` 的元信息、依赖、配置项布局，以及它的受限执行环境
 - `component-patterns.md`
   - 高频组件、组件组合、反向约束
 - `tag-patterns.md`
