@@ -86,13 +86,28 @@ Bundle a release directory with exclusion and incremental sync:
 python scripts/bundle_release.py . --output ..\MyMod_release
 ```
 
+Unpack an official icon atlas:
+```bash
+python scripts/tex_atlas_tool.py unpack inventoryimages1
+```
+
+Pack multiple PNGs into one atlas:
+```bash
+python scripts/tex_atlas_tool.py pack path/to/png_dir my_atlas
+```
+
+Resize one icon:
+```bash
+python scripts/resize_png.py path/to/icon.png 64x64
+```
+
 ## Read These References As Needed
 
 - Read `references/official-files.md` for file paths, entry points, and what each official file family is good for.
 - Read `references/mod-api-map.md` for the highest-value mod APIs and where they live.
 - Read `references/modinfo-patterns.md` when the task edits `modinfo.lua`, compatibility flags, dependencies, or `configuration_options`.
 - Read `references/creation-patterns.md` when the task is about how prefabs, components, or helper modules are created and loaded.
-- Read `references/component-patterns.md` when the task is mainly about high-frequency official components such as `inspectable`, `inventoryitem`, `stackable`, `finiteuses`, `inventory`, `container`, `edible`, `cookable`, `fuel`, `tool`, `pickable`, `workable`, `timer`, `talker`, `health`, `hunger`, `sanity`, `combat`, `equippable`, `armor`, or `weapon`.
+- Read `references/component-patterns.md` when the task is mainly about high-frequency official components such as `inspectable`, `inventoryitem`, `stackable`, `finiteuses`, `inventory`, `container`, `edible`, `cookable`, `fuel`, `tool`, `pickable`, `workable`, `timer`, `talker`, `health`, `hunger`, `sanity`, `combat`, `equippable`, `armor`, or `weapon`. Use it as the routing page, then open the matching detail file under `references/components/`.
 - Read `references/tag-patterns.md` when the task depends on prefab tags, action filters, `FindEntities(...)` queries, AI targeting, or helper-entity interaction rules such as `NOCLICK`, `FX`, or `structure`.
 - Read `references/template-patterns.md` when the task needs a practical starter skeleton for common mod code.
 - Read `references/brain-patterns.md` when the task creates or patches NPC AI behavior.
@@ -104,6 +119,7 @@ python scripts/bundle_release.py . --output ..\MyMod_release
 - Read `references/string-patterns.md` when the task adds names, inspect text, UI text, speech, or localized metadata.
 - Read `references/runtime-i18n-patterns.md` when the task designs or refactors runtime localization, locale loaders, character speech inheritance, or `.po` versus Lua-table i18n strategy.
 - Read `references/asset-patterns.md` when the task adds anim zips, atlases, inventory icons, or minimap assets.
+- Read `references/texture-patterns.md` when the task packs or unpacks atlas `tex+xml`, inspects official icon atlases from `images.zip`, or resizes PNG files for DST texture fitting.
 - Read `references/animstate-patterns.md` when the task touches `inst.AnimState`, animation playback flow, symbol overrides, or animation-driven UI state.
 - Read `references/effects-patterns.md` when the task adds lighting, a visual FX prefab, particle FX, or sound playback.
 - Read `references/recipe-patterns.md` when the task adds recipes, crafting filters, or placers.

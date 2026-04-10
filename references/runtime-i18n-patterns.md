@@ -1,9 +1,6 @@
 # Runtime I18n Patterns
 
-Use this file when the task designs or refactors runtime localization for a mod.
-
-This page is about normal mod runtime text, not `modinfo.lua`.
-For `modinfo.lua` metadata localization, read `references/modinfo-patterns.md` instead.
+Use this file when the task designs or refactors runtime localization for a mod. This page is for runtime text, not `modinfo.lua` metadata.
 
 ## Official Runtime Foundations
 
@@ -19,13 +16,13 @@ Verified in official files:
 - `scripts/stringutil.lua`
   - runtime lookups use `GetString(...)`
 
-Practical consequence:
+Implication:
 
-- the official runtime translation system exists
+- official runtime translation exists
 - it is `.po` plus translator based
 - runtime text still resolves through `STRINGS`
 
-## Recommended Mod-Owned Runtime Strategy
+## Recommended Runtime Strategy
 
 For most mods, prefer a Lua-table runtime i18n layer over generating full Lua dumps from `.po`.
 
@@ -34,20 +31,18 @@ Recommended approach:
 1. choose the locale once in a small loader module
 2. load one locale-specific common table for mod-owned strings
 3. merge that table into `STRINGS`
-4. for character speech, deep-copy the default base speech table first
+4. deep-copy the base speech table for character speech
 5. apply only sparse locale overrides for the custom character
 
-Why this is recommended:
+Benefits:
 
 - smaller locale files
 - easier reviews
 - less generated noise
-- character mods can inherit future default lines automatically from the base table
-- common strings and character speech stay conceptually separate
+- character mods inherit future default lines from the base table
+- common strings and character speech stay separate
 
 ## Recommended Directory Shape
-
-A clean layout is:
 
 ```text
 scripts/languages/
@@ -60,20 +55,18 @@ scripts/languages/
 └─ speech_sidekick_zh.lua
 ```
 
-Use these roles:
+Roles:
 
 - `i18n.lua`
   - locale selection and loading orchestration
 - `common_<locale>.lua`
   - mod-owned additions to `STRINGS`
 - `speech_<character>_<locale>.lua`
-  - sparse overrides for the character speech table
+  - sparse overrides for a character speech table
 - sidekick or companion speech files
-  - separate localized tables, preferably keyed by speech path or symbolic id
+  - separate localized tables keyed by speech path or symbolic id
 
 ## Common Strings Should Be Mod-Owned Additions
-
-Recommended shape for `common_<locale>.lua`:
 
 ```lua
 return {
@@ -106,8 +99,6 @@ return {
 }
 ```
 
-Practical rule:
-
 - `common_<locale>.lua` should only describe strings your mod owns
 - do not mirror the entire global `STRINGS` tree when only a few branches are needed
 
@@ -116,23 +107,21 @@ Practical rule:
 Verified in `scripts/stringutil.lua`:
 
 - `GetString(...)` resolves character strings
-- when a character-specific branch misses a value, it falls back to `STRINGS.CHARACTERS.GENERIC`
+- missing character-specific values fall back to `STRINGS.CHARACTERS.GENERIC`
 
-Practical rule:
+Rules:
 
-- for character mods, the correct base speech table is `STRINGS.CHARACTERS.GENERIC`
+- the correct base speech table is `STRINGS.CHARACTERS.GENERIC`
 - do not build a full copied speech file from scratch when you only need differences
-- do not think of the base as a `WILSON` table; the default fallback table is `GENERIC`
+- do not think of the base as `WILSON`; the default fallback table is `GENERIC`
 
 Recommended pattern:
 
 1. deep-copy `STRINGS.CHARACTERS.GENERIC`
-2. merge the custom character's sparse locale overrides into that copy
+2. merge sparse locale overrides into that copy
 3. assign the merged result to `STRINGS.CHARACTERS.<YOURCHAR>`
 
 ## Sparse Character Speech File
-
-Recommended shape for `speech_mychar_<locale>.lua`:
 
 ```lua
 return {
@@ -146,14 +135,10 @@ return {
 }
 ```
 
-Practical rule:
-
 - keep only changed lines here
 - inherit everything else from the copied generic base
 
 ## Standard Loader Shape
-
-Recommended `scripts/languages/i18n.lua` structure:
 
 ```lua
 local supported = {
@@ -209,20 +194,12 @@ STRINGS.CHARACTERS.MYCHAR = speech
 
 ## Companion Or Proxy Speaker Text
 
-If a second speaker responds to the main character's lines, do not key that table by the final translated sentence text.
+Do not key a second speaker table by the final translated sentence text.
 
-Avoid this pattern:
+- avoid localized output strings as lookup keys, for example `STRINGS.CHARACTERS.MYCHAR.DESCRIBE.MY_ITEM`
+- line text changes, locale changes, and punctuation edits will break the lookup
 
-- using localized output strings as lookup keys
-- for example indexing by `STRINGS.CHARACTERS.MYCHAR.DESCRIBE.MY_ITEM`
-
-Why it is fragile:
-
-- line text changes break the lookup
-- different locales change keys
-- punctuation or override edits become data-breaking
-
-Prefer one of these:
+Prefer:
 
 - path-keyed tables
   - `DESCRIBE.MY_ITEM`
@@ -230,8 +207,6 @@ Prefer one of these:
 - symbolic ids
   - `MYITEM_DESCRIBE`
   - `GENERIC_BATTLECRY`
-
-Recommended shape:
 
 ```lua
 return {
@@ -244,7 +219,7 @@ return {
 }
 ```
 
-Then read from the same path on the current locale table instead of using the translated string as the key.
+Read from the same path on the current locale table instead of using translated text as the key.
 
 ## Optional Official `.po` Route
 
@@ -254,20 +229,16 @@ The official mod environment exposes:
 LoadPOFile(path, lang)
 ```
 
-And official runtime translation is based on:
+Official runtime translation is based on:
 
 - `LanguageTranslator:LoadPOFile(...)`
 - `TranslateStringTable(STRINGS)`
 
-Practical rule:
-
 - this is a real official runtime capability
-- use it when you explicitly want `.po`-based workflow
+- use it when you explicitly want `.po` workflow
 - for many gameplay mods, a Lua delta-table approach is simpler to maintain
 
 ## Intent Index
-
-Use this when the user describes the problem in plain language.
 
 - "I want proper runtime i18n for my mod"
   - start with locale-selected common tables plus a small loader
@@ -299,5 +270,5 @@ Use this when the user describes the problem in plain language.
 
 - `modinfo.lua` localization is one system.
 - runtime localization is another system.
-- For runtime text, keep locale files sparse.
-- For character mods, copy `STRINGS.CHARACTERS.GENERIC` and override only the differences.
+- keep runtime locale files sparse.
+- for character mods, copy `STRINGS.CHARACTERS.GENERIC` and override only the differences.

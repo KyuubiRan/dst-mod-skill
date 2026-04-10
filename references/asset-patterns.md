@@ -2,6 +2,7 @@
 
 Use this file when the task adds animation zips, inventory icons, minimap images, frontend assets, or atlas references.
 If the task is specifically about lighting, FX prefabs, particle FX, or sound playback logic, also read `references/effects-patterns.md`.
+If the task is specifically about atlas packing, TEX/XML unpacking, or PNG resizing workflow, also read `references/texture-patterns.md`.
 
 ## Prefab Assets
 
@@ -53,6 +54,11 @@ Asset("IMAGE", "images/inventoryimages/my_item.tex")
 
 When a recipe or UI element needs an icon atlas, keep the atlas path explicit.
 
+Texture-workflow rule:
+
+- asset registration belongs here
+- atlas generation, atlas extraction, and PNG resizing belong in `references/texture-patterns.md`
+
 ## Minimap Images
 
 For minimap icons, prefab files often declare:
@@ -92,3 +98,4 @@ For most gameplay prefabs, normal `assets` or mod-level `Assets` are enough.
 - Put shared mod assets in top-level `Assets`.
 - Use atlas/image pairs for UI or inventory icon resources.
 - Use `AddMinimapAtlas` only when minimap registration needs it explicitly.
+- If the user asks to pack, unpack, or resize texture files, switch to `references/texture-patterns.md`.

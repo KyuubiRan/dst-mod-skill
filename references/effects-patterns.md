@@ -1,13 +1,8 @@
 # Light, FX, And Sound Patterns
 
-Use this file when a task adds lighting, a visual FX prefab, particle FX, or sound playback.
+Use this file when a task adds lighting, a visual FX prefab, particle FX, or sound playback. Read the closest official prefab first.
 
-Read the closest official prefab first.
-This page is a routing guide for common presentation-side patterns.
-
-## Why This Page Exists
-
-These tasks sound simple, but the official implementation shape varies a lot:
+Common official shapes:
 
 - a structure with a real light
 - a hand-held light child entity
@@ -17,7 +12,7 @@ These tasks sound simple, but the official implementation shape varies a lot:
 - a particle effect built with `AddVFXEffect`
 - a sound tied to SG timeline frames
 
-## Core Engine Pieces You Will See
+## Core Engine Pieces
 
 Observed in official prefabs:
 
@@ -27,7 +22,7 @@ Observed in official prefabs:
 - `inst.entity:AddAnimState()`
 - `inst.entity:AddNetwork()`
 
-Important distinction:
+Distinction:
 
 - `Light`
   - engine light attached to an entity
@@ -38,9 +33,7 @@ Important distinction:
 - `VFXEffect`
   - particle-style effect system with emitters, textures, shaders, and envelopes
 
-## Related Tags And Components Quick Map
-
-Use this as a quick index before reading the rest of the page.
+## Quick Map
 
 - one-shot visual helper
   - tags: `FX`, often `NOCLICK`
@@ -48,18 +41,18 @@ Use this as a quick index before reading the rest of the page.
   - tags: often `NOBLOCK`, often also `FX` and `NOCLICK`
 - light-emitting structure
   - entity pieces: `AddLight`, usually `AddAnimState`, often `AddSoundEmitter`
-  - gameplay side often still includes `inspectable`, sometimes `burnable`, `fueled`, or `prototyper`
+  - gameplay side often still includes `inspectable`, `burnable`, `fueled`, or `prototyper`
 - hand-held or follower light helper
   - entity pieces: proxy entity + child light entity
   - networking often uses a netvar if clients must see range or state changes
 - SG-timed sound
   - stategraph timeline helpers: `SoundTimeEvent`, `SoundFrameEvent`
 
-Practical rule:
+Rules:
 
-- `FX` is usually a routing tag, not a behavior system by itself
-- light and sound are not components in the normal DST component sense
-- if a lit object also burns, consumes fuel, or works as an item, that gameplay behavior still belongs in normal components
+- `FX` is usually a routing tag, not a behavior system
+- light and sound are not components in the usual DST component sense
+- if a lit object also burns, consumes fuel, or works as an item, that behavior still belongs in normal components
 
 ## Pattern: Lit World Structure
 
@@ -76,7 +69,7 @@ Common shape:
 - `AddSoundEmitter`
 - `AddNetwork`
 
-Observed official light setup:
+Observed light setup:
 
 - `SetFalloff(...)`
 - `SetIntensity(...)`
@@ -84,12 +77,7 @@ Observed official light setup:
 - `SetColour(...)`
 - `EnableClientModulation(true)`
 
-Practical use:
-
-- stations
-- altars
-- glowing structures
-- world props with a persistent light source
+Use for stations, altars, glowing structures, and other persistent light sources.
 
 ## Pattern: Portable Or Attached Light Helper
 
@@ -97,7 +85,7 @@ Observed official reference:
 
 - `scripts/prefabs/lighterfire_common.lua`
 
-Observed official shape:
+Observed shape:
 
 - main prefab has `AddSoundEmitter()` and `AddNetwork()`
 - a separate non-networked child entity is created with `AddLight()`
@@ -105,16 +93,10 @@ Observed official shape:
 - light range is replicated through a netvar
 - cleanup removes the child light entity on parent removal
 
-Practical use:
+Rules:
 
-- hand-held flames
-- player-follow light helpers
-- light state that should exist visually on clients without turning the whole helper into a heavy gameplay prefab
-
-Important distinction:
-
-- the visible light may live on a helper child, not on the main gameplay entity
-- this is often cleaner than putting every detail directly on the parent
+- the visible light may live on a child helper, not on the main gameplay entity
+- this is often cleaner for hand-held flames, follower lights, or client-visible light state
 
 ## Pattern: One-Shot Anim FX Prefab
 
@@ -122,7 +104,7 @@ Observed official reference:
 
 - `scripts/prefabs/moose_nest_fx.lua`
 
-Observed official shape:
+Observed shape:
 
 - local non-networked entity with `AddAnimState()` and `AddSoundEmitter()`
 - tags usually include `FX`
@@ -130,17 +112,11 @@ Observed official shape:
 - listen for `animover`
 - remove on animation completion
 
-Practical use:
+Rules:
 
-- impact flashes
-- spawn bursts
-- electric pops
-- short scripted visuals
-
-Practical rule:
-
+- use for impact flashes, bursts, electric pops, and other short scripted visuals
 - if the effect is purely presentational and short-lived, keep it non-persistent
-- if the effect should not be directly targeted, add `NOCLICK`
+- if it should not be targeted, add `NOCLICK`
 
 ## Pattern: Network Proxy That Spawns Local-Only FX
 
@@ -148,18 +124,13 @@ Observed official reference:
 
 - `scripts/prefabs/moose_nest_fx.lua`
 
-Observed official flow:
+Observed flow:
 
 1. spawn a small networked proxy prefab
 2. on non-dedicated clients, delay one frame and spawn the local FX entity
 3. on the server, keep the proxy short-lived and non-persistent
 
-Practical use:
-
-- synchronized presentation triggers
-- cases where clients should see the effect but the effect entity itself does not need full replicated gameplay state
-
-This is often the cleanest pattern for purely visual synchronized FX.
+Use for synchronized presentation triggers where clients only need local visuals.
 
 ## Pattern: Sound-Only Proxy
 
@@ -167,7 +138,7 @@ Observed official reference:
 
 - `scripts/prefabs/atrium_gate_pulsesfx.lua`
 
-Observed official flow:
+Observed flow:
 
 - spawn a small networked proxy with `FX`
 - on non-dedicated clients, spawn a local non-networked sound emitter entity
@@ -175,11 +146,7 @@ Observed official flow:
 - play the sound
 - remove the local sound entity immediately
 
-Practical use:
-
-- warning pings
-- area-localized cues
-- sound events that should be heard client-side without leaving behind a world object
+Use for warning pings, area-localized cues, and other client-heard sound events without a persistent world object.
 
 ## Pattern: Combined Anim FX With Optional Sound And Light
 
@@ -187,7 +154,7 @@ Observed official reference:
 
 - `scripts/prefabs/deer_fx.lua`
 
-Observed official shape:
+Observed shape:
 
 - `AddAnimState()`
 - optional `AddSoundEmitter()`
@@ -198,17 +165,10 @@ Observed official shape:
 - `inst.persists = false` on the server
 - one-shot removal or looping animation depending on data
 
-Practical use:
+Rules:
 
-- elemental spell FX
-- charge-up circles
-- looping aura visuals
-- FX families generated by one shared factory
-
-Practical rule:
-
-- if you have many similar FX variants, use one factory function plus a data table
-- this is the same general maintainability rule as shared prefab families elsewhere
+- use for elemental spell FX, charge-up circles, looping auras, and other shared FX families
+- if you have many similar variants, use one factory function plus a data table
 
 ## Pattern: Particle FX With `AddVFXEffect`
 
@@ -216,7 +176,7 @@ Observed official reference:
 
 - `scripts/prefabs/torchfire_barber.lua`
 
-Observed official shape:
+Observed shape:
 
 - register particle textures and shaders as assets
 - add colour and scale envelopes through `EnvelopeManager`
@@ -231,7 +191,7 @@ Use this when:
 - the effect is really a particle system
 - you need smoke, embers, sparks, fire plumes, or similar layered particles
 
-Practical rule:
+Rule:
 
 - use `AnimState` for ordinary sprite animation
 - use `VFXEffect` only when the effect is truly particle-oriented
@@ -246,7 +206,7 @@ Observed official usage:
 - `inst.SoundEmitter:PlayingSound("loop")`
 - `inst.SoundEmitter:SetParameter("loop", "intensity", value)`
 
-Use these patterns differently:
+Typical use:
 
 - one-shot cue
   - `PlaySound("event/path")`
@@ -268,14 +228,10 @@ Verified in `scripts/stategraph.lua` and observed in SG files such as `SGhound.l
 - `SoundTimeEvent(time, "event/path")`
 - `SoundFrameEvent(frame, "event/path")`
 
-Use this when:
+Rules:
 
-- the sound must line up with a hit frame
-- the sound belongs to an animation state, not to prefab startup
-
-Practical rule:
-
-- if the timing belongs to a performer animation, put it in the stategraph timeline
+- use this when the sound must line up with a hit frame or animation state
+- if timing belongs to a performer animation, put it in the SG timeline
 - do not replace frame-accurate SG timing with ad hoc delayed tasks unless the official pattern does
 
 ## Tag Index
@@ -292,25 +248,23 @@ High-frequency tags around light, FX, and sound:
 Observed official examples:
 
 - many helper and FX prefabs use `FX` + `NOCLICK`
-- placement-safe helpers often add `NOBLOCK` too
+- placement-safe helpers often add `NOBLOCK`
 
-Practical rule:
+Rules:
 
 - choose these tags from interaction needs, not habit
 - a world object the player should inspect or click usually should not be marked `NOCLICK`
 
 ## Intent Index
 
-Use this when the user describes the goal in plain language.
-
 - "I want to add a glowing structure"
-  - start from a lit world-structure pattern
+  - start from the lit world-structure pattern
   - inspect `moon_altar.lua`
 - "I want to add a hand-held or attached light"
   - start from the child-light helper pattern
   - inspect `lighterfire_common.lua`
 - "I want to add a one-shot visual effect prefab"
-  - start from a one-shot anim FX prefab
+  - start from the one-shot anim FX prefab
   - inspect `moose_nest_fx.lua`
 - "I want the server to trigger an FX but clients spawn it locally"
   - start from the network-proxy FX pattern

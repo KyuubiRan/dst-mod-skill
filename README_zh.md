@@ -52,6 +52,8 @@
   - `dst_zip_tool.py`：直接检索官方 `scripts.zip`
   - `init_dst_mod.py`：生成基础 Mod 骨架
   - `bundle_release.py`：按排除规则和增量同步生成发布目录
+  - `tex_atlas_tool.py`：把多张 PNG 打成一个 atlas `tex+xml`，或解包官方/本地 atlas TEX/XML
+  - `resize_png.py`：单张或批量调整 PNG 尺寸，便于适配游戏贴图
 
 ## 依赖环境
 
@@ -69,6 +71,7 @@
 - 常见 macOS 脚本包路径：
   - `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
 - Python 3
+- `tex_atlas_tool.py` 与 `resize_png.py` 需要 `Pillow`
 
 如果你的游戏路径不同，建议在使用时明确提供路径，避免引用错误的官方文件。
 
@@ -110,6 +113,24 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
 python scripts/bundle_release.py . --output ..\MyMod_release
 ```
 
+解包官方物品图集：
+
+```bash
+python scripts/tex_atlas_tool.py unpack inventoryimages1
+```
+
+把多张 PNG 打成一个 atlas：
+
+```bash
+python scripts/tex_atlas_tool.py pack path/to/png_dir my_atlas
+```
+
+调整单张图尺寸：
+
+```bash
+python scripts/resize_png.py path/to/icon.png 64x64
+```
+
 ## 文档重点
 
 `references/` 里比较常用的几类文档：
@@ -119,7 +140,7 @@ python scripts/bundle_release.py . --output ..\MyMod_release
 - `modinfo-patterns.md`
   - `modinfo.lua` 的元信息、依赖、配置项布局，以及它的受限执行环境
 - `component-patterns.md`
-  - 高频组件、组件组合、反向约束
+  - 高频组件路由、组件组合、反向约束，以及 `references/components/` 细节入口
 - `tag-patterns.md`
   - 高频 tag、tag 来源、tag 路由含义
 - `world-system-patterns.md`
@@ -130,6 +151,8 @@ python scripts/bundle_release.py . --output ..\MyMod_release
   - stategraph 结构、`wilson` / `wilson_client`、预测相关线索、SG Hook 路由
 - `effects-patterns.md`
   - 灯光、FX prefab、粒子特效、音效触发的官方模式
+- `texture-patterns.md`
+  - atlas `tex+xml` 打包解包、官方 `images.zip` 贴图检索、PNG 缩放工作流
 - `runtime-i18n-patterns.md`
   - 推荐的 runtime 本地化结构、locale loader、角色台词继承方式，以及可选 `.po` 路线
 - `task-playbook.md`

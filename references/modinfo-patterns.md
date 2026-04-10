@@ -1,34 +1,16 @@
 # Modinfo Patterns
 
-Use this file when the task edits `modinfo.lua`.
-
-This page is for metadata, compatibility flags, and `configuration_options` structure.
-Read it before writing non-trivial `modinfo.lua` logic.
+Use this file when the task edits `modinfo.lua`. It covers metadata, compatibility flags, and `configuration_options`.
 
 ## `modinfo.lua` Is Not Normal Runtime Lua
 
-Practical rule:
-
 - treat `modinfo.lua` as a constrained metadata environment
-- do not assume normal runtime globals or standard-library helpers are available
-- keep the file simple and data-first
-
-Important limitation observed in real mod usage:
-
-- do not rely on Lua standard-library helpers inside `modinfo.lua`
-- avoid `pairs`, `ipairs`, `tostring`, `type`, and similar assumptions
-- also avoid depending on `string`, `table`, and other library namespaces being present
-
-Practical consequence:
-
-- prefer literal tables
-- prefer numeric `for` loops over iterator helpers when you truly need a loop
-- prefer explicit string concatenation over helper formatting
-- do not write clever meta-programming in `modinfo.lua`
+- do not assume runtime globals or Lua standard-library helpers are available
+- prefer literal tables, numeric `for`, and direct string concatenation
+- avoid `pairs`, `ipairs`, `tostring`, `type`, `string`, `table`, and similar assumptions
+- keep helpers tiny and intent-revealing
 
 ## Read These Fields Early
-
-When inspecting an existing mod, start here:
 
 - `name`
 - `description`
@@ -41,7 +23,7 @@ When inspecting an existing mod, start here:
 - `mod_dependencies`
 - `configuration_options`
 
-If the mod already has config, inspect the config layout before adding more options.
+If config already exists, inspect its layout before adding new options.
 
 ## `mod_dependencies`
 
@@ -53,29 +35,15 @@ mod_dependencies = {
 }
 ```
 
-Use it for:
-
-- hard dependency declaration
-- forcing workshop dependency install or load expectations
-
-Practical rule:
-
-- use this for actual dependencies, not soft compatibility hints
+- use this for hard dependencies, not soft compatibility hints
+- inspect this first when the task mentions dependency mods
 
 ## Localization In `modinfo.lua`
 
-Existing patterns may use:
-
-- `locale`
-- `ChooseTranslationTable(...)`
-- a custom translation table plus a small lookup helper
-
-For standardized skill output, prefer this format:
+For standardized skill output, prefer:
 
 - `MODINFO_TRANSLATIONS`
 - `Translate(key)`
-
-Recommended standardized shape:
 
 ```lua
 local MODINFO_TRANSLATIONS = {
@@ -92,13 +60,9 @@ local function Translate(key)
 end
 ```
 
-Practical rule:
-
-- metadata localization in `modinfo.lua` is separate from runtime `STRINGS`
-- keep the translation helper extremely small
-- do not depend on standard-library helpers while building localized config structures
-- this local translation-table pattern is a recommended way to organize `modinfo.lua` text
-- do not treat that pattern as the runtime i18n solution for normal mod code
+- `modinfo.lua` localization is separate from runtime `STRINGS`
+- keep the helper minimal
+- do not depend on standard-library helpers while building localized config
 
 ## `configuration_options`
 
@@ -127,7 +91,7 @@ High-frequency fields:
 - `options`
 - `default`
 
-Practical rule:
+Rules:
 
 - keep option names stable after release when possible
 - keep `data` values simple and explicit
@@ -135,17 +99,9 @@ Practical rule:
 
 ## Config Section Headers
 
-Observed practical pattern from real mod usage:
+Use a fake config entry as a section label when grouping character, equipment, UI, or debug options.
 
-- insert a fake config entry that only acts as a section label
-
-This is useful for:
-
-- grouping character options
-- grouping equipment options
-- grouping UI or debug options
-
-Recommended helper name:
+Recommended helper:
 
 ```lua
 local function MakeConfigSectionHeader(label)
@@ -163,11 +119,8 @@ local function MakeConfigSectionHeader(label)
 end
 ```
 
-Why this name:
-
-- `titlefn` describes implementation shape, not intent
-- `MakeConfigSectionHeader` states exactly what the helper produces
-- the name is still short enough for repeated use in `configuration_options`
+- `titlefn` describes shape, not intent
+- `MakeConfigSectionHeader` states what the helper returns
 
 Use it like this:
 
@@ -197,7 +150,7 @@ configuration_options = {
 }
 ```
 
-## Safe Helper Style For `modinfo.lua`
+## Safe Helper Style
 
 Good helper traits:
 
@@ -209,7 +162,7 @@ Good helper traits:
 Good examples:
 
 - localized lookup helper with direct table access
-- boolean yes or no option builder
+- boolean option builder
 - config section-header builder
 - numeric `for` loop over a literal option list
 
@@ -221,11 +174,9 @@ Bad examples:
 - using `tostring(...)`
 - assuming runtime-only globals from `modmain.lua`
 
-## Key Mapping Options In `modinfo.lua`
+## Key Mapping Options
 
-If the user wants hotkey config inside `configuration_options`, keep the key mapping helper literal and conservative.
-
-Recommended shape:
+If the user wants hotkey config inside `configuration_options`, keep the helper literal and conservative.
 
 ```lua
 local default_suffix = " (Default)"
@@ -271,8 +222,6 @@ local function MakeKeyOptions(default_value)
 end
 ```
 
-Use it like this:
-
 ```lua
 {
     name = "HOTKEY_SKILL",
@@ -283,36 +232,15 @@ Use it like this:
 }
 ```
 
-Why this shape is safe:
-
-- literal table, no runtime-generated alphabet
-- numeric `for`, not `pairs` or `ipairs`
-- string concatenation only
-- no `string.char`, `table.insert`, or other standard-library dependency
-
-## Key Mapping Rules
-
-Practical rule:
+Rules:
 
 - use explicit keycode tables in `modinfo.lua`
 - mark the default option by mutating the matched literal entry in a numeric loop
-- keep key labels and keycode values close together for later editing
-
-If the key list gets large:
-
-- still prefer a literal table over dynamic generation inside `modinfo.lua`
-- if readability becomes a problem, split the list into a tiny helper table in the same file
-
-Avoid these patterns in `modinfo.lua`:
-
-- generating `A` to `Z` through `string.char(...)`
-- appending options with `table.insert(...)`
-- walking option tables with `pairs(...)` or `ipairs(...)`
-- formatting labels with `string.format(...)`
+- keep key labels and keycode values close together
+- if the list gets large, still prefer a literal table; split it into a tiny helper table if needed
+- avoid `string.char(...)`, `table.insert(...)`, `pairs(...)`, `ipairs(...)`, and `string.format(...)`
 
 ## Intent Index
-
-Use this when the user describes the need in plain language.
 
 - "I need to classify the mod type"
   - inspect `client_only_mod` and `all_clients_require_mod`
@@ -322,11 +250,9 @@ Use this when the user describes the need in plain language.
   - use `MakeConfigSectionHeader(...)`
 - "I need to add hotkey config in `modinfo.lua`"
   - use a literal key option builder such as `MakeKeyOptions(...)`
-  - avoid Lua standard-library helpers while building the option list
 - "I need localized mod metadata"
   - keep localization inside `modinfo.lua`
-  - prefer standardized names such as `MODINFO_TRANSLATIONS` and `Translate(...)`
-  - do not mix it with runtime `STRINGS`
+  - prefer `MODINFO_TRANSLATIONS` and `Translate(...)`
 - "I need to add config helpers"
   - keep them minimal and standard-library-free
 
@@ -337,7 +263,7 @@ Use this when the user describes the need in plain language.
 - config section label breaks option parsing
   - fake header entry shape does not match normal config-entry expectations
 - localized metadata works but config builder crashes
-  - helper function used library calls not available in `modinfo.lua`
+  - helper function used unavailable library calls
 - option defaults behave strangely
   - `default` does not exactly match one of the option `data` values
 

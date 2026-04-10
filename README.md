@@ -53,6 +53,8 @@ This skill is designed to help with:
   - `dst_zip_tool.py`: inspect official `scripts.zip`
   - `init_dst_mod.py`: scaffold a basic mod skeleton
   - `bundle_release.py`: build a release bundle with exclusion rules and incremental sync
+  - `tex_atlas_tool.py`: pack multiple PNGs into one atlas `tex+xml`, or unpack official/local atlas TEX/XML
+  - `resize_png.py`: resize one PNG or a whole PNG directory for DST texture fitting
 
 ## Requirements
 
@@ -70,6 +72,7 @@ This skill is designed to help with:
 - common macOS script bundle path:
   - `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
 - Python 3
+- Pillow for texture scripts such as `tex_atlas_tool.py` and `resize_png.py`
 
 If your local install path differs, provide it explicitly when using the skill.
 
@@ -111,6 +114,24 @@ Bundle a release directory:
 python scripts/bundle_release.py . --output ..\MyMod_release
 ```
 
+Unpack an official icon atlas:
+
+```bash
+python scripts/tex_atlas_tool.py unpack inventoryimages1
+```
+
+Pack multiple PNGs into one atlas:
+
+```bash
+python scripts/tex_atlas_tool.py pack path/to/png_dir my_atlas
+```
+
+Resize one icon:
+
+```bash
+python scripts/resize_png.py path/to/icon.png 64x64
+```
+
 ## Recommended Reading
 
 High-value docs under `references/` include:
@@ -120,7 +141,7 @@ High-value docs under `references/` include:
 - `modinfo-patterns.md`
   - `modinfo.lua` metadata, dependencies, configuration layout, and its constrained execution environment
 - `component-patterns.md`
-  - common official components, intent-to-component bundles, and negative constraints such as infinite durability
+  - component routing, intent-to-component bundles, negative constraints, and links into `references/components/`
 - `tag-patterns.md`
   - high-frequency prefab tags and the difference between prefab-added and component-managed tags
 - `world-system-patterns.md`
@@ -131,6 +152,8 @@ High-value docs under `references/` include:
   - SG object shape, `wilson` versus `wilson_client`, prediction clues, and SG hook routing
 - `effects-patterns.md`
   - official light, FX prefab, particle, and sound patterns
+- `texture-patterns.md`
+  - atlas `tex+xml` packing and unpacking, official `images.zip` texture lookup, and PNG resize workflow
 - `runtime-i18n-patterns.md`
   - recommended runtime localization structure, locale loaders, character speech inheritance, and optional `.po` route
 - `task-playbook.md`

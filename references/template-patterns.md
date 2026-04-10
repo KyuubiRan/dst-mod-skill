@@ -1,9 +1,6 @@
 # Template Patterns
 
-Use this file when the task needs a practical starter template instead of just conceptual guidance.
-
-These templates are intentionally minimal.
-They are starting points, not drop-in complete mods.
+Use this file when the task needs a practical starter template instead of conceptual guidance. These templates are minimal starting points, not drop-in complete mods.
 
 ## Minimal `modmain.lua`
 
@@ -84,7 +81,7 @@ end
 return MyComponent
 ```
 
-Attach it from a prefab with:
+Attach from a prefab with:
 
 ```lua
 inst:AddComponent("mycomponent")
@@ -225,7 +222,7 @@ return Prefab("my_lamp", fn, assets)
 
 ## Minimal Sound-Only Proxy
 
-Use this when the server should trigger a cue but the actual sound can be spawned locally on clients.
+Use this when the server should trigger a cue but the sound can be spawned locally on clients.
 
 ```lua
 local function PlayLocalSound(proxy, sound)
@@ -354,11 +351,11 @@ DeepMerge(speech, require("languages/speech_mychar_" .. locale))
 STRINGS.CHARACTERS.MYCHAR = speech
 ```
 
-This is the recommended baseline when:
+Recommended when:
 
 - the mod has common locale data and character speech overrides
-- you want sparse locale files
-- you want character speech to inherit missing lines from the default generic base
+- locale files should stay sparse
+- character speech should inherit missing lines from the generic base
 
 ## Minimal Brain
 
@@ -380,7 +377,7 @@ end
 return MyBrain
 ```
 
-Attach it from the prefab with:
+Attach from the prefab with:
 
 ```lua
 local brain = require("brains/mybrain")
@@ -462,16 +459,16 @@ end
 return unpack(prefabs)
 ```
 
-This pattern is recommended when:
+Recommended when:
 
 - most setup is shared
-- the differences are cleanly table-driven
-- you want one file to own a whole item family
+- the differences are table-driven
+- one file should own a whole item family
 
-If the variants start needing many unrelated branches, split the file or move the shared helper down one level instead.
+If the variants start needing many unrelated branches, split the file or move the shared helper down one level.
 
 ## Rule Of Thumb
 
 - Start from the smallest template that fits.
 - Replace placeholders only after reading the closest official file.
-- Keep templates narrow; move complexity into dedicated files only when the feature actually needs it.
+- Keep templates narrow; move complexity into dedicated files only when needed.
