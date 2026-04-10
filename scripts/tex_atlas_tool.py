@@ -11,7 +11,7 @@ Requirements:
 Supported today:
 - unpack official/local `argb` and `dxt5` KTEX files
 - split atlas entries by XML coordinates
-- pack multiple PNGs into one atlas PNG + XML + uncompressed `argb` KTEX
+- pack multiple PNGs into one atlas PNG + XML + `argb` or `dxt5` KTEX
 """
 
 from __future__ import annotations
@@ -68,6 +68,7 @@ FORMAT_ARGB = "argb"
 FORMAT_DXT5 = "dxt5"
 FORMAT_CODES_WRITE = {
     FORMAT_ARGB: 0xFFFC6240,
+    FORMAT_DXT5: 0xFFFC6220,
 }
 FORMAT_CODES_READ = {
     0xFFFC6240: FORMAT_ARGB,
@@ -154,8 +155,8 @@ def parse_args() -> argparse.Namespace:
     unpack_parser.add_argument(
         "--output",
         type=Path,
-        default=Path("output") / "images",
-        help="Output root directory. Defaults to ./output/images",
+        default=Path(".output") / "images",
+        help="Output root directory. Defaults to ./.output/images",
     )
 
     pack_parser = subparsers.add_parser(
@@ -167,8 +168,8 @@ def parse_args() -> argparse.Namespace:
     pack_parser.add_argument(
         "--output",
         type=Path,
-        default=Path("output") / "images",
-        help="Output directory. Defaults to ./output/images",
+        default=Path(".output") / "images",
+        help="Output directory. Defaults to ./.output/images",
     )
     pack_parser.add_argument(
         "--max-size",
@@ -184,9 +185,9 @@ def parse_args() -> argparse.Namespace:
     )
     pack_parser.add_argument(
         "--format",
-        choices=[FORMAT_ARGB],
+        choices=[FORMAT_ARGB, FORMAT_DXT5],
         default=FORMAT_ARGB,
-        help="Pure Python packing currently supports argb only.",
+        help="KTEX output format. Pure Python packing supports argb and dxt5.",
     )
 
     return parser.parse_args()
@@ -419,6 +420,18 @@ def build_atlas_xml(
     return ET.tostring(root, encoding="utf-8", xml_declaration=False)
 
 
+def build_mip_images(image: Image.Image) -> list[Image.Image]:
+    rgba = image.convert("RGBA")
+    mip_images = [rgba]
+    current = rgba
+    while current.size != (1, 1):
+        next_width = max(1, current.size[0] // 2)
+        next_height = max(1, current.size[1] // 2)
+        current = current.resize((next_width, next_height), Image.Resampling.BOX)
+        mip_images.append(current)
+    return mip_images
+
+
 def load_pngs(input_dir: Path) -> list[PackedImage]:
     if not input_dir.is_dir():
         raise FileNotFoundError(f"Input directory not found: {input_dir}")
@@ -535,15 +548,113 @@ def paste_with_padding(dst: Image.Image, src: Image.Image, x: int, y: int, paddi
             dst.paste(corner_br, (inner_x + width + dx, inner_y + height + dy))
 
 
+def encode_rgb565(color: tuple[int, int, int]) -> int:
+    r, g, b = color
+    return ((r * 31 + 127) // 255) << 11 | ((g * 63 + 127) // 255) << 5 | ((b * 31 + 127) // 255)
+
+
+def color_distance_sq(lhs: tuple[int, int, int], rhs: tuple[int, int, int]) -> int:
+    return sum((lhs[index] - rhs[index]) ** 2 for index in range(3))
+
+
+def make_dxt5_alpha_table(alpha0: int, alpha1: int) -> list[int]:
+    alpha_table = [alpha0, alpha1]
+    if alpha0 > alpha1:
+        for step in range(1, 7):
+            alpha_table.append(((7 - step) * alpha0 + step * alpha1) // 7)
+    else:
+        for step in range(1, 5):
+            alpha_table.append(((5 - step) * alpha0 + step * alpha1) // 5)
+        alpha_table.extend([0, 255])
+    return alpha_table
+
+
+def choose_color_endpoints(block_pixels: list[tuple[int, int, int, int]]) -> tuple[int, int]:
+    colors_565 = {encode_rgb565(pixel[:3]) for pixel in block_pixels}
+    if not colors_565:
+        return 0, 0
+    if len(colors_565) == 1:
+        value = next(iter(colors_565))
+        return value, value
+
+    decoded = [(value, decode_rgb565(value)) for value in colors_565]
+    best_pair = (decoded[0][0], decoded[1][0])
+    best_distance = -1
+    for index, (lhs_raw, lhs_color) in enumerate(decoded):
+        for rhs_raw, rhs_color in decoded[index + 1 :]:
+            distance = color_distance_sq(lhs_color, rhs_color)
+            if distance > best_distance:
+                best_distance = distance
+                best_pair = (lhs_raw, rhs_raw)
+
+    color0, color1 = best_pair
+    if color0 < color1:
+        color0, color1 = color1, color0
+    return color0, color1
+
+
+def encode_dxt5_block(block_pixels: list[tuple[int, int, int, int]]) -> bytes:
+    alpha_values = [pixel[3] for pixel in block_pixels]
+    alpha0 = max(alpha_values)
+    alpha1 = min(alpha_values)
+    alpha_table = make_dxt5_alpha_table(alpha0, alpha1)
+    alpha_bits = 0
+    for index, alpha in enumerate(alpha_values):
+        best = min(range(8), key=lambda candidate: abs(alpha - alpha_table[candidate]))
+        alpha_bits |= best << (3 * index)
+
+    color0, color1 = choose_color_endpoints(block_pixels)
+    if color0 == color1:
+        palette = [decode_rgb565(color0)] * 4
+    else:
+        c0 = decode_rgb565(color0)
+        c1 = decode_rgb565(color1)
+        palette = [
+            c0,
+            c1,
+            tuple((2 * c0[channel] + c1[channel]) // 3 for channel in range(3)),
+            tuple((c0[channel] + 2 * c1[channel]) // 3 for channel in range(3)),
+        ]
+
+    color_bits = 0
+    for index, pixel in enumerate(block_pixels):
+        rgb = pixel[:3]
+        best = min(range(4), key=lambda candidate: color_distance_sq(rgb, palette[candidate]))
+        color_bits |= best << (2 * index)
+
+    return b"".join(
+        [
+            bytes((alpha0, alpha1)),
+            alpha_bits.to_bytes(6, "little"),
+            struct.pack("<HH", color0, color1),
+            color_bits.to_bytes(4, "little"),
+        ]
+    )
+
+
+def encode_dxt5_image(image: Image.Image) -> tuple[int, bytes]:
+    width, height = image.size
+    block_width = math.ceil(width / 4)
+    block_height = math.ceil(height / 4)
+    pixels = image.load()
+
+    payload = bytearray()
+    for block_y in range(block_height):
+        for block_x in range(block_width):
+            block_pixels: list[tuple[int, int, int, int]] = []
+            for py in range(4):
+                for px in range(4):
+                    sx = min(block_x * 4 + px, width - 1)
+                    sy = min(block_y * 4 + py, height - 1)
+                    block_pixels.append(pixels[sx, sy])
+            payload.extend(encode_dxt5_block(block_pixels))
+
+    pitch = max(16, block_width * 16)
+    return pitch, bytes(payload)
+
+
 def build_argb_ktex(image: Image.Image) -> bytes:
-    rgba = image.convert("RGBA")
-    mip_images = [rgba]
-    current = rgba
-    while current.size != (1, 1):
-        next_width = max(1, current.size[0] // 2)
-        next_height = max(1, current.size[1] // 2)
-        current = current.resize((next_width, next_height), Image.Resampling.BOX)
-        mip_images.append(current)
+    mip_images = build_mip_images(image)
 
     header = bytearray()
     header.extend(KTEX_MAGIC)
@@ -555,6 +666,24 @@ def build_argb_ktex(image: Image.Image) -> bytes:
         flipped = mip.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
         raw = flipped.tobytes("raw", "RGBA")
         header.extend(struct.pack("<HHHI", width, height, width * 4, len(raw)))
+        payload.extend(raw)
+
+    return bytes(header + payload)
+
+
+def build_dxt5_ktex(image: Image.Image) -> bytes:
+    mip_images = build_mip_images(image)
+
+    header = bytearray()
+    header.extend(KTEX_MAGIC)
+    header.extend(struct.pack("<I", FORMAT_CODES_WRITE[FORMAT_DXT5]))
+
+    payload = bytearray()
+    for mip in mip_images:
+        width, height = mip.size
+        flipped = mip.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
+        pitch, raw = encode_dxt5_image(flipped)
+        header.extend(struct.pack("<HHHI", width, height, pitch, len(raw)))
         payload.extend(raw)
 
     return bytes(header + payload)
@@ -651,7 +780,12 @@ def command_pack(args: argparse.Namespace) -> int:
     atlas_xml_path.write_bytes(
         build_atlas_xml(args.atlas_name, placements, atlas_size, args.padding)
     )
-    atlas_tex_path.write_bytes(build_argb_ktex(atlas_image))
+    if args.format == FORMAT_ARGB:
+        atlas_tex_path.write_bytes(build_argb_ktex(atlas_image))
+    elif args.format == FORMAT_DXT5:
+        atlas_tex_path.write_bytes(build_dxt5_ktex(atlas_image))
+    else:
+        raise ValueError(f"Unsupported pack format: {args.format}")
 
     print(f"atlas: {args.atlas_name}")
     print(f"format: {args.format}")

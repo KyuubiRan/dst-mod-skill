@@ -4,6 +4,7 @@ Use this file when the task is about atlas `tex+xml`, inventory icons, PNG resiz
 
 This page is about texture workflow, not `AnimState` bank/build logic.
 If the task also touches prefab asset registration, read `references/asset-patterns.md`.
+If the task is about animation resource compile, keep using the game's official `autocompiler` flow instead of extending these texture scripts.
 
 ## Common Cases
 
@@ -28,7 +29,7 @@ Useful official entries:
 
 Default unpack output:
 
-- `output/images/`
+- `.output/images/`
 
 ## Helper Scripts
 
@@ -60,7 +61,7 @@ python scripts/tex_atlas_tool.py pack path/to/png_dir my_atlas
 Rules:
 
 - official atlas names are usually read from `images/<name>.tex` and `images/<name>.xml`
-- if the user omits an output path, unpack defaults to `output/images/`
+- if the user omits an output path, unpack defaults to `.output/images/`
 - packing currently writes `argb` TEX in pure Python
 - unpacking supports official `dxt5` icon atlases
 
@@ -75,7 +76,7 @@ python scripts/resize_png.py path/to/icon.png 64x64
 ```
 
 ```bash
-python scripts/resize_png.py path/to/icon_dir 64x64 --mode contain --output output/resized_icons
+python scripts/resize_png.py path/to/icon_dir 64x64 --mode contain --output .output/resized_icons
 ```
 
 Supported resize modes:

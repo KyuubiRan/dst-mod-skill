@@ -64,7 +64,7 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help=(
             "Output file or directory. "
-            "Defaults to ./output/resized_pngs for directory input, "
+            "Defaults to ./.output/resized_pngs for directory input, "
             "or <stem>_<width>x<height>.png next to the source file."
         ),
     )
@@ -154,7 +154,7 @@ def output_path_for_file(source: Path, output: Path | None, size: tuple[int, int
 def output_dir_for_batch(output: Path | None) -> Path:
     if output is not None:
         return ensure_dir(output)
-    return ensure_dir(Path("output") / "resized_pngs")
+    return ensure_dir(Path(".output") / "resized_pngs")
 
 
 def main() -> int:
