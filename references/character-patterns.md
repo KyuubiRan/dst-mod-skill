@@ -108,6 +108,49 @@ For character mods, `modmain.lua` usually owns:
 Keep the root file as the registration hub.
 Move the actual player prefab logic into `prefabs/<character>.lua`.
 
+## Optional Character Modes In `AddModCharacter(...)`
+
+Observed official routing:
+
+- `scripts/modutil.lua`
+  - stores the third `AddModCharacter(...)` argument in `MODCHARACTERMODES[name]`
+- `scripts/widgets/redux/loadoutselect.lua`
+  - if `MODCHARACTERMODES[currentcharacter]` exists, replaces the normal preview mode list with the default mode plus the mod-defined modes
+- each mode entry can expose:
+  - `type`
+  - `anim_bank`
+  - `idle_anim`
+  - `play_emotes`
+  - `scale`
+  - `offset`
+- `scripts/widgets/skinspuppet.lua`
+  - uses `skinmode.type` for preview-build selection
+  - uses `anim_bank`, `idle_anim`, `scale`, and `offset` for the wardrobe puppet
+
+Practical consequence:
+
+- the `modes` table is mainly a frontend preview and wardrobe/loadout feature
+- it does not automatically implement gameplay transforms, player-state logic, or runtime form switching
+- use it when the character has alternate preview forms the wardrobe or loadout flow should cycle through
+- skip it for ordinary characters that only need the usual normal and ghost presentation
+
+Minimal shape:
+
+```lua
+local character_modes = {
+    { type = "young_skin", play_emotes = true },
+    { type = "old_skin", play_emotes = true, scale = 0.9 },
+}
+
+AddModCharacter("mychar", "FEMALE", character_modes)
+```
+
+Important note:
+
+- `scripts/widgets/skinspuppet.lua` tries to map `skinmode.type` through `GetSkinData("<character>_none").skins[skinmode.type]` when base skin data exists
+- keep custom `type` names aligned with any base-skin mapping you ship
+- if the character has real alternate gameplay forms, still implement the authoritative runtime behavior in the player prefab, components, and SG code
+
 ## Character Prefab Shape
 
 Official character prefabs usually contain:
@@ -336,6 +379,8 @@ Practical consequence:
 
 - "I need a normal modded character with stats, tags, portraits, and speech."
   - stop at the base character pattern
+- "I need wardrobe or loadout previews for alternate character forms."
+  - add optional character modes and verify the mode `type` names against the preview build mapping
 - "I need unlockable perks or skill-gated recipes."
   - add the optional skill tree
 - "I need custom player actions or SG changes."

@@ -80,6 +80,20 @@ Use this when:
 - the main missing piece is registration plus frontend assets
 - the actual player logic will live in `prefabs/mychar.lua`
 
+If the character has alternate wardrobe or loadout preview forms, pass an optional third argument:
+
+```lua
+local character_modes = {
+    { type = "young_skin", play_emotes = true },
+    { type = "old_skin", play_emotes = true, scale = 0.9 },
+}
+
+AddModCharacter("mychar", "FEMALE", character_modes)
+```
+
+Use this only for frontend preview modes.
+It does not replace the real gameplay-side form switching logic.
+
 ## Minimal `modworldgenmain.lua`
 
 ```lua

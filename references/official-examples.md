@@ -66,6 +66,8 @@ Read next:
 
 ## Playable Character And Skill Tree Examples
 
+- `scripts/modutil.lua`
+  - `AddModCharacter(...)` registration and optional mod character mode storage
 - `scripts/prefabs/player_common.lua`
   - shared player-character constructor, client/server split, and baseline player systems
 - `scripts/prefabs/wilson.lua`
@@ -82,6 +84,12 @@ Read next:
   - mod-character save-slot portrait lookup
 - `scripts/widgets/inventorybar.lua`
   - self-inspect avatar lookup
+- `scripts/widgets/redux/loadoutselect.lua`
+  - mod-character preview mode routing through `MODCHARACTERMODES`
+- `scripts/widgets/skinspuppet.lua`
+  - wardrobe puppet build and anim selection for skin modes
+- `scripts/skinsutils.lua`
+  - default `GetSkinModes(...)` data and skinned-character helpers
 - `scripts/widgets/redux/skilltreewidget.lua`
   - skill-tree background image contract
 - `scripts/widgets/redux/skilltreebuilder.lua`

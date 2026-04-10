@@ -53,6 +53,8 @@ LoadPOFile(path, lang)
   - `AddRoom`, `AddTask`, `AddTaskSet`, `AddLevel`, `AddStartLocation`
 - patch runtime prefab, component, SG, or UI class
   - `AddPrefabPostInit`, `AddComponentPostInit`, `AddStategraphPostInit`, `AddClassPostConstruct`, `AddGlobalClassPostConstruct`
+- register a playable character, optionally with wardrobe or loadout preview modes
+  - `AddModCharacter`
 - add networking glue
   - `AddReplicableComponent`, `AddModRPCHandler`, `AddClientModRPCHandler`
 - add explicit minimap or runtime `.po` translation support
