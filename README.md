@@ -81,6 +81,9 @@ Common texture bundle path:
 
 If your local install path differs, provide it explicitly when using the skill.
 
+When you pass game paths into shell commands, quote or escape them correctly.
+This matters for paths such as `Don't Starve Together`, because special characters like the apostrophe can make the first command fail if they are not escaped.
+
 ## Example Commands
 
 Search official source:

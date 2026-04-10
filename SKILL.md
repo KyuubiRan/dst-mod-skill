@@ -20,6 +20,7 @@ Inspect official scripts before writing mod code and tie conclusions to concrete
 - Common macOS script bundle: `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
 - Prefer a user-provided game path when the path is not already known.
 - If the user refuses to provide it, say that accuracy may be lower without reading the local official scripts.
+- When passing game paths into shell commands, quote or escape them correctly. Paths such as `Don't Starve Together` contain an apostrophe and can fail on the first command if the shell string is built carelessly.
 - Treat official game files as authoritative. Do not learn default behavior from third-party mods unless the user explicitly asks for comparison.
 
 ## Follow This Workflow
