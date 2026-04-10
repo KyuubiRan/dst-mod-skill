@@ -142,6 +142,8 @@ High-value docs under `references/` include:
   - `modinfo.lua` metadata, dependencies, configuration layout, and its constrained execution environment
 - `component-patterns.md`
   - component routing, intent-to-component bundles, negative constraints, and links into `references/components/`
+- `feature-recipes.md`
+  - whole-feature entry points such as weapon, container, creature, structure, and playable-character tasks
 - `tag-patterns.md`
   - high-frequency prefab tags and the difference between prefab-added and component-managed tags
 - `world-system-patterns.md`

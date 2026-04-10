@@ -160,11 +160,12 @@ If the only viable patch point is a closed-over helper function, read `reference
 ### Add A New Prefab Or Item
 
 1. Read `references/creation-patterns.md` for the loader path from `modmain.lua` to `prefabs/*.lua`.
-2. Read `references/animstate-patterns.md` if the prefab has custom `AnimState` behavior beyond a basic idle clip.
-3. Pick the closest official prefab.
-4. Read that prefab and any helper calls in `scripts/standardcomponents.lua`.
-5. Reuse helper constructors for burnable, freezable, physics, hauntable, floatable, and similar setup.
-6. Register the prefab in `PrefabFiles` and keep assets relative to the mod root.
+2. Read `references/feature-recipes.md` if the request is phrased as a whole feature such as a weapon, container, creature, structure, or playable character.
+3. Read `references/animstate-patterns.md` if the prefab has custom `AnimState` behavior beyond a basic idle clip.
+4. Pick the closest official prefab.
+5. Read that prefab and any helper calls in `scripts/standardcomponents.lua`.
+6. Reuse helper constructors for burnable, freezable, physics, hauntable, floatable, and similar setup.
+7. Register the prefab in `PrefabFiles` and keep assets relative to the mod root.
 
 If the mod owns a family of near-identical prefab variants, prefer a shared factory pattern over repeated constructors. Use `scripts/prefabs/staff.lua` as the official shape reference.
 

@@ -141,6 +141,8 @@ python scripts/resize_png.py path/to/icon.png 64x64
   - `modinfo.lua` 的元信息、依赖、配置项布局，以及它的受限执行环境
 - `component-patterns.md`
   - 高频组件路由、组件组合、反向约束，以及 `references/components/` 细节入口
+- `feature-recipes.md`
+  - 武器、容器、生物、建筑、角色等整类需求的入口路由
 - `tag-patterns.md`
   - 高频 tag、tag 来源、tag 路由含义
 - `world-system-patterns.md`
