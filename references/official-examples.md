@@ -101,6 +101,19 @@ Read next:
 - `references/runtime-i18n-patterns.md`
 - `references/recipe-patterns.md`
 
+## Player-Wide Patch Examples
+
+- `scripts/modutil.lua`
+  - `AddPlayerPostInit(...)` is implemented through `AddPrefabPostInitAny(...)` plus the `player` tag
+- `scripts/prefabs/player_common.lua`
+  - player baseline setup, `common_postinit`, `master_postinit`, and player lifecycle events
+
+Read next:
+
+- `references/player-patterns.md`
+- `references/runtime-local-ui.md`
+- `references/runtime-authority.md`
+
 ## Skin System Examples
 
 - `scripts/prefabskin.lua`
@@ -121,6 +134,25 @@ Read next:
 - `references/skin-patterns.md`
 - `references/character-patterns.md`
 - `references/creation-patterns.md`
+
+## Standard Helper Examples
+
+- `scripts/standardcomponents.lua`
+  - official `Make*` helper definitions
+- `scripts/prefabs/spear.lua`
+  - `MakeInventoryPhysics(...)`, `MakeInventoryFloatable(...)`, and `MakeHauntableLaunch(...)`
+- `scripts/prefabs/backpack.lua`
+  - `MakeInventoryFloatable(...)`, burnable or propagator helpers, and `MakeHauntableLaunchAndDropFirstItem(...)`
+- `scripts/prefabs/berrybush.lua`
+  - obstacle physics, snow-covered helpers, seasonal growth helper, and haunt custom reaction
+- `scripts/prefabs/treasurechest.lua`
+  - structure-side burnable setup and heavy obstacle physics
+
+Read next:
+
+- `references/standard-helper-patterns.md`
+- `references/world-system-patterns.md`
+- `references/helper-signatures.md`
 
 ## FX, Light, And Sound Examples
 

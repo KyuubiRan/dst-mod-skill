@@ -12,6 +12,8 @@ This page focuses on high-frequency official systems that often appear together 
 - `hauntable`
 - `deployable`
 
+If the task is mainly about choosing `Make*` helper constructors from `scripts/standardcomponents.lua`, also read `references/standard-helper-patterns.md`.
+
 Read exact signatures from the official component files first.
 Then inspect the closest official prefab that combines them in the same way.
 
@@ -264,6 +266,8 @@ Observed official combinations:
 Common pitfalls:
 
 - prefer the standard helper if it already matches the intended haunt behavior
+- in the current `scripts/standardcomponents.lua`, `MakeHauntableWork(...)` and `MakeHauntableIgnite(...)` keep their `#HAUNTFIX` logic commented and return `false`
+- do not assume the helper name alone guarantees live work or ignite behavior
 - only drop to a custom haunt callback when the official helper family is not enough
 
 ## `deployable`

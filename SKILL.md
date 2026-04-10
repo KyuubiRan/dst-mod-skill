@@ -117,8 +117,10 @@ python scripts/check_skill.py
 - Read `references/creation-patterns.md` when the task is about how prefabs, components, or helper modules are created and loaded.
 - Read `references/feature-recipes.md` when the user describes a whole feature such as a weapon, container, creature, structure, or playable character and you need the likely file set before drilling into subsystems.
 - Read `references/character-patterns.md` when the task is specifically a playable character mod, especially when it uses `prefabs/player_common.lua`, `MakePlayerCharacter(...)`, character strings, portraits, or an optional skill tree.
+- Read `references/player-patterns.md` when the task patches players as a class, uses `AddPlayerPostInit(...)`, or depends on player lifecycle events such as `playerentered` or `playeractivated`.
 - Read `references/skin-patterns.md` when the task is specifically about official skin data, wardrobe or loadout skin selection, `PREFAB_SKINS`, or `CreatePrefabSkin(...)`.
 - Read `references/component-patterns.md` when the task is mainly about high-frequency official components such as `inspectable`, `inventoryitem`, `stackable`, `finiteuses`, `inventory`, `container`, `edible`, `cookable`, `fuel`, `tool`, `pickable`, `workable`, `timer`, `talker`, `health`, `hunger`, `sanity`, `combat`, `equippable`, `armor`, or `weapon`. Use it as the routing page, then open the matching detail file under `references/components/`.
+- Read `references/standard-helper-patterns.md` when the task is mainly about `Make*` helper constructors from `scripts/standardcomponents.lua`, especially physics, floatable, snow-covered, or haunt helper selection.
 - Read `references/tag-patterns.md` when the task depends on prefab tags, action filters, `FindEntities(...)` queries, AI targeting, or helper-entity interaction rules such as `NOCLICK`, `FX`, or `structure`.
 - Read `references/template-patterns.md` when the task needs a practical starter skeleton for common mod code.
 - Read `references/brain-patterns.md` when the task creates or patches NPC AI behavior.

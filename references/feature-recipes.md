@@ -258,6 +258,7 @@ Common adjacent work:
 Common routing:
 
 - read `references/character-patterns.md`
+- read `references/player-patterns.md` if the request is really a player-wide patch rather than one character's local identity
 - read `references/runtime-i18n-patterns.md`
 - read `references/string-patterns.md`
 - read `references/stategraph-patterns.md`

@@ -84,9 +84,19 @@ If the only viable patch point is a closed-over helper function, read `reference
 
 ### Add Player-Wide Behavior
 
-1. Read `scripts/prefabs/player_common.lua` and any involved components.
-2. Reach for `AddPlayerPostInit` or a component hook.
-3. Guard master-sim and client logic explicitly.
+1. Read `references/player-patterns.md`.
+2. Read `scripts/prefabs/player_common.lua` and any involved components.
+3. Reach for `AddPlayerPostInit` or a component hook.
+4. Guard master-sim and client logic explicitly.
+
+### Use Standard Helper Constructors
+
+1. Read `references/standard-helper-patterns.md`.
+2. Read `references/helper-signatures.md` for exact argument order.
+3. Read `scripts/standardcomponents.lua`.
+4. Read the closest official prefab that already uses the same helper family.
+5. Verify whether the helper belongs before `SetPristine()` or only on the master path.
+6. Do not assume every helper name is equally complete; verify current helper behavior in source.
 
 ### Patch Survival, Combat, Equipment, Or Container Behavior
 
