@@ -30,6 +30,23 @@ Then sanity-check the rest of the mod:
 
 If the declared flags and the actual code shape disagree, note the mismatch before making changes.
 
+## Mod Shape Is Not The Same As Entry File Choice
+
+Do not confuse compatibility flags with root entry-file routing.
+
+- `client_only_mod` and `all_clients_require_mod`
+  - classify install and synchronization shape
+- `modmain.lua`, `modworldgenmain.lua`, and `modservercreationmain.lua`
+  - classify execution phase
+
+Practical consequence:
+
+- a mod can be all-clients gameplay and still use `modworldgenmain.lua`
+- a server-only mod can still need `modservercreationmain.lua` for host setup or preset-facing behavior
+- worldgen-side code does not automatically belong in `modmain.lua` just because the mod is server-authoritative
+
+When the task is about rooms, tasks, levels, presets, or start locations, read `references/worldgen-patterns.md` even if the mod is already classified as client-only, server-only, or all-clients gameplay.
+
 ## The Three Common Mod Shapes
 
 ### All-Clients Gameplay Mod
