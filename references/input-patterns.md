@@ -17,6 +17,7 @@ TheInput:AddMouseButtonHandler(fn)
 TheInput:AddMoveHandler(fn)
 TheInput:AddControlHandler(control, fn)
 TheInput:AddGeneralControlHandler(fn)
+TheInput:AddControlMappingHandler(fn)
 TheInput:AddTextInputHandler(fn)
 ```
 
@@ -34,12 +35,15 @@ TheInput:AddTextInputHandler(fn)
   - Listen to a specific mapped control such as `CONTROL_PRIMARY`.
 - `AddGeneralControlHandler`
   - Listen to control events broadly.
+- `AddControlMappingHandler`
+  - Listen for control-rebinding changes in control-settings UI or similar tooling.
 
 ## Prefer The Narrowest Handler
 
 - Use `AddKeyDownHandler(key, fn)` when a single hotkey is enough.
 - Use `AddMouseButtonHandler(fn)` when the interaction is pointer-button-based.
 - Use `AddControlHandler(control, fn)` when the feature should respect DST control mapping.
+- Prefer control handlers over raw keys when the action concept is "primary", "secondary", "inspect", or another mapped control.
 - Use `AddKeyHandler(fn)` only when raw keyboard handling is genuinely needed.
 
 ## Local-Only Expectations
@@ -61,6 +65,22 @@ local handler = TheInput:AddKeyDownHandler(KEY_F, function()
 end)
 ```
 
+## `TheInput` Vs Widget Methods
+
+Do not route every UI input task through global `TheInput` handlers.
+Official widgets and screens also override local methods such as:
+
+```lua
+widget:OnControl(control, down)
+widget:OnMouseButton(button, down, x, y)
+widget:OnKeyDown(key)
+```
+
+Practical rule:
+
+- Use `TheInput:*Handler` when the input listener should exist outside one focused widget or needs process-level local input.
+- Use widget or screen `OnControl` / `OnMouseButton` / `OnKeyDown` overrides when the behavior is owned by that UI object.
+
 ## Mouse Button Notes
 
 Common button constants from `scripts/constants.lua`:
@@ -71,6 +91,15 @@ MOUSEBUTTON_RIGHT
 MOUSEBUTTON_MIDDLE
 MOUSEBUTTON_SCROLLUP
 MOUSEBUTTON_SCROLLDOWN
+```
+
+Common mapped controls from `scripts/constants.lua`:
+
+```lua
+CONTROL_PRIMARY
+CONTROL_SECONDARY
+CONTROL_ACCEPT
+CONTROL_CANCEL
 ```
 
 Typical callback shape:
@@ -98,3 +127,16 @@ Practical rule:
 - Store the returned handler.
 - Remove it during widget teardown, screen close, or component cleanup.
 - Do not leave long-lived local handlers registered accidentally.
+
+## Small Routing Index
+
+- "I need one local hotkey"
+  - `AddKeyDownHandler`
+- "I need left or right click anywhere in a local screen flow"
+  - `AddMouseButtonHandler`
+- "I need controls that respect player keybinds"
+  - `AddControlHandler` or widget `OnControl`
+- "I need to react when the user remaps controls"
+  - `AddControlMappingHandler`
+- "I only need input while this widget is focused"
+  - prefer widget `OnControl`, `OnMouseButton`, or `OnKeyDown`
