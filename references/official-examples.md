@@ -39,6 +39,7 @@ Read next:
 
 Read next:
 
+- `references/entrypoint-patterns.md`
 - `references/modmain-patterns.md`
 - `references/creation-patterns.md`
 
@@ -62,6 +63,25 @@ Read next:
 - `references/brain-patterns.md`
 - `references/stategraph-patterns.md`
 - `references/networking-patterns.md`
+
+## Playable Character And Skill Tree Examples
+
+- `scripts/prefabs/player_common.lua`
+  - shared player-character constructor, client/server split, and baseline player systems
+- `scripts/prefabs/wilson.lua`
+  - compact vanilla character example with `common_postinit` and `master_postinit`
+- `scripts/prefabs/wormwood.lua`
+  - richer character example with custom assets and skill-tree asset registration
+- `scripts/prefabs/skilltree_defs.lua`
+  - central skill-tree registry, validation helpers, and `CreateSkillTreeFor(...)`
+- `scripts/prefabs/skilltree_wilson.lua`
+  - character-local skill-tree data module
+
+Read next:
+
+- `references/character-patterns.md`
+- `references/runtime-i18n-patterns.md`
+- `references/recipe-patterns.md`
 
 ## FX, Light, And Sound Examples
 

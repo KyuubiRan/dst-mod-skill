@@ -26,7 +26,7 @@ Inspect official scripts before writing mod code and tie conclusions to concrete
 
 1. Classify the request.
 2. Confirm the local game path if it is not already known.
-3. Check whether `modinfo.lua` and `modmain.lua` exist in the target mod folder.
+3. Check whether `modinfo.lua` and the relevant root entry files such as `modmain.lua`, `modworldgenmain.lua`, or `modservercreationmain.lua` exist in the target mod folder.
 4. If `modinfo.lua` exists, read it early and classify the mod as all-clients gameplay, client-only, or server-only before choosing hooks or reading runtime globals.
 5. If `modinfo.lua` is missing, ask whether the user wants a new mod skeleton.
 6. Inspect the smallest official source that answers the question.
@@ -112,9 +112,11 @@ python scripts/check_skill.py
 - Read `references/official-examples.md` when you already know the subsystem but need the closest concrete official prefab, widget, SG, map, or networking example to open first.
 - Read `references/mod-api-map.md` for the highest-value mod APIs and where they live.
 - Read `references/modinfo-patterns.md` when the task edits `modinfo.lua`, compatibility flags, dependencies, or `configuration_options`.
+- Read `references/entrypoint-patterns.md` when the task is mainly about choosing between `modinfo.lua`, `modmain.lua`, `modworldgenmain.lua`, and `modservercreationmain.lua`.
 - Read `references/modmain-patterns.md` when the task is mainly about `modmain.lua` as the gameplay entry hub, including `PrefabFiles`, top-level `Assets`, `modimport(...)`, `AddModCharacter(...)`, or shared startup glue.
 - Read `references/creation-patterns.md` when the task is about how prefabs, components, or helper modules are created and loaded.
 - Read `references/feature-recipes.md` when the user describes a whole feature such as a weapon, container, creature, structure, or playable character and you need the likely file set before drilling into subsystems.
+- Read `references/character-patterns.md` when the task is specifically a playable character mod, especially when it uses `prefabs/player_common.lua`, `MakePlayerCharacter(...)`, character strings, portraits, or an optional skill tree.
 - Read `references/component-patterns.md` when the task is mainly about high-frequency official components such as `inspectable`, `inventoryitem`, `stackable`, `finiteuses`, `inventory`, `container`, `edible`, `cookable`, `fuel`, `tool`, `pickable`, `workable`, `timer`, `talker`, `health`, `hunger`, `sanity`, `combat`, `equippable`, `armor`, or `weapon`. Use it as the routing page, then open the matching detail file under `references/components/`.
 - Read `references/tag-patterns.md` when the task depends on prefab tags, action filters, `FindEntities(...)` queries, AI targeting, or helper-entity interaction rules such as `NOCLICK`, `FX`, or `structure`.
 - Read `references/template-patterns.md` when the task needs a practical starter skeleton for common mod code.

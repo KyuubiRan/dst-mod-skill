@@ -37,6 +37,43 @@ Use this when:
 - `modmain.lua` is the normal runtime entry point
 - you still want the usual global passthrough and authority split
 
+## Minimal `modworldgenmain.lua`
+
+```lua
+AddRoomPreInit("BGForest", function(room)
+    room.contents = room.contents or {}
+    room.contents.distributeprefabs = room.contents.distributeprefabs or {}
+    room.contents.distributeprefabs.my_worldgen_prefab = 0.03
+end)
+```
+
+Use this when:
+
+- the task is generation-time only
+- the feature belongs to rooms, tasks, levels, or start locations
+- runtime gameplay hooks are not the main change
+
+## Minimal `modservercreationmain.lua`
+
+```lua
+AddCustomizeGroup(LEVELCATEGORY.WORLDGEN, "mygroup", "My Group", "Host-facing mod group.", nil, 50)
+
+AddCustomizeItem(LEVELCATEGORY.WORLDGEN, "mygroup", "my_option", {
+    text = "My Option",
+    desc = "Host-facing worldgen toggle.",
+    items = {
+        { data = "default", text = "Default", desc = "Use the default behavior." },
+        { data = "often", text = "Often", desc = "Bias toward this option." },
+    },
+})
+```
+
+Use this when:
+
+- the host setup screen must expose a mod-owned option
+- the task is preset-facing or setup-UI-facing
+- the generated content itself may still need matching worldgen-side logic elsewhere
+
 ## Minimal Prefab
 
 ```lua
@@ -392,6 +429,75 @@ Recommended when:
 
 Do not copy this into `modinfo.lua`.
 This is runtime-side only.
+
+## Minimal Playable Character Prefab
+
+```lua
+local MakePlayerCharacter = require("prefabs/player_common")
+
+local assets =
+{
+    Asset("SCRIPT", "scripts/prefabs/player_common.lua"),
+    Asset("ANIM", "anim/player_mychar.zip"),
+    Asset("ANIM", "anim/player_idles_mychar.zip"),
+}
+
+local prefabs = {}
+
+local start_inv = {}
+for mode, items in pairs(TUNING.GAMEMODE_STARTING_ITEMS) do
+    start_inv[string.lower(mode)] = items.MYCHAR
+end
+
+local function common_postinit(inst)
+    inst:AddTag("mychar")
+    inst.customidleanim = "idle_mychar"
+end
+
+local function master_postinit(inst)
+    inst.starting_inventory = start_inv[TheNet:GetServerGameMode()] or start_inv.default
+
+    inst.components.health:SetMaxHealth(TUNING.MYCHAR_HEALTH)
+    inst.components.hunger:SetMax(TUNING.MYCHAR_HUNGER)
+    inst.components.sanity:SetMax(TUNING.MYCHAR_SANITY)
+end
+
+return MakePlayerCharacter("mychar", prefabs, assets, common_postinit, master_postinit)
+```
+
+Use this when:
+
+- the task is a real playable character
+- you need the normal player baseline from `player_common.lua`
+- the character does not need a custom skill tree yet
+
+## Minimal Character Skill-Tree Registration
+
+Use this only when the character really needs unlockable progression.
+
+```lua
+local skilltreedefs = require("prefabs/skilltree_defs")
+local BuildMyCharSkillTreeData = require("prefabs/skilltree_mychar")
+
+local data = BuildMyCharSkillTreeData(skilltreedefs.FN)
+
+skilltreedefs.CreateSkillTreeFor("mychar", data.SKILLS)
+skilltreedefs.SKILLTREE_ORDERS.mychar = data.ORDERS
+
+if data.BACKGROUND_SETTINGS ~= nil then
+    skilltreedefs.SKILLTREE_METAINFO.mychar.BACKGROUND_SETTINGS = data.BACKGROUND_SETTINGS
+end
+
+if data.CUSTOM_FUNCTIONS ~= nil then
+    skilltreedefs.CUSTOM_FUNCTIONS.mychar = data.CUSTOM_FUNCTIONS
+end
+```
+
+Pair this with:
+
+- `Asset("SCRIPT", "scripts/prefabs/skilltree_mychar.lua")`
+- a `scripts/prefabs/skilltree_mychar.lua` data module
+- optional `builder_skill` recipe gates for skill-unlocked crafts
 
 ## Minimal Brain
 

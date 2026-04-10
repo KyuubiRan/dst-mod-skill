@@ -45,6 +45,8 @@ Practical consequence:
 - a server-only mod can still need `modservercreationmain.lua` for host setup or preset-facing behavior
 - worldgen-side code does not automatically belong in `modmain.lua` just because the mod is server-authoritative
 
+Read `references/entrypoint-patterns.md` when the real question is "which root file should own this change?"
+
 When the task is about rooms, tasks, levels, presets, or start locations, read `references/worldgen-patterns.md` even if the mod is already classified as client-only, server-only, or all-clients gameplay.
 
 ## The Three Common Mod Shapes

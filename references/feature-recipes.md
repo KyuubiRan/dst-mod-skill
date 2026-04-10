@@ -235,27 +235,33 @@ Usually involved:
 - speech strings
 - runtime i18n files if localized
 - avatar, map icon, select screen, or inventory icon assets
+- optional `scripts/prefabs/skilltree_<name>.lua`
 - optional custom SG or post-init hooks for player behavior
 
 Typical components or systems:
 
-- player prefab hooks instead of a simple standalone creature setup
-- `talker`
+- player prefab hooks through `prefabs/player_common.lua`
+- `MakePlayerCharacter(...)`
 - survival stat tuning
 - character-specific strings under `STRINGS.CHARACTERS.<NAME>`
 - optional custom crafting, actions, RPC, or UI
+- optional skill-gated recipes or progression
 
 Common adjacent work:
 
 - classify the mod type from `modinfo.lua`
+- register the character from `modmain.lua`
 - inherit character speech from `STRINGS.CHARACTERS.GENERIC`
 - patch player initialization carefully
+- decide whether the character actually needs a skill tree
 
 Common routing:
 
+- read `references/character-patterns.md`
 - read `references/runtime-i18n-patterns.md`
 - read `references/string-patterns.md`
 - read `references/stategraph-patterns.md`
+- read `references/recipe-patterns.md` if the character has skill-gated or character-gated crafting
 - read `references/networking-patterns.md` if custom client-visible systems are added
 
 ## Lit, FX, Or Sound-Driven Prefab

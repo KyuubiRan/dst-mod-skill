@@ -2,6 +2,8 @@
 
 Use this file when the task touches world presets, level generation, tasks, set pieces, or server-creation customization.
 
+Read `references/entrypoint-patterns.md` first when the task is still deciding between `modmain.lua`, `modworldgenmain.lua`, and `modservercreationmain.lua`.
+
 ## The Four Common Mod Entry Files
 
 Official mod loading recognizes these root-level entry files:
