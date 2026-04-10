@@ -26,6 +26,9 @@ Typical examples:
 - `structure`
 - `backpack`
 - `chest`
+- `placer`
+- `CLASSIFIED`
+- `DECOR`
 - `NOCLICK`
 - `NOBLOCK`
 - `FX`
@@ -83,11 +86,19 @@ Practical rule:
 - `FX`
   - common on visual-only prefabs
   - usually appears together with `NOCLICK`, and sometimes also `NOBLOCK`
+- `CLASSIFIED`
+  - common on helper entities, placement previews, replica helpers, and other technical prefabs that should not behave like normal gameplay objects
+- `placer`
+  - identity tag for placement-preview prefabs
+- `DECOR`
+  - presentation-only tag sometimes used instead of `FX` when `FX` would cause the wrong interaction behavior
 
 Observed official patterns:
 
 - many FX prefabs add `FX` + `NOCLICK`
 - ocean and boat helper prefabs often add `NOBLOCK`
+- `MakePlacer(...)` adds `CLASSIFIED` + `NOCLICK` + `placer`
+- `sunderarmordebuff.lua` uses `DECOR` with the comment that `FX` would catch mouseover
 
 ### Structure And Storage Identity Tags
 
@@ -176,6 +187,10 @@ Use this as a quick tag checklist after choosing components.
 
 - visual helper, reticule, projectile visualizer, placement ghost
   - think `FX`, `NOCLICK`, often `NOBLOCK`
+- placement preview or placer child helper
+  - think `CLASSIFIED`, `NOCLICK`, `placer`
+- presentation helper where `FX` causes the wrong mouse behavior
+  - think `DECOR`, usually also `NOCLICK`
 - local light or sound helper
   - think `FX`, often `NOCLICK`
   - add `NOBLOCK` when it should not interfere with placement or movement
@@ -216,12 +231,17 @@ These are expectation sketches, not mandatory bundles.
 - FX helper
   - components: often none or only minimal helpers
   - tags to expect: prefab-added `FX`, `NOCLICK`, often `NOBLOCK`
+- placer preview
+  - components: `placer`
+  - tags to expect: prefab-added `CLASSIFIED`, `NOCLICK`, `placer`
 
 ## Common Pitfalls
 
 - Do not manually add component-owned tags such as `inspectable`, `weapon`, or `pickable` when the component already manages them.
 - Do not add `hostile`, `monster`, or `companion` casually; many unrelated systems filter on them.
 - Do not use `NOCLICK` on something the player is meant to target directly.
+- Do not add `CLASSIFIED` to an ordinary gameplay prefab unless it is really a technical helper or classified-style entity.
+- Do not use `FX` by habit when an official pattern uses `DECOR` to avoid bad mouse behavior.
 - Do not assume a query-side internal tag such as `_inventoryitem` is safe to depend on without checking an official pattern.
 - Tags are not a replacement for components; a `weapon` tag alone does not make an item deal weapon damage.
 

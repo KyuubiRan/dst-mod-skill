@@ -207,6 +207,7 @@ Observed official behavior:
 
 - returns a `Prefab(name, fn)`
 - creates a non-networked preview entity
+- adds tags `CLASSIFIED`, `NOCLICK`, and `placer`
 - adds the `placer` component
 - sets placement behavior such as grid snapping and on-ground mode
 - optionally runs `postinit_fn`
@@ -215,6 +216,7 @@ Practical consequence:
 
 - placers are usually returned from the same prefab file as the structure or deployable
 - recipes reference the placer name through recipe config
+- if a task is really about the preview helper rather than the final structure, also read `references/tag-patterns.md`
 
 ## Recipe To Placer To Prefab Chain
 
