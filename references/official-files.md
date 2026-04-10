@@ -81,6 +81,9 @@ Use the worldgen or server-creation entry files only when the task is specific t
 - `scripts/input.lua`
   - Local input handler registration for keyboard, mouse, movement, text, and mapped controls.
   - Read this when a mod needs hotkeys, mouse hooks, or local input interception.
+- `scripts/frontend.lua`
+  - Frontend screen stack and frontend sound access such as `PushScreen(...)`, `PopScreen(...)`, and `GetSound()`.
+  - Read this when a task depends on local screen flow rather than gameplay authority.
 - `scripts/map/rooms.lua`
   - Core room registration and duplicate-name behavior.
   - Read this when the task adds or patches room definitions.
@@ -107,6 +110,9 @@ Use the worldgen or server-creation entry files only when the task is specific t
 - `scripts/strings.lua`
   - Core `STRINGS` tree and naming patterns.
   - Read this when a mod adds or routes runtime text.
+- `scripts/consolecommands.lua`
+  - High-value debug console helpers such as `c_spawn`, `c_find`, `c_findtag`, and `c_dumpworldstate`.
+  - Read this when the task needs practical in-game verification or debugging shortcuts.
 - `scripts/recipe.lua`
   - Recipe object behavior behind `AddRecipe2`.
   - Read this when recipe config behavior is unclear.

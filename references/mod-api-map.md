@@ -23,6 +23,8 @@ Read exact signatures from the official source before writing code.
   - Add an SG event handler.
 - `AddClassPostConstruct`
   - Patch a required class such as a widget or screen class by wrapping its constructor.
+- `AddGlobalClassPostConstruct`
+  - Patch a globally exposed class when the class name matters in addition to the package path.
 - `AddAction`
   - Register a custom action.
 - `AddComponentAction`
@@ -41,6 +43,10 @@ Read exact signatures from the official source before writing code.
   - Register client-side mod RPC handlers.
 - `AddModCharacter`
   - Register a mod character and its metadata.
+- `AddMinimapAtlas`
+  - Register a minimap atlas path explicitly.
+- `LoadPOFile`
+  - Load runtime `.po` translation data through the mod environment.
 - `AddCustomizeGroup`
   - Register a host-visible world customization group.
 - `RemoveCustomizeGroup`

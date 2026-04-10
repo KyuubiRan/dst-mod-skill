@@ -23,6 +23,7 @@ AddRoom(arg1, ...)
 AddStartLocation(arg1, ...)
 
 AddClassPostConstruct(package, fn)
+AddGlobalClassPostConstruct(package, classname, fn)
 AddAction(id, str, fn)
 AddComponentAction(actiontype, component, fn)
 AddStategraphActionHandler(stategraph, handler)
@@ -35,9 +36,11 @@ AddBrainPostInit(brain, fn)
 AddModCharacter(name, gender, modes)
 AddRecipeToFilter(recipe_name, filter_name)
 AddRecipe2(name, ingredients, tech, config, filters)
+AddMinimapAtlas(atlaspath)
 AddReplicableComponent(name)
 AddModRPCHandler(namespace, name, fn)
 AddClientModRPCHandler(namespace, name, fn)
+LoadPOFile(path, lang)
 ```
 
 ## Fast Router
@@ -49,6 +52,8 @@ AddClientModRPCHandler(namespace, name, fn)
 - register new room, task, task set, level, or start location
   - `AddRoom`, `AddTask`, `AddTaskSet`, `AddLevel`, `AddStartLocation`
 - patch runtime prefab, component, SG, or UI class
-  - `AddPrefabPostInit`, `AddComponentPostInit`, `AddStategraphPostInit`, `AddClassPostConstruct`
+  - `AddPrefabPostInit`, `AddComponentPostInit`, `AddStategraphPostInit`, `AddClassPostConstruct`, `AddGlobalClassPostConstruct`
 - add networking glue
   - `AddReplicableComponent`, `AddModRPCHandler`, `AddClientModRPCHandler`
+- add explicit minimap or runtime `.po` translation support
+  - `AddMinimapAtlas`, `LoadPOFile`
