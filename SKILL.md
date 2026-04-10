@@ -81,6 +81,11 @@ Scaffold a new mod:
 python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --description "Short summary" --mod-type all-clients
 ```
 
+Bundle a release directory with exclusion and incremental sync:
+```bash
+python scripts/bundle_release.py . --output ..\MyMod_release
+```
+
 ## Read These References As Needed
 
 - Read `references/official-files.md` for file paths, entry points, and what each official file family is good for.

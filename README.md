@@ -52,6 +52,7 @@ This skill is designed to help with:
   - helper scripts
   - `dst_zip_tool.py`: inspect official `scripts.zip`
   - `init_dst_mod.py`: scaffold a basic mod skeleton
+  - `bundle_release.py`: build a release bundle with exclusion rules and incremental sync
 
 ## Requirements
 
@@ -102,6 +103,12 @@ Scaffold a new mod:
 
 ```bash
 python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --description "Short summary" --mod-type all-clients
+```
+
+Bundle a release directory:
+
+```bash
+python scripts/bundle_release.py . --output ..\MyMod_release
 ```
 
 ## Recommended Reading

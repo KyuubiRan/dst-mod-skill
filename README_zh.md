@@ -51,6 +51,7 @@
   - 辅助脚本
   - `dst_zip_tool.py`：直接检索官方 `scripts.zip`
   - `init_dst_mod.py`：生成基础 Mod 骨架
+  - `bundle_release.py`：按排除规则和增量同步生成发布目录
 
 ## 依赖环境
 
@@ -101,6 +102,12 @@ python scripts/dst_zip_tool.py extract scripts/modutil.lua --output tmp/modutil.
 
 ```bash
 python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --description "Short summary" --mod-type all-clients
+```
+
+生成发布目录：
+
+```bash
+python scripts/bundle_release.py . --output ..\MyMod_release
 ```
 
 ## 文档重点
