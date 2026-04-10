@@ -2,6 +2,7 @@
 
 Use this file when the task needs RPC, client-readable replicated state, classified entities, or netvars.
 Use `references/networking-templates.md` when the task has already been classified and now needs the smallest practical implementation shape.
+Use `references/runtime-authority.md` too when the real confusion is "which side owns this mutation?"
 
 ## Decide The Lowest Necessary Networking Tool
 
@@ -15,6 +16,17 @@ Use the simplest tool that matches the need:
   - classified pattern
 - client needs to request an authoritative action
   - mod RPC or an existing action flow
+
+Fast router:
+
+- one or two replicated booleans, counters, or compact values
+  - netvars
+- clean client API for a custom component
+  - replica component plus netvars
+- owner-scoped or structured state with attach/detach lifecycle
+  - classified
+- local input or UI asks the server to do something
+  - action flow or mod RPC
 
 ## Mod RPC Registration
 
@@ -67,6 +79,13 @@ Practical rule:
 - define netvars before or around the pristine split as needed by the prefab pattern you are following
 - listen for dirty events on the client side when presentation must react
 
+Common correct shape:
+
+1. declare netvars before the master-sim return
+2. `SetPristine()`
+3. client dirty listeners or client-only setup
+4. server writes values authoritatively
+
 ## Replica Components
 
 If a component must be readable on clients, plan for a replica-side partner.
@@ -94,6 +113,16 @@ Practical consequence:
 - do not read `inst.components.mycomponent` on clients
 - use `inst.replica.mycomponent` or the relevant classified/netvar path
 
+Observed official replica trigger:
+
+- `EntityScript:AddComponent(name)` calls `self:ReplicateComponent(name)`
+- `EntityScript:ReplicateComponent(name)` loads `components/<name>_replica.lua` when the component is marked replicable
+
+Practical rule:
+
+- a custom replica is not only a file-placement convention
+- it must also be reachable through the replicable registration path
+
 ## Classified Pattern
 
 Classified entities are used when clients need replicated data that should be attached or exposed in a controlled way.
@@ -112,11 +141,25 @@ This is a stronger pattern than a single bare netvar and is useful when:
 - ownership or visibility matters
 - the client-side API should be wrapped cleanly
 
+Use classified when the state has its own lifecycle:
+
+- attach on spawn or ownership
+- listen for dirty events
+- detach on removal or ownership loss
+
+If the state is only one or two plain values, classified is usually too heavy.
+
 ## `OnEntityReplicated`
 
 Official replica flow calls `inst:OnEntityReplicated()` after replica setup when defined.
 
 Use this hook when client-side setup must happen only after replica components are available.
+
+This is often the right place for:
+
+- replica-dependent event hookup
+- client-only cached references that rely on replica existence
+- UI/local presentation setup that should not run before replica attachment
 
 ## Preferred Order
 
@@ -124,6 +167,14 @@ Use this hook when client-side setup must happen only after replica components a
 2. if the client only sends intent, prefer an existing action flow or mod RPC
 3. if the client needs reads, prefer replica/netvar patterns
 4. use classified when the state is more complex or scoped
+
+## Common Failure Points
+
+- wrote a custom replica file but never called `AddReplicableComponent(...)`
+- client reads `inst.components` instead of `inst.replica`
+- used RPC for state that should really be replicated afterward
+- built a classified entity when one netvar would have been enough
+- forgot dirty listeners or attach/detach flow on the client side
 
 ## Rule Of Thumb
 

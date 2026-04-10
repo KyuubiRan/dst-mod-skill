@@ -140,8 +140,9 @@ If the request is actually a local screen or HUD interaction, stop and reroute t
 1. Read `references/brain-patterns.md`.
 2. Read the closest official prefab and note which brain file it requires.
 3. Read the matching file under `scripts/brains/`.
-4. If the change is small, prefer `AddBrainPostInit`.
-5. If the AI shape is mod-owned, create a dedicated brain file under `scripts/brains/`.
+4. Read the matching SG too, because AI choice and performer execution are separate layers.
+5. If the change is small, prefer `AddBrainPostInit`.
+6. If the AI shape is mod-owned, create a dedicated brain file under `scripts/brains/`.
 
 ### Add Strings Or Localization
 
@@ -189,6 +190,8 @@ If the request is actually a local screen or HUD interaction, stop and reroute t
 4. Read `scripts/networkclientrpc.lua` for RPC routing.
 5. Read `scripts/entityreplica.lua` and a similar official prefab or component before adding replica or classified logic.
 6. Keep client reads on replica or netvars, not server-only components.
+
+If the request is actually a built-in world interaction with prediction, inspect action and SG flow before defaulting to custom RPC.
 
 ### Add A New Prefab Or Item
 

@@ -1,6 +1,7 @@
 # Brain Patterns
 
 Use this file when the task creates or patches NPC AI behavior.
+If the issue is mostly performer animation, action timing, or hit windows, read `references/stategraph-patterns.md` instead of treating it as a brain problem.
 
 This page focuses on the common DST brain path:
 
@@ -74,6 +75,7 @@ Practical consequence:
 - the brain file normally lives under `scripts/brains/`
 - the prefab loads it with `require("brains/<name>")`
 - the actual creature prefab attaches it through `inst:SetBrain(brain)`
+- the prefab usually also sets the matching SG right next to it
 
 ## Brain And Stategraph Are Separate
 
@@ -90,6 +92,16 @@ Stategraph answers:
 - what tags, timing, and action handlers apply
 
 Do not collapse both into one system mentally.
+
+Fast distinction:
+
+- "what should I do next?"
+  - brain
+- "how do I animate and time that?"
+  - stategraph
+
+If a creature chooses the right target but attacks badly, the bug may be SG-side.
+If a creature animates correctly but keeps making bad choices, the bug may be brain-side.
 
 ## When To Write A New Brain
 
@@ -115,6 +127,27 @@ end)
 
 Use this narrowly.
 If the AI shape is fundamentally different, a custom brain is usually cleaner.
+
+## Behaviour Tree Is The Core Output
+
+In practice, `OnStart()` must produce a real behavior tree:
+
+```lua
+self.bt = BT(self.inst, root)
+```
+
+If the brain file exists but never assigns `self.bt`, the creature usually will not behave as expected.
+
+## Common Routing
+
+- mod-owned new creature
+  - new brain file plus matching SG
+- tweak one official target choice or priority
+  - inspect `AddBrainPostInit(...)`
+- AI seems wrong only during attack, hit, sleep, freeze, or locomotion execution
+  - inspect SG and `commonstates.lua`
+- creature logic depends on nearby scans
+  - also read `references/entity-query-patterns.md`
 
 ## Read The Closest Official Brain First
 

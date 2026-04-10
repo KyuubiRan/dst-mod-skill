@@ -60,6 +60,14 @@ Use it for:
 - simple counters or compact states
 - visual presentation updates
 
+Keep the order intact:
+
+1. create networked entity pieces
+2. declare netvars
+3. `SetPristine()`
+4. client listener branch
+5. server-authoritative writes
+
 ## Template: Server Component Plus Replica Component
 
 Use this when the client should read through `inst.replica.<name>` instead of touching server components.
@@ -102,6 +110,9 @@ Practical rule:
 - client reads go through `inst.replica.mycomponent`
 - replicated fields still usually live on `inst` or a classified child as netvars
 
+Do not stop after creating the replica file.
+You still need `AddReplicableComponent("mycomponent")`.
+
 ## Template: Classified Entity
 
 Use this when:
@@ -138,6 +149,10 @@ Practical rule:
 - choose this only when bare entity netvars would become messy
 - classified is especially useful for inventory-like or owner-scoped state
 
+Typical warning sign that classified is warranted:
+
+- the state wants attach, detach, ownership, and multiple related dirty events
+
 ## Template: `OnEntityReplicated`
 
 Use this when client-side setup must happen after replica components exist.
@@ -171,6 +186,8 @@ Practical rule:
 
 - RPC carries intent
 - replicated state still needs netvars, replica, or classified if clients must read it later
+
+If a built-in world action already gives you the right authority and prediction path, prefer that over inventing a new RPC route.
 
 ## Common Pitfalls
 
