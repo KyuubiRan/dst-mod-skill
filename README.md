@@ -50,6 +50,7 @@ This skill is designed to help with:
   - topic-focused reference docs
 - `scripts/`
   - helper scripts
+  - `check_skill.py`: lightweight integrity check for references, scripts, and route targets
   - `dst_zip_tool.py`: inspect official `scripts.zip`
   - `init_dst_mod.py`: scaffold a basic mod skeleton
   - `bundle_release.py`: build a release bundle with exclusion rules and incremental sync
@@ -130,6 +131,12 @@ Resize one icon:
 
 ```bash
 python scripts/resize_png.py path/to/icon.png 64x64
+```
+
+Run a lightweight skill integrity check:
+
+```bash
+python scripts/check_skill.py
 ```
 
 ## Recommended Reading

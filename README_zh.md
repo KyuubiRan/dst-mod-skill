@@ -49,6 +49,7 @@
   - 主题化速查文档，包括 creation、UI、action、networking、brain、recipe、assets、diagnostics 等
 - `scripts/`
   - 辅助脚本
+  - `check_skill.py`：轻量自检，检查引用页、脚本和关键路由目标是否存在
   - `dst_zip_tool.py`：直接检索官方 `scripts.zip`
   - `init_dst_mod.py`：生成基础 Mod 骨架
   - `bundle_release.py`：按排除规则和增量同步生成发布目录
@@ -129,6 +130,12 @@ python scripts/tex_atlas_tool.py pack path/to/png_dir my_atlas
 
 ```bash
 python scripts/resize_png.py path/to/icon.png 64x64
+```
+
+运行轻量自检：
+
+```bash
+python scripts/check_skill.py
 ```
 
 ## 文档重点

@@ -101,6 +101,11 @@ Resize one icon:
 python scripts/resize_png.py path/to/icon.png 64x64
 ```
 
+Run a lightweight skill integrity check:
+```bash
+python scripts/check_skill.py
+```
+
 ## Read These References As Needed
 
 - Read `references/official-files.md` for file paths, entry points, and what each official file family is good for.
@@ -146,3 +151,6 @@ python scripts/resize_png.py path/to/icon.png 64x64
 - Do not guess DST signatures or execution context.
 - Do not use `ThePlayer` or HUD globals without guarding local-client availability.
 - Do not copy large official files when a post-init, helper, or smaller override is enough.
+- Do not modify the user's animation asset files by default, especially `.scml`.
+- In animation-related work, default to inspection, explanation, routing, validation, or compile-flow guidance unless the user explicitly asks for an animation asset edit.
+- If an animation asset edit appears necessary, stop first, tell the user which files would be changed, and get consent before editing them.

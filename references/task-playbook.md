@@ -183,3 +183,4 @@ If the mod owns a family of near-identical prefab variants, prefer a shared fact
 - Check that RPC namespace and name pairs match on both sides.
 - Check that replica-only reads do not call server-only components.
 - Check that the final implementation still matches the official pattern you inspected.
+- Run `python scripts/check_skill.py` after documentation or helper-script refactors.
