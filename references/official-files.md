@@ -81,6 +81,21 @@ Use the worldgen or server-creation entry files only when the task is specific t
 - `scripts/input.lua`
   - Local input handler registration for keyboard, mouse, movement, text, and mapped controls.
   - Read this when a mod needs hotkeys, mouse hooks, or local input interception.
+- `scripts/map/rooms.lua`
+  - Core room registration and duplicate-name behavior.
+  - Read this when the task adds or patches room definitions.
+- `scripts/map/tasks.lua`
+  - Core task registration and duplicate-name behavior.
+  - Read this when the task adds or patches task definitions.
+- `scripts/map/tasksets.lua`
+  - Task-set definitions used by world presets.
+  - Read this when the task modifies preset composition or task-set routing.
+- `scripts/map/startlocations.lua`
+  - Start-location definitions and world-entry routing.
+  - Read this when the task changes spawn starts or custom start locations.
+- `scripts/leveldataoverride.lua`
+  - World customization override flow and preset data handling.
+  - Read this when a task depends on world customization settings rather than only map content.
 - `scripts/constants.lua`
   - Core constants, enums, and identifiers used throughout the codebase.
 - `scripts/tuning.lua`
@@ -109,6 +124,12 @@ Use the worldgen or server-creation entry files only when the task is specific t
   - Practical `AddVFXEffect()` particle-system reference.
 - `scripts/brains/`
   - AI decision logic.
+- `scripts/map/levels/*.lua`
+  - Concrete level definitions for forest, caves, events, and special modes.
+- `scripts/map/rooms/**`
+  - Concrete room definitions grouped by biome or content family.
+- `scripts/map/tasks/*.lua`
+  - Concrete task definitions grouped by world family.
 - `scripts/widgets/`
   - Widget classes used by UI patches.
 - `scripts/screens/`
