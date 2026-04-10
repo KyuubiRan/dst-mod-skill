@@ -7,10 +7,11 @@ Use this file as a compact decision tree.
 1. Check whether `modinfo.lua` and `modmain.lua` exist.
 2. If `modinfo.lua` exists, read `references/modinfo-patterns.md` when metadata, dependencies, or config layout may matter.
 3. If `modinfo.lua` exists, classify the mod as all-clients gameplay, client-only, or server-only from its flags before reading runtime APIs.
-4. Identify the smallest official file that already matches the feature shape.
-5. Inspect the exact hook or helper definition in official code.
-6. Check whether the behavior is server-only, client-only, or replicated.
-7. Keep the implementation smaller than the official source you inspected.
+4. If the task is runtime-side, read `references/runtime-globals.md` and decide whether it is authority logic, local UI, local input, or entity-query logic.
+5. Identify the smallest official file that already matches the feature shape.
+6. Inspect the exact hook or helper definition in official code.
+7. Check whether the behavior is server-only, client-only, or replicated.
+8. Keep the implementation smaller than the official source you inspected.
 
 ## Edit `modinfo.lua`
 
@@ -28,7 +29,16 @@ Use this file as a compact decision tree.
    - wrong runtime context
    - missing client replication
    - wrong UI or action wiring
-3. Inspect the smallest official file that matches the failing subsystem.
+3. Use official console checks first when the symptom is "does this thing even exist right now?"
+4. Inspect the smallest official file that matches the failing subsystem.
+
+### Decide Runtime Context
+
+1. Read `references/runtime-globals.md`.
+2. If the code mutates real gameplay state, read `references/runtime-authority.md`.
+3. If the code touches HUD, screens, or local player state, read `references/runtime-local-ui.md`.
+4. If the code listens for local controls, read `references/input-patterns.md`.
+5. If the code scans nearby entities, read `references/entity-query-patterns.md`.
 
 ## Common Task Routes
 

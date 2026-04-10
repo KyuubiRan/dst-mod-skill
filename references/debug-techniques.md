@@ -2,8 +2,46 @@
 
 Use this file when a task needs targeted debugging or a narrow patch into an existing closure without copying the whole outer function.
 
-This page includes a useful Lua debug technique derived from a third-party DST tutorial, not from official Klei scripts.
-Treat it as a practical advanced tool, not the first default option.
+Start with official DST-side debug routes first.
+Only drop to Lua debug-library patching when normal hooks, post-inits, console checks, and source inspection are not narrow enough.
+
+## Official First-Line Debug Routes
+
+Observed in `scripts/consolecommands.lua`:
+
+- `c_spawn("prefab")`
+  - verify prefab registration and spawnability
+- `c_find("prefab")`
+  - locate a nearby prefab quickly
+- `c_findtag("tag")`
+  - verify whether tagged entities exist in the current area
+- `c_selectnear("prefab")`
+  - select the nearest matching entity
+- `c_list("prefab")`
+  - inspect whether instances exist at all
+- `c_listtag("tag")`
+  - inspect tagged-instance presence
+- `c_dumpworldstate()`
+  - inspect world-state values
+- `c_remote("...")`
+  - execute on the authoritative side when local console context is not the server
+
+Use these before deeper patching when the problem is:
+
+- prefab never appears
+- wrong entity is being found
+- expected tag does not exist
+- world-state assumptions look wrong
+
+## Preferred Order
+
+Before using debug-library patching, prefer:
+
+1. source inspection in the closest official file
+2. a normal mod API hook
+3. a post-init patch
+4. console verification with official debug commands
+5. a smaller override point already exposed by official code
 
 ## When This Technique Helps
 
@@ -103,19 +141,12 @@ Main risks:
 - patching the wrong closure can silently do nothing or break behavior
 - this is harder to read than a normal hook or post-init extension
 
-## Preferred Order
-
-Before using this technique, prefer:
-
-1. a normal mod API hook
-2. a post-init patch
-3. a smaller override point already exposed by official code
-
 Reach for debug upvalue patching only when those routes are not narrow enough.
 
 ## Rule Of Thumb
 
 - Use `debug.getupvalue` / `debug.setupvalue` for narrow closure patching.
+- Verify the target behavior first with normal console or source-level debugging before patching closures.
 - Prefer upvalue replacement over wholesale function copying when only one inner helper needs to change.
 - Document the target function and target upvalue clearly when you use this technique.
 - Re-check this patch after game updates because closure layout is not a stable public API.

@@ -33,6 +33,26 @@ Check in this order:
 
 If this smells like a sync issue, also read `references/networking-pitfalls.md`.
 
+## World Setting, Preset, Or Start Location Does Not Show Up
+
+Check in this order:
+
+1. Is this task in `modworldgenmain.lua` or `modservercreationmain.lua`, rather than ordinary runtime `modmain.lua`?
+2. If it is a customization option, did you use the correct category: `LEVELCATEGORY.SETTINGS` or `LEVELCATEGORY.WORLDGEN`?
+3. If it is a host-visible option, did you add it through `AddCustomizeGroup(...)` or `AddCustomizeItem(...)`?
+4. If it is a start type, did you register it with `AddStartLocation(...)`?
+5. If it is a preset problem, are you changing the settings side, the worldgen side, or both?
+
+Common misses:
+
+- putting world customization logic in `modmain.lua`
+- wrong `LEVELCATEGORY`
+- start location registered as backend data but not considered as host-facing selection flow
+
+Also read:
+
+- `references/worldgen-patterns.md`
+
 ## Recipe Does Not Show Up
 
 Check in this order:
@@ -92,6 +112,27 @@ Common misses:
 - wrong package path, such as a file path instead of require path
 - trying to patch gameplay code as if it were UI code
 - UI patch runs only on clients, but the test was done in the wrong context
+
+## Local FX Or Sound Works Only On One Side
+
+Check in this order:
+
+1. Is the effect supposed to be purely local, networked, or a proxy that spawns local-only presentation?
+2. Is the code incorrectly gated by `TheWorld.ismastersim` when it really needs a `not TheNet:IsDedicated()` local path?
+3. If the server triggers the presentation, should the prefab use a network proxy pattern instead?
+4. If the sound is UI/frontend-only, should it be on `TheFrontEnd:GetSound()` rather than an entity `SoundEmitter`?
+5. If the sound or FX is animation-timed, should it live in the SG timeline instead of ad hoc code?
+
+Common misses:
+
+- local presentation is gated out on non-dedicated clients
+- dedicated-server-safe branch is confused with gameplay authority
+- entity sound was expected in a frontend-only flow
+
+Also read:
+
+- `references/effects-patterns.md`
+- `references/runtime-authority.md`
 
 ## Hotkey Or Mouse Input Does Not Fire
 
@@ -186,6 +227,45 @@ Common misses:
 - prefab forgot to attach the brain
 - brain exists but never assigns `self.bt`
 - trying to fix stategraph behavior by changing only the brain
+
+## `modinfo.lua` Causes Load Failure Or Settings Screen Breakage
+
+Check in this order:
+
+1. Did `modinfo.lua` stay inside the constrained environment instead of using normal Lua stdlib assumptions?
+2. If config text is localized, does it use the modinfo-side translation pattern rather than runtime `STRINGS`?
+3. If config sections are grouped, is the helper tiny and self-contained?
+4. If key configuration was added, do the option values and labels match the intended key map shape?
+
+Common misses:
+
+- using stdlib helpers casually in `modinfo.lua`
+- mixing runtime localization assumptions into metadata localization
+
+Also read:
+
+- `references/modinfo-patterns.md`
+
+## Fast Console Checks
+
+Official `scripts/consolecommands.lua` exposes high-value commands for quick triage:
+
+- `c_spawn("prefab")`
+  - verify prefab registration quickly
+- `c_find("prefab")`
+  - locate nearby prefab instances
+- `c_findtag("tag")`
+  - check whether expected tagged entities exist
+- `c_selectnear("prefab")`
+  - grab the nearest matching entity for inspection
+- `c_list("prefab")`
+  - count or list loaded entities of one prefab
+- `c_listtag("tag")`
+  - count or list tagged entities
+- `c_dumpworldstate()`
+  - inspect current world state values
+
+Use these for verification before deeper code changes when the bug is "I think this thing does not exist" or "I think this runtime branch never happens."
 
 ## Fast Triage Rule
 
