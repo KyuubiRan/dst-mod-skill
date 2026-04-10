@@ -6,9 +6,11 @@ Lightweight integrity checks for the DST mod development skill.
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import py_compile
 import re
 import sys
+import zipfile
 from pathlib import Path
 
 
@@ -21,6 +23,10 @@ DOC_FILES = [
 SCRIPT_FILES = sorted((REPO_ROOT / "scripts").glob("*.py"))
 REFERENCE_FILES = sorted((REPO_ROOT / "references").glob("*.md"))
 COMPONENT_REFERENCE_FILES = sorted((REPO_ROOT / "references" / "components").glob("*.md"))
+OFFICIAL_REFERENCE_DOCS = [
+    REPO_ROOT / "references" / "official-files.md",
+    REPO_ROOT / "references" / "official-examples.md",
+]
 CRITICAL_PATHS = [
     REPO_ROOT / "SKILL.md",
     REPO_ROOT / "README.md",
@@ -38,6 +44,7 @@ CRITICAL_PATHS = [
 ]
 
 PATH_PATTERN = re.compile(r"(references/[A-Za-z0-9_./-]+\.md|scripts/[A-Za-z0-9_./-]+\.py)")
+OFFICIAL_SCRIPT_PATTERN = re.compile(r"`(scripts/[^`]+)`")
 
 
 def parse_args() -> argparse.Namespace:
@@ -80,6 +87,56 @@ def check_py_compile(errors: list[str]) -> None:
             errors.append(f"py_compile failed for {to_repo_relative(script)}: {exc.msg}")
 
 
+def normalize_official_script_ref(ref: str) -> str:
+    return ref.strip()
+
+
+def validate_official_script_ref(
+    ref: str,
+    entry_names: set[str],
+    all_entries: list[str],
+) -> bool:
+    if "*" in ref:
+        return any(fnmatch.fnmatch(name, ref) for name in all_entries)
+    if ref.endswith("/"):
+        return any(name.startswith(ref) for name in all_entries)
+    return ref in entry_names
+
+
+def check_official_script_references(errors: list[str], warnings: list[str]) -> None:
+    try:
+        from dst_zip_tool import resolve_zip_path
+    except Exception as exc:  # pragma: no cover - defensive import fallback
+        warnings.append(f"skipped official script reference validation: {exc}")
+        return
+
+    try:
+        zip_path = resolve_zip_path(None)
+    except Exception as exc:
+        warnings.append(f"skipped official script reference validation: {exc}")
+        return
+
+    with zipfile.ZipFile(zip_path) as zf:
+        all_entries = sorted(
+            info.filename for info in zf.infolist() if not info.is_dir()
+        )
+        entry_names = set(all_entries)
+
+    for doc in OFFICIAL_REFERENCE_DOCS:
+        text = doc.read_text(encoding="utf-8")
+        refs = {
+            normalize_official_script_ref(ref)
+            for ref in OFFICIAL_SCRIPT_PATTERN.findall(text)
+        }
+        for ref in sorted(refs):
+            if ref.endswith(".py"):
+                continue
+            if not validate_official_script_ref(ref, entry_names, all_entries):
+                errors.append(
+                    f"broken official script reference in {to_repo_relative(doc)}: {ref}"
+                )
+
+
 def check_counts(warnings: list[str]) -> None:
     if len(REFERENCE_FILES) < 20:
         warnings.append(f"reference doc count looks low: {len(REFERENCE_FILES)}")
@@ -99,6 +156,7 @@ def main() -> int:
     check_exists(errors)
     check_markdown_references(errors)
     check_py_compile(errors)
+    check_official_script_references(errors, warnings)
     check_counts(warnings)
 
     print(f"repo: {REPO_ROOT}")

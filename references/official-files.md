@@ -149,7 +149,7 @@ Use the worldgen or server-creation entry files only when the task is specific t
 ## `AnimState` Reality Check
 
 `AnimState` is engine-side.
-You will not find a normal Lua implementation such as `scripts/animstate.lua` inside `scripts.zip`.
+You will not find a normal Lua implementation such as `animstate.lua` inside `scripts.zip`.
 
 For animation work, inspect script-level usage instead:
 
