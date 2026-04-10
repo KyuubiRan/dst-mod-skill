@@ -32,6 +32,18 @@ Practical consequence:
 - declare mod-level `Assets` in `modmain.lua`
 - use `modimport("scripts/foo")` when you want to split logic into additional Lua files
 
+`modimport(...)` is a direct file loader, not the same thing as `require(...)`.
+
+Observed official behavior in `scripts/mods.lua`:
+
+- it loads from `env.MODROOT .. modulename`
+- it appends `.lua` if missing
+
+Practical rule:
+
+- use `modimport("scripts/foo")` when you want an explicit file load by mod-root path
+- use `require("widgets/foo")`, `require("brains/foo")`, or similar when you want package-style module loading through the mod `scripts/` path
+
 ## How `PrefabFiles` Are Loaded
 
 After `modmain.lua` runs, the loader checks `mod.PrefabFiles` and loads each entry from `prefabs/<name>.lua`.
@@ -208,6 +220,11 @@ Practical consequence for mods:
 
 This works because the mod loader adds the mod's `scripts/` directory to `package.path`.
 
+Observed official path:
+
+- `EntityScript:AddComponent(name)` calls `LoadComponent(name)`
+- `LoadComponent(name)` does `require("components/" .. name)`
+
 ## Existing Component Extension Versus New Component
 
 Use these two routes differently:
@@ -240,6 +257,41 @@ Practical rule:
 - if clients only need server-side authority, a normal component may be enough
 - if clients need to read state locally, plan for replica and netvars instead of reading `inst.components` on clients
 
+Observed official path:
+
+- `EntityScript:ReplicateComponent(name)` does `require("components/" .. name .. "_replica")`
+- `AddReplicableComponent(name)` marks the component name as replicable
+
+Practical consequence:
+
+- custom component file
+  - `scripts/components/mycomponent.lua`
+- custom replica file
+  - `scripts/components/mycomponent_replica.lua`
+- registration
+  - `AddReplicableComponent("mycomponent")`
+
+## Brain And Stategraph File Placement
+
+Typical mod-owned creature file family:
+
+- `prefabs/mycreature.lua`
+- `scripts/brains/mycreaturebrain.lua`
+- `scripts/stategraphs/SGmycreature.lua`
+
+Observed prefab-side attach calls:
+
+- `inst:SetBrain(brain)`
+- `inst:SetStateGraph("SGmycreature")`
+
+Practical rule:
+
+- the prefab owns the final `SetBrain(...)` and `SetStateGraph(...)` wiring
+- the brain file owns AI decision logic
+- the SG file owns performer animation/state timing
+
+If the creature uses both, do not try to fix all behavior from only one side.
+
 ## File Placement Summary
 
 - `modmain.lua`
@@ -248,8 +300,27 @@ Practical rule:
   - prefab definition files returned through `Prefab(...)`
 - `scripts/components/<name>.lua`
   - custom server-side component classes
+- `scripts/components/<name>_replica.lua`
+  - custom client-readable replica classes when needed
+- `scripts/brains/<name>.lua`
+  - brain behavior trees for creatures
+- `scripts/stategraphs/SG<name>.lua`
+  - stategraph definitions for performer timing and animation flow
 - `scripts/<other>.lua`
   - helper modules loaded with `modimport(...)` or `require(...)`
+
+## Fast Router
+
+- reusable stateful gameplay logic on one entity
+  - component
+- client-readable companion to a custom component
+  - replica plus `AddReplicableComponent`
+- actor AI decision logic
+  - brain
+- actor animation, buffered action timing, hit windows, or state tags
+  - stategraph
+- one-off registration glue
+  - `modmain.lua` or `modimport(...)`
 
 ## Rule Of Thumb
 

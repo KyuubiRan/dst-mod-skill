@@ -2,6 +2,7 @@
 
 Use this file when a mod adds custom actions or hooks action collection into stategraphs.
 If the task also needs deeper SG patching, prediction, or `wilson` versus `wilson_client` routing, also read `references/stategraph-patterns.md`.
+If the interaction is purely local UI, read `references/ui-patterns.md` instead.
 
 ## The Core Registration Chain
 
@@ -28,6 +29,17 @@ This is the usual flow:
 
 Read `scripts/componentactions.lua` whenever the collector site is unclear.
 That file is the practical source of truth for how action collection is split.
+
+Practical distinction:
+
+- action collector
+  - decides whether the action appears
+- SG action handler
+  - decides how the performer animates and executes it
+- action function body
+  - performs the authoritative behavior
+
+If one layer is missing, the chain breaks even when the other two exist.
 
 ## `AddAction`
 
@@ -126,6 +138,19 @@ Important distinction:
 Official stategraphs contain many built-in `ActionHandler(...)` examples.
 Read the closest official SG file before inventing a new action state.
 
+## UI-Oriented Requests That Are Not Really Actions
+
+Common misclassification:
+
+- "I want a HUD button that toggles a panel"
+  - not a world action
+- "I want clicking a world object to offer a contextual action"
+  - action system
+- "I want a keybind to request a server-side ability"
+  - local input plus RPC or existing action route
+
+Use the world action system only when the interaction belongs in the normal world action picker or performer-state flow.
+
 ## Reuse Official Actions Aggressively
 
 Before adding a new custom action, inspect whether the behavior can fit an official action route such as:
@@ -179,6 +204,8 @@ That means action bugs can come from any of these layers, not just the action fu
   - missing `wilson_client` route or wrong authority assumptions
 - action should have reused an official route
   - unnecessary custom action increased complexity
+- UI request was modeled as a world action unnecessarily
+  - wrong subsystem increased complexity for no gain
 
 ## Rule Of Thumb
 

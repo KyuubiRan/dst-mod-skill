@@ -16,6 +16,9 @@ This page is for the practical questions that keep coming up in DST modding:
 - where do tags, timeline, and timeout fit
 - when should I reuse `CommonStates`
 
+Stategraphs are performer-side execution flow.
+They are not a substitute for UI code, and they are not the same thing as action collection.
+
 ## Core SG Objects
 
 Verified in `scripts/stategraph.lua`:
@@ -143,6 +146,26 @@ Practical rule:
 - if the closest official state already exists and only needs a small change, prefer `AddStategraphPostInit`
 - if your mod owns a genuinely new performer state, add a new `State`
 
+## Action Layer Versus SG Layer
+
+Use this distinction aggressively:
+
+- action collector
+  - decides "can this action be offered?"
+- SG handler
+  - decides "what state should this performer enter?"
+- state body
+  - decides "what happens over time while performing it?"
+
+If the user says:
+
+- "the action shows up but nothing animates"
+  - SG layer
+- "the action never shows up"
+  - collector layer, usually `references/action-patterns.md`
+- "the animation plays but the real effect never happens"
+  - state timeline or authoritative action execution layer
+
 ## `ActionHandler` Versus Reusing Official Action Flow
 
 Before writing a custom action route, inspect whether an official action already maps to an existing state you can reuse.
@@ -202,6 +225,8 @@ Use this when the user describes the problem in plain language.
 - "I added a custom action and it shows up but does nothing"
   - inspect action handler routing in both `wilson` and `wilson_client`
   - start with `AddStategraphActionHandler(...)`
+- "the UI button works but I thought I needed a stategraph"
+  - verify whether the task is actually UI-only first
 - "I need a new player action animation"
   - inspect the closest official player state in `SGwilson.lua`
   - then mirror the prediction shape in `SGwilson_client.lua`

@@ -4,6 +4,7 @@ Use this file when the task creates or patches widgets, screens, HUD elements, o
 
 This page is for local UI structure and patch routing.
 If the task also depends on input handlers, read `references/input-patterns.md`.
+If the UI should trigger gameplay authority, also read `references/networking-patterns.md` or `references/action-patterns.md` instead of mutating gameplay directly from the widget.
 
 ## Where UI Code Lives
 
@@ -100,6 +101,31 @@ Rule:
 - guard dedicated-server paths
 - do not treat screen creation as gameplay authority
 
+## UI Button Versus World Action
+
+Do not treat every clickable UI feature as a custom DST world action.
+
+Use UI-local routes when:
+
+- a button opens or closes a local screen
+- a widget toggles local display state
+- a HUD element plays local feedback
+
+Use action or RPC routes when:
+
+- the UI should change real gameplay state
+- the server must validate the result
+- a player performer state or world interaction is involved
+
+Practical router:
+
+- local screen button
+  - stay in UI code
+- click in the 3D world or use an item on a target
+  - read `references/action-patterns.md`
+- UI asks the server to do something authoritative
+  - read `references/networking-patterns.md`
+
 ## How To Patch Existing UI
 
 For existing official widget or screen classes, use:
@@ -121,6 +147,7 @@ Practical consequence:
 - pass a require-style package path without `.lua`
 - patch narrowly instead of replacing the whole class
 - patch constructor-built structure, then store your own handles on `self`
+- use `AddGlobalClassPostConstruct(...)` only when the class is globally exposed and the ordinary package patch is not the right fit
 
 Common targets:
 
@@ -212,6 +239,9 @@ Rule:
   - inspect `widgets/controls` or `screens/playerhud`
 - "add a local hotkey to a widget"
   - patch the widget, then read `references/input-patterns.md`
+- "add a button that should perform a real gameplay action"
+  - patch the widget for UI
+  - then route the authoritative side through networking or action flow
 - "UI exists but dedicated server crashes"
   - inspect local guards around `ThePlayer`, `TheFrontEnd`, and `TheInput`
 - "UI duplicates or keeps responding after close"

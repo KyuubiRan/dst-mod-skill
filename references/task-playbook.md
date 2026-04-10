@@ -105,8 +105,9 @@ If the only viable patch point is a closed-over helper function, read `reference
 1. Read `references/ui-patterns.md`.
 2. Read the concrete class under `scripts/widgets/` or `scripts/screens/`.
 3. Read `references/input-patterns.md` if the patch listens to keyboard, mouse, or mapped controls.
-4. Reach for `AddClassPostConstruct`.
-5. Patch narrowly instead of replacing the whole widget.
+4. If the UI should request real gameplay changes, route the authoritative side through networking or action flow instead of mutating gameplay directly from the widget.
+5. Reach for `AddClassPostConstruct`.
+6. Patch narrowly instead of replacing the whole widget.
 
 ### Add Recipes, Actions, Or Stategraph Changes
 
@@ -116,6 +117,8 @@ If the only viable patch point is a closed-over helper function, read `reference
 4. Read the target stategraph under `scripts/stategraphs/`.
 5. Reuse an existing official action flow whenever possible.
 6. Prefer `AddRecipe2` over deprecated recipe APIs.
+
+If the request is actually a local screen or HUD interaction, stop and reroute to `references/ui-patterns.md`.
 
 ### Patch Common World Systems
 
@@ -198,6 +201,8 @@ If the only viable patch point is a closed-over helper function, read `reference
 7. Register the prefab in `PrefabFiles` and keep assets relative to the mod root.
 
 If the mod owns a family of near-identical prefab variants, prefer a shared factory pattern over repeated constructors. Use `scripts/prefabs/staff.lua` as the official shape reference.
+
+If the prefab is a creature or NPC, also route through brain and SG placement early instead of treating it as a plain item prefab.
 
 ### Adjust Numbers Or Balance
 
