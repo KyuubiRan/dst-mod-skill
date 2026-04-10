@@ -1,6 +1,7 @@
 # Hook Signatures
 
 Exact signatures copied from `scripts/modutil.lua`.
+Use `references/hook-selection-patterns.md` when the real question is which hook should own the patch.
 
 ```lua
 AddCustomizeGroup(category, name, text, desc, atlas, order)

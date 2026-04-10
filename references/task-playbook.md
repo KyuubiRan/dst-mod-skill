@@ -13,8 +13,9 @@ Use this file as a compact decision tree.
 7. Identify the smallest official file that already matches the feature shape.
 8. If you still need a concrete official starter, read `references/official-examples.md`.
 9. Inspect the exact hook or helper definition in official code.
-10. Check whether the behavior is server-only, client-only, or replicated.
-11. Keep the implementation smaller than the official source you inspected.
+10. If the real question is patch-hook choice, read `references/hook-selection-patterns.md`.
+11. Check whether the behavior is server-only, client-only, or replicated.
+12. Keep the implementation smaller than the official source you inspected.
 
 ## Edit `modinfo.lua`
 
@@ -77,8 +78,9 @@ Use this file as a compact decision tree.
 
 1. Read `scripts/prefabs/<prefab>.lua`.
 2. Read the component files that drive the target behavior.
-3. Reach for `AddPrefabPostInit` unless the change clearly belongs elsewhere.
-4. Add only the missing behavior instead of replacing the prefab wholesale.
+3. Read `references/hook-selection-patterns.md` if the hook choice is not obvious.
+4. Reach for `AddPrefabPostInit` unless the change clearly belongs elsewhere.
+5. Add only the missing behavior instead of replacing the prefab wholesale.
 
 If the only viable patch point is a closed-over helper function, read `references/debug-techniques.md` before copying a large outer function.
 
@@ -86,8 +88,9 @@ If the only viable patch point is a closed-over helper function, read `reference
 
 1. Read `references/player-patterns.md`.
 2. Read `scripts/prefabs/player_common.lua` and any involved components.
-3. Reach for `AddPlayerPostInit` or a component hook.
-4. Guard master-sim and client logic explicitly.
+3. If the task needs owner-only player replication, HUD sync, or `player_classified`, read `references/player-network-patterns.md`.
+4. Reach for `AddPlayerPostInit` or a component hook.
+5. Guard master-sim and client logic explicitly.
 
 ### Use Standard Helper Constructors
 
@@ -111,9 +114,10 @@ If the only viable patch point is a closed-over helper function, read `reference
 1. Read `references/creation-patterns.md` for the base loading path.
 2. Read `references/component-patterns.md` if the task targets a common official component.
 3. Read the official component with the closest lifecycle and networking shape.
-4. Reach for `AddComponentPostInit` for small extensions.
-5. If the component has a replica, inspect replica and classified patterns before writing net code.
-6. Register replica support with `AddReplicableComponent` when needed.
+4. Read `references/hook-selection-patterns.md` if the task is really about patch-hook choice.
+5. Reach for `AddComponentPostInit` for small extensions.
+6. If the component has a replica, inspect replica and classified patterns before writing net code.
+7. Register replica support with `AddReplicableComponent` when needed.
 
 ### Patch UI
 
@@ -121,8 +125,9 @@ If the only viable patch point is a closed-over helper function, read `reference
 2. Read the concrete class under `scripts/widgets/` or `scripts/screens/`.
 3. Read `references/input-patterns.md` if the patch listens to keyboard, mouse, or mapped controls.
 4. If the UI should request real gameplay changes, route the authoritative side through networking or action flow instead of mutating gameplay directly from the widget.
-5. Reach for `AddClassPostConstruct`.
-6. Patch narrowly instead of replacing the whole widget.
+5. Read `references/hook-selection-patterns.md`.
+6. Reach for `AddClassPostConstruct`.
+7. Patch narrowly instead of replacing the whole widget.
 
 ### Understand Or Refactor `modmain.lua`
 
@@ -209,10 +214,20 @@ If the request is actually a local screen or HUD interaction, stop and reroute t
 
 1. Read `references/networking-patterns.md`.
 2. Read `references/networking-templates.md` for the smallest implementation shape that fits.
-3. Decide whether the need is RPC intent, replicated state, or both.
-4. Read `scripts/networkclientrpc.lua` for RPC routing.
-5. Read `scripts/entityreplica.lua` and a similar official prefab or component before adding replica or classified logic.
-6. Keep client reads on replica or netvars, not server-only components.
+3. If the task is player-owned or owner-only, also read `references/player-network-patterns.md`.
+4. Decide whether the need is RPC intent, replicated state, or both.
+5. Read `scripts/networkclientrpc.lua` for RPC routing.
+6. Read `scripts/entityreplica.lua` and a similar official prefab or component before adding replica or classified logic.
+7. Keep client reads on replica or netvars, not server-only components.
+
+### Choose A Patch Hook
+
+1. Read `references/hook-selection-patterns.md`.
+2. If the target is one prefab, prefer `AddPrefabPostInit(...)`.
+3. If the target is all players, prefer `AddPlayerPostInit(...)`.
+4. If the target is a component family, prefer `AddComponentPostInit(...)`.
+5. If the target is a widget or screen class, prefer `AddClassPostConstruct(...)`.
+6. Use `AddPrefabPostInitAny(...)` only when a narrower hook cannot express the target set.
 
 If the request is actually a built-in world interaction with prediction, inspect action and SG flow before defaulting to custom RPC.
 
@@ -265,6 +280,7 @@ If the prefab is a creature or NPC, also route through brain and SG placement ea
 - Check that the target file is the right entry point.
 - Check that `PrefabFiles` and `Assets` cover any new prefab or asset.
 - Check that server and client code are not mixed accidentally.
+- Check that the chosen hook is the narrowest one that matches the target.
 - Check that RPC namespace and name pairs match on both sides.
 - Check that replica-only reads do not call server-only components.
 - Check that the final implementation still matches the official pattern you inspected.

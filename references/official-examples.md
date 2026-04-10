@@ -111,6 +111,8 @@ Read next:
 Read next:
 
 - `references/player-patterns.md`
+- `references/player-network-patterns.md`
+- `references/hook-selection-patterns.md`
 - `references/runtime-local-ui.md`
 - `references/runtime-authority.md`
 
@@ -191,6 +193,7 @@ Read next:
 Read next:
 
 - `references/ui-patterns.md`
+- `references/hook-selection-patterns.md`
 - `references/input-patterns.md`
 - `references/runtime-local-ui.md`
 
@@ -227,6 +230,7 @@ Read next:
 
 - `references/networking-patterns.md`
 - `references/networking-templates.md`
+- `references/player-network-patterns.md`
 - `references/runtime-authority.md`
 
 ## Worldgen And Preset Examples

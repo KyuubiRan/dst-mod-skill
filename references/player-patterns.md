@@ -12,6 +12,7 @@ Typical triggers:
 If the task is mainly about one playable character prefab, read `references/character-patterns.md`.
 If the task touches local HUD or screens, also read `references/runtime-local-ui.md`.
 If the task touches player action states or prediction, also read `references/stategraph-patterns.md`.
+If the task needs player-owned replicated state or `player_classified`, also read `references/player-network-patterns.md`.
 
 ## Choose The Narrowest Player Hook
 
@@ -144,3 +145,5 @@ end)
   - `references/character-patterns.md`
 - "touch only the local active player's HUD or screen"
   - `playeractivated` plus `references/runtime-local-ui.md`
+- "sync owner-only player HUD or controller state"
+  - `references/player-network-patterns.md`

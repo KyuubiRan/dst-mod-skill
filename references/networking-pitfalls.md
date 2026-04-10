@@ -92,5 +92,6 @@ Practical rule:
 ## Fast Router
 
 - if the task needs implementation shape, read `networking-templates.md`
+- if the task is specifically about player-owned or owner-only player state, read `player-network-patterns.md`
 - if the bug is mostly authority confusion, read `runtime-authority.md`
 - if the bug is mostly symptom-driven, read `diagnostic-patterns.md`

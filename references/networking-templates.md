@@ -4,6 +4,7 @@ Use this file when a task needs practical server/client templates rather than on
 
 This page complements `references/networking-patterns.md`.
 Read that file first for the decision framework, then use this file for implementation shapes.
+If the target is player-owned owner-only state, also read `references/player-network-patterns.md`.
 
 ## Choose The Smallest Template That Fits
 
@@ -15,6 +16,8 @@ Read that file first for the decision framework, then use this file for implemen
   - server component + replica component + optional netvars
 - client needs structured or scoped replicated state
   - classified entity pattern
+- player owner-only HUD, controller, or grouped status data
+  - player-classified-style pattern
 - client needs to request an authoritative action
   - action flow or mod RPC
 

@@ -212,6 +212,8 @@ Common misses:
 - forgot the replica-side file
 - netvar exists but nothing listens for updates
 
+If this is specifically a player HUD or owner-only player sync issue, also read `references/player-network-patterns.md`.
+
 ## Brain Does Not Seem To Control The Creature
 
 Check in this order:

@@ -3,6 +3,7 @@
 Use this file when the task needs RPC, client-readable replicated state, classified entities, or netvars.
 Use `references/networking-templates.md` when the task has already been classified and now needs the smallest practical implementation shape.
 Use `references/runtime-authority.md` too when the real confusion is "which side owns this mutation?"
+Use `references/player-network-patterns.md` too when the task is specifically about player-owned state, `player_classified`, or owner-only HUD data.
 
 ## Decide The Lowest Necessary Networking Tool
 
@@ -14,6 +15,8 @@ Use the simplest tool that matches the need:
   - replica and netvars
 - client needs private or structured replicated state
   - classified pattern
+- player owner-only HUD, controller, or grouped status data
+  - player-classified-style pattern
 - client needs to request an authoritative action
   - mod RPC or an existing action flow
 
