@@ -22,6 +22,11 @@ Implication:
 - it is `.po` plus translator based
 - runtime text still resolves through `STRINGS`
 
+Verified mod-side helper:
+
+- `scripts/modutil.lua`
+  - exposes `LoadPOFile(path, lang)` in the mod environment
+
 ## Recommended Runtime Strategy
 
 For most mods, prefer a Lua-table runtime i18n layer over generating full Lua dumps from `.po`.
@@ -41,6 +46,11 @@ Benefits:
 - less generated noise
 - character mods inherit future default lines from the base table
 - common strings and character speech stay separate
+
+Practical rule:
+
+- use Lua delta tables when maintainability matters more than matching the official `.po` pipeline
+- use `.po` when the project explicitly wants translator tooling or existing `.po` workflow
 
 ## Recommended Directory Shape
 
@@ -192,6 +202,20 @@ DeepMerge(speech, require("languages/speech_mychar_" .. locale))
 STRINGS.CHARACTERS.MYCHAR = speech
 ```
 
+## Asset, String, And I18n Boundaries
+
+Keep these systems separate:
+
+- runtime i18n
+  - locale choice, table merge, optional `.po` loading
+- runtime strings
+  - the final `STRINGS` tree content
+- assets
+  - atlases, textures, anim zips, sounds
+
+Translating a name does not register an icon.
+Registering an icon does not populate a localized `STRINGS.NAMES` entry.
+
 ## Companion Or Proxy Speaker Text
 
 Do not key a second speaker table by the final translated sentence text.
@@ -238,6 +262,14 @@ Official runtime translation is based on:
 - use it when you explicitly want `.po` workflow
 - for many gameplay mods, a Lua delta-table approach is simpler to maintain
 
+Minimal official-style route:
+
+1. call `LoadPOFile(path, lang)`
+2. ensure the target strings exist in `STRINGS`
+3. call or rely on `TranslateStringTable(STRINGS)` in the relevant flow
+
+If the project does not already want `.po`, the Lua-table route is usually simpler.
+
 ## Intent Index
 
 - "I want proper runtime i18n for my mod"
@@ -265,6 +297,21 @@ Official runtime translation is based on:
   - merged a full tree instead of a sparse mod-owned branch set
 - runtime i18n and `modinfo.lua` i18n got mixed together
   - two different systems were treated as one
+- runtime locale files tried to solve missing asset or atlas issues
+  - wrong subsystem
+- direct string writes and locale loader both overwrite the same branch without a clear order
+  - final runtime text becomes unpredictable
+
+## Fast Router
+
+- "I only need a few new strings"
+  - read `references/string-patterns.md`
+- "I need runtime locale switching"
+  - stay on this page
+- "I need metadata/config translation"
+  - read `references/modinfo-patterns.md`
+- "the text is right but art is missing"
+  - read `references/asset-patterns.md`
 
 ## Rule Of Thumb
 

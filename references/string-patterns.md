@@ -2,6 +2,7 @@
 
 Use this file when the task adds names, inspect text, UI text, speech, or localization-related content.
 Read `references/runtime-i18n-patterns.md` too when the task is about the overall runtime i18n architecture rather than one or two direct `STRINGS` writes.
+Read `references/modinfo-patterns.md` instead when the text belongs in `modinfo.lua` metadata or config UI.
 
 ## Runtime Strings Usually Modify `STRINGS` Directly
 
@@ -49,6 +50,20 @@ For prefab and action identifiers, uppercase keys are the safest default when wr
 - `STRINGS.UI`
   - UI-facing text
 
+## Asset And String Are Separate Wires
+
+Do not confuse text registration with icon or asset registration.
+
+Typical split:
+
+- `STRINGS.NAMES.MY_ITEM`
+  - display text
+- `Asset("ATLAS", "images/inventoryimages/my_item.xml")`
+  - icon resource declaration
+
+If a recipe entry exists but the icon is missing, the bug may be in assets, not strings.
+If the icon exists but the text is blank, the bug may be in `STRINGS`, not assets.
+
 ## `modinfo.lua` Localization Is A Separate Case
 
 For broader `modinfo.lua` rules such as config grouping and environment limits, also read `references/modinfo-patterns.md`.
@@ -87,6 +102,25 @@ Example:
 ```lua
 modimport("scripts/my_strings")
 ```
+
+Use this when:
+
+- direct `STRINGS` assignments are getting long
+- the mod does not yet need a full locale loader
+- you want runtime text split out without overengineering i18n
+
+If the mod later grows real locale tables, that helper file can become the loader entry point.
+
+## Fast Router
+
+- one or two fixed runtime strings
+  - direct `STRINGS` writes are enough
+- many runtime strings but one language
+  - split with `modimport(...)`
+- real locale switching or sparse locale tables
+  - read `references/runtime-i18n-patterns.md`
+- metadata or config labels in `modinfo.lua`
+  - read `references/modinfo-patterns.md`
 
 ## Rule Of Thumb
 

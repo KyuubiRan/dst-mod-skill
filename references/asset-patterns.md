@@ -3,6 +3,7 @@
 Use this file when the task adds animation zips, inventory icons, minimap images, frontend assets, or atlas references.
 If the task is specifically about lighting, FX prefabs, particle FX, or sound playback logic, also read `references/effects-patterns.md`.
 If the task is specifically about atlas packing, TEX/XML unpacking, or PNG resizing workflow, also read `references/texture-patterns.md`.
+If the task is mostly about strings or localization, read `references/string-patterns.md` instead of bloating asset registration with text logic.
 
 ## Prefab Assets
 
@@ -27,6 +28,13 @@ Practical rule:
 - keep prefab asset paths relative to the mod root
 - register only the assets the prefab actually needs
 
+Common split:
+
+- visual or sound asset declaration
+  - belongs here
+- runtime playback logic, symbol overrides, or FX spawn flow
+  - belongs in the prefab, SG, or `references/effects-patterns.md`
+
 ## Mod-Level `Assets`
 
 `modmain.lua` can also define a top-level `Assets = { ... }`.
@@ -40,6 +48,7 @@ Practical use:
 
 - global mod assets
 - shared atlases or images not tied to one single prefab file
+- shared art referenced by several prefab files
 
 ## Inventory Images And Atlases
 
@@ -53,6 +62,11 @@ Asset("IMAGE", "images/inventoryimages/my_item.tex")
 ```
 
 When a recipe or UI element needs an icon atlas, keep the atlas path explicit.
+
+Practical consequence:
+
+- texture files alone are not enough
+- recipe, inventory, or UI code often also needs the explicit atlas path
 
 Texture-workflow rule:
 
@@ -91,6 +105,41 @@ ReloadPreloadAssets()
 Use these only when the task specifically needs frontend-only or preload asset behavior.
 
 For most gameplay prefabs, normal `assets` or mod-level `Assets` are enough.
+
+## Loader Reality
+
+Observed in `scripts/mods.lua`:
+
+```lua
+Prefab("MOD_"..modname, nil, mod.Assets, prefabnames, true)
+```
+
+Practical consequence:
+
+- top-level `Assets` become part of the mod's default loader prefab
+- this is why shared mod assets can live in `modmain.lua` even when no single gameplay prefab owns them
+
+## Asset And String Cross-Checks
+
+When a feature "looks missing", check both asset and string sides:
+
+- recipe visible but icon missing
+  - likely asset or atlas wiring
+- icon exists but crafted item text is blank
+  - likely `STRINGS` side
+- runtime locale loader works but some icon paths break
+  - locale and asset registration are separate problems
+
+## Common Failure Points
+
+- asset file exists but was never declared
+  - loader never sees it
+- atlas and image paths disagree with the code that references them
+  - crafting or UI icon lookup breaks
+- shared asset was kept inside one prefab-local `assets` table even though several systems need it
+  - move it to top-level `Assets`
+- tried to solve asset issues by editing strings or locale files
+  - wrong subsystem
 
 ## Rule Of Thumb
 

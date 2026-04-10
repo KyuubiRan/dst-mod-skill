@@ -44,6 +44,27 @@ Optional later additions:
 - configuration option entries
 - helper directories for `scripts/`, `widgets/`, `stategraphs/`, or `prefabs/`
 
+## Minimal File Families By Mod Shape
+
+- client-only UI or QoL mod
+  - `modinfo.lua`
+  - `modmain.lua`
+  - optional `scripts/` for widgets, screens, or helpers
+- server-only world or automation mod
+  - `modinfo.lua`
+  - `modmain.lua`
+  - optional `modworldgenmain.lua` or `modservercreationmain.lua` if it touches presets, rooms, tasks, or start locations
+- all-clients gameplay/content mod
+  - `modinfo.lua`
+  - `modmain.lua`
+  - often `prefabs/`
+  - optional `scripts/components/`, `scripts/replicas/`, `scripts/widgets/`, `scripts/stategraphs/`, `scripts/brains/`
+
+Practical rule:
+
+- do not create `modworldgenmain.lua` by habit
+- add it only when the feature really belongs to worldgen or host setup flow
+
 ## Recommended Defaults
 
 - `api_version = 10`
@@ -63,3 +84,26 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
 ```
 
 Add `--with-config` if the user wants starter `configuration_options`.
+
+## After Scaffolding
+
+The next file depends on the first real feature:
+
+- item, creature, structure, or FX prefab
+  - read `references/template-patterns.md`
+- metadata, dependencies, or key config
+  - read `references/modinfo-patterns.md`
+- worldgen or presets
+  - read `references/worldgen-patterns.md`
+- runtime strings or locale loader
+  - read `references/string-patterns.md`
+  - then `references/runtime-i18n-patterns.md` if needed
+
+## Common Failure Points
+
+- scaffolded the wrong mod shape
+  - fix `client_only_mod` and `all_clients_require_mod` first
+- generated worldgen files for an ordinary runtime mod
+  - unnecessary file surface makes routing worse
+- started writing prefabs before `PrefabFiles` exists in `modmain.lua`
+  - registration path breaks later

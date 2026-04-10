@@ -2,6 +2,9 @@
 
 Use this file when the task needs a practical starter template instead of conceptual guidance. These templates are minimal starting points, not drop-in complete mods.
 
+Pick the smallest template that matches the requested feature shape.
+Do not combine unrelated templates just because they all seem useful.
+
 ## Minimal `modmain.lua`
 
 ```lua
@@ -27,6 +30,12 @@ end
 
 -- Server-authoritative logic goes here.
 ```
+
+Use this when:
+
+- the mod is not purely worldgen-side
+- `modmain.lua` is the normal runtime entry point
+- you still want the usual global passthrough and authority split
 
 ## Minimal Prefab
 
@@ -60,6 +69,12 @@ end
 
 return Prefab("my_item", fn, assets)
 ```
+
+Use this when:
+
+- the task needs a bare networked prefab shell
+- the real behavior will be added afterward through components
+- you want a safe `SetPristine()` split before adding logic
 
 ## Minimal Custom Component
 
@@ -95,6 +110,9 @@ AddClassPostConstruct("widgets/controls", function(self)
 end)
 ```
 
+Use this only for classes that are already `require(...)`-loaded by the game.
+If the user really wants a brand-new widget class, create the widget file first and then patch or instantiate it from the owning screen.
+
 ## Minimal Hotkey
 
 ```lua
@@ -106,6 +124,8 @@ end
 ```
 
 If the handler belongs to a widget or screen, store it and remove it during teardown.
+
+If the feature should respect control remapping, prefer a control-based template over raw key handling.
 
 ## Minimal Mod RPC
 
@@ -120,6 +140,11 @@ if not TheNet:IsDedicated() then
     end
 end
 ```
+
+Use this when:
+
+- local input or UI should request an authoritative server-side action
+- the state mutation does not belong purely on the client
 
 ## Minimal Netvar On A Prefab
 
@@ -143,6 +168,11 @@ local function fn()
     return inst
 end
 ```
+
+Use this when:
+
+- clients need a small replicated value
+- a full replica component would be overkill
 
 ## Minimal One-Shot FX Prefab
 
@@ -297,6 +327,9 @@ STRINGS.RECIPE_DESC.MY_STRUCTURE = "Place a structure."
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.MY_ITEM = "A custom thing."
 ```
 
+Use direct assignments for small string additions.
+If the task is "real locale support", stop here and switch to `references/runtime-i18n-patterns.md`.
+
 ## Minimal Runtime I18n Loader
 
 Use this when the mod needs real runtime localization instead of a few direct string writes.
@@ -356,6 +389,9 @@ Recommended when:
 - the mod has common locale data and character speech overrides
 - locale files should stay sparse
 - character speech should inherit missing lines from the generic base
+
+Do not copy this into `modinfo.lua`.
+This is runtime-side only.
 
 ## Minimal Brain
 
@@ -467,8 +503,15 @@ Recommended when:
 
 If the variants start needing many unrelated branches, split the file or move the shared helper down one level.
 
+This is the right default when the user asks for:
+
+- a whole staff or gem family
+- several foods with the same base flow
+- multiple weapon or armor variants that differ mostly by table data
+
 ## Rule Of Thumb
 
 - Start from the smallest template that fits.
 - Replace placeholders only after reading the closest official file.
 - Keep templates narrow; move complexity into dedicated files only when needed.
+- If the task has explicit negative constraints such as "no durability", "not inspectable", or "client-only", remove the template pieces that violate that constraint before coding.
