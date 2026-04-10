@@ -6,6 +6,7 @@ If the task is mainly about entry-file choice first, read `references/entrypoint
 If the task is mainly about runtime i18n layout, also read `references/runtime-i18n-patterns.md`.
 If the task is mainly about recipes unlocked by character progression, also read `references/recipe-patterns.md`.
 If the task is mainly about general atlases, icons, or anim zips beyond character-specific frontend assets, also read `references/asset-patterns.md`.
+If the task is mainly about real wardrobe-selectable character skins rather than portraits or preview modes, also read `references/skin-patterns.md`.
 
 ## Playable Characters Do Not Start From A Normal Creature Prefab
 
@@ -381,6 +382,8 @@ Practical consequence:
   - stop at the base character pattern
 - "I need wardrobe or loadout previews for alternate character forms."
   - add optional character modes and verify the mode `type` names against the preview build mapping
+- "I need full official-style character skins for a mod character."
+  - switch to `references/skin-patterns.md` and treat it as an advanced UI-plus-data task
 - "I need unlockable perks or skill-gated recipes."
   - add the optional skill tree
 - "I need custom player actions or SG changes."

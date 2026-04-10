@@ -234,6 +234,15 @@ If the prefab is a creature or NPC, also route through brain and SG placement ea
 9. If portraits, avatar icons, or self-inspect art are wrong, inspect `scripts/screens/lobbyscreen.lua`, `scripts/screens/redux/serverslotscreen.lua`, and `scripts/widgets/inventorybar.lua` before changing unrelated gameplay code.
 10. If wardrobe or loadout preview forms are wrong, inspect `scripts/widgets/redux/loadoutselect.lua`, `scripts/widgets/skinspuppet.lua`, and whether `AddModCharacter(..., modes)` uses `type` names that match the character's base skin mapping.
 
+### Add Or Patch Official Skin Data
+
+1. Read `references/skin-patterns.md`.
+2. Decide whether the task really needs the official skin system or only preview modes or runtime build swaps.
+3. Inspect `scripts/prefabskin.lua`, `scripts/prefabskins.lua`, and `scripts/prefabs/skinprefabs.lua`.
+4. Inspect `scripts/widgets/redux/loadoutselect.lua` and `scripts/screens/redux/defaultskinselection.lua` before promising wardrobe behavior.
+5. Do not assume mod characters get the vanilla base-skin selector.
+6. Do not assume ownership exists unless the task also patches the inventory-facing selection flow.
+
 ### Adjust Numbers Or Balance
 
 1. Start in `scripts/tuning.lua`.

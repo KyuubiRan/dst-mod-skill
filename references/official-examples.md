@@ -101,6 +101,27 @@ Read next:
 - `references/runtime-i18n-patterns.md`
 - `references/recipe-patterns.md`
 
+## Skin System Examples
+
+- `scripts/prefabskin.lua`
+  - `CreatePrefabSkin(...)` and shared skin helper functions
+- `scripts/prefabskins.lua`
+  - generated `PREFAB_SKINS` and `PREFAB_SKINS_IDS`
+- `scripts/prefabs/skinprefabs.lua`
+  - generated base-skin and item-skin data
+- `scripts/skinsutils.lua`
+  - skin data lookup, build-name resolution, portrait naming, and skin modes
+- `scripts/widgets/redux/loadoutselect.lua`
+  - mod-character preview modes and vanilla-character base-skin UI behavior
+- `scripts/screens/redux/defaultskinselection.lua`
+  - ownership-gated skin list building
+
+Read next:
+
+- `references/skin-patterns.md`
+- `references/character-patterns.md`
+- `references/creation-patterns.md`
+
 ## FX, Light, And Sound Examples
 
 - `scripts/prefabs/moon_altar.lua`

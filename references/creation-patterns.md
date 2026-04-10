@@ -16,6 +16,7 @@ Read `references/modmain-patterns.md` first when the task is mainly about the en
 If the task is specifically about common official components such as `health`, `hunger`, `sanity`, `combat`, `equippable`, `armor`, `weapon`, or `container`, also read `references/component-patterns.md`.
 If the prefab is mainly a light helper, FX prefab, particle effect, or sound proxy, also read `references/effects-patterns.md`.
 If the prefab also needs replicated client state, also read `references/networking-templates.md`.
+If the task is specifically about official prefab skins or character base-skin metadata, also read `references/skin-patterns.md`.
 
 ## How `PrefabFiles` Are Loaded
 
