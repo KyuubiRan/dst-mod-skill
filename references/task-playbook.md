@@ -9,9 +9,10 @@ Use this file as a compact decision tree.
 3. If `modinfo.lua` exists, classify the mod as all-clients gameplay, client-only, or server-only from its flags before reading runtime APIs.
 4. If the task is runtime-side, read `references/runtime-globals.md` and decide whether it is authority logic, local UI, local input, or entity-query logic.
 5. Identify the smallest official file that already matches the feature shape.
-6. Inspect the exact hook or helper definition in official code.
-7. Check whether the behavior is server-only, client-only, or replicated.
-8. Keep the implementation smaller than the official source you inspected.
+6. If you still need a concrete official starter, read `references/official-examples.md`.
+7. Inspect the exact hook or helper definition in official code.
+8. Check whether the behavior is server-only, client-only, or replicated.
+9. Keep the implementation smaller than the official source you inspected.
 
 ## Edit `modinfo.lua`
 

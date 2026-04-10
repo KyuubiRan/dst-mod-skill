@@ -109,6 +109,7 @@ python scripts/check_skill.py
 ## Read These References As Needed
 
 - Read `references/official-files.md` for file paths, entry points, and what each official file family is good for.
+- Read `references/official-examples.md` when you already know the subsystem but need the closest concrete official prefab, widget, SG, map, or networking example to open first.
 - Read `references/mod-api-map.md` for the highest-value mod APIs and where they live.
 - Read `references/modinfo-patterns.md` when the task edits `modinfo.lua`, compatibility flags, dependencies, or `configuration_options`.
 - Read `references/creation-patterns.md` when the task is about how prefabs, components, or helper modules are created and loaded.
