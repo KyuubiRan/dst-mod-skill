@@ -21,6 +21,14 @@ Use this file as a compact decision tree.
 4. Keep config helpers tiny and avoid Lua standard-library assumptions.
 5. If config needs grouping, use `MakeConfigSectionHeader(...)`.
 
+## Scaffold A New Mod
+
+1. Read `references/mod-bootstrap.md`.
+2. Classify the mod as all-clients gameplay, client-only, or server-only.
+3. Generate only `modinfo.lua` and `modmain.lua` first unless worldgen or host setup files are clearly required.
+4. If the user wants deterministic output, use `scripts/init_dst_mod.py`.
+5. After the scaffold exists, route the first real feature through `references/template-patterns.md` or the narrower subsystem page.
+
 ## Debug A Broken Feature
 
 1. Read `references/diagnostic-patterns.md`.
@@ -138,6 +146,7 @@ If the only viable patch point is a closed-over helper function, read `reference
 2. Decide whether the text belongs in runtime `STRINGS` or localized `modinfo.lua` metadata.
 3. If the task is really about runtime i18n architecture, read `references/runtime-i18n-patterns.md`.
 4. Keep prefab and action keys aligned with uppercase `STRINGS` entries.
+5. If art or icon issues are mixed in, inspect `references/asset-patterns.md` separately instead of treating it as a string bug.
 
 ### Add Assets Or Icons
 
