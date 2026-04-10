@@ -85,7 +85,7 @@ Typical modinfo-side shape:
 ```lua
 name = ChooseTranslationTable({
     "English Name",
-    ["zh"] = "中文名",
+    ["zh"] = "Localized Name",
 })
 ```
 

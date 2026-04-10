@@ -1,91 +1,89 @@
 # DST Mod Development Skill
 
-[中文说明](./README_zh.md)
+[Chinese](./README_zh.md)
 
-This repository is a local skill for Don't Starve Together mod development.
-It is intended for Codex-style agent workflows around DST modding.
+This repository packages a local skill for Don't Starve Together mod development.
+It is designed to help Codex work from official DST source files first, then choose the narrowest safe implementation path for mod code.
 
-Its core workflow is:
+## What This Skill Helps With
 
-- inspect official `scripts.zip`
-- confirm runtime context and authority boundaries
-- implement with the narrowest safe hook or patch
-
-## Scope
-
-This skill is designed to help with:
-
-- inspecting `modinfo.lua` and `modmain.lua`
+- reading `modinfo.lua`, `modmain.lua`, and related entry files
 - classifying a mod as `all-clients`, `client-only`, or `server-only`
-- tracing hooks such as `AddPrefabPostInit` and `AddComponentPostInit`
-- understanding prefabs, components, stategraphs, brains, widgets, and screens
-- mapping user intent to common component bundles and prefab tags
-- working with recipes, placers, assets, RPC, replica, classified entities, and netvars
-- organizing repeated prefab families with shared factory patterns
-- symptom-driven debugging and Lua debug techniques
+- routing tasks across prefabs, components, brains, stategraphs, widgets, screens, RPC, replica, persistence, and shard runtime
+- matching feature requests to common component bundles and prefab tags
+- debugging host versus client issues, save or load bugs, and Master versus Caves problems
+- inspecting official game source and texture atlases quickly
 
-## Principles
-
-- official local DST files are the source of truth
-- prefer `data/databundles/scripts.zip`
-- avoid copying large official functions when a smaller hook is available
-- separate server, client, and local UI concerns before coding
-- for existing mods, read `modinfo.lua` first and classify the mod before implementation
-
-## Repository Layout
-
-```text
-.
-├─ SKILL.md
-├─ agents/
-├─ references/
-└─ scripts/
-```
+## Included In The Repository
 
 - `SKILL.md`
-  - main skill instructions and workflow
-- `agents/`
-  - agent metadata
+  - the core skill instructions and routing rules
 - `references/`
-  - topic-focused reference docs
-- `scripts/`
-  - helper scripts
-  - `check_skill.py`: lightweight integrity check for references, scripts, and route targets
-  - `dst_zip_tool.py`: inspect official `scripts.zip`
-  - `init_dst_mod.py`: scaffold a basic mod skeleton
-  - `bundle_release.py`: build a release bundle with exclusion rules and incremental sync
-  - `tex_atlas_tool.py`: pack multiple PNGs into one atlas `tex+xml`, or unpack official/local atlas TEX/XML
-  - `resize_png.py`: resize one PNG or a whole PNG directory for DST texture fitting
+  - focused docs for components, creation flow, UI, networking, persistence, shards, assets, animation, debugging, and more
+- `scripts/check_skill.py`
+  - lightweight repository validation
+- `scripts/dst_zip_tool.py`
+  - search, read, and extract files from the official DST `scripts.zip`
+- `scripts/init_dst_mod.py`
+  - scaffold a basic DST mod
+- `scripts/bundle_release.py`
+  - build a release directory with exclusion and incremental sync support
+- `scripts/tex_atlas_tool.py`
+  - unpack official or local atlas TEX/XML data, or pack multiple PNGs into one atlas
+- `scripts/resize_png.py`
+  - resize one PNG or a whole PNG directory for DST texture workflows
 
-## Requirements
+## Source Of Truth
 
-- local Don't Starve Together installation
-- common Windows game path:
-  - `C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together`
-- common Windows script bundle path:
-  - `C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together\data\databundles\scripts.zip`
-- common Linux game path:
-  - `~/.local/share/Steam/steamapps/common/Don't Starve Together`
-- common Linux script bundle path:
-  - `~/.local/share/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
-- common macOS game path:
-  - `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together`
-- common macOS script bundle path:
-  - `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
+This skill is built around one rule:
+
+- prefer local official DST files over memory
+
+In practice that means:
+
+- inspect `data/databundles/scripts.zip` for code behavior
+- inspect `data/databundles/images.zip` for official texture atlases
+- avoid copying large official functions when a smaller hook already fits
+- separate server, client, local UI, persistence, and shard concerns before editing
+
+## Typical Use Cases
+
+- "Read this mod and tell me whether it is client-only or all-clients."
+- "Add a weapon prefab and wire the right components."
+- "Patch an existing container without rewriting the whole widget."
+- "Debug why the feature works on host but not on remote clients."
+- "Find the correct save or load phase for this data."
+- "Inspect how official migration or shard logic handles this case."
+- "Unpack an official icon atlas and show me the files."
+
+## Setup Requirements
+
+- a local Don't Starve Together installation
 - Python 3
-- Pillow for texture scripts such as `tex_atlas_tool.py` and `resize_png.py`
+- Pillow for `tex_atlas_tool.py` and `resize_png.py`
+
+Common DST install paths:
+
+- Windows:
+  - `C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together`
+- Linux:
+  - `~/.local/share/Steam/steamapps/common/Don't Starve Together`
+- macOS:
+  - `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together`
+
+Common script bundle path:
+
+- `data/databundles/scripts.zip`
+
+Common texture bundle path:
+
+- `data/databundles/images.zip`
 
 If your local install path differs, provide it explicitly when using the skill.
 
-## Common Commands
+## Example Commands
 
-List matching files:
-
-```bash
-python scripts/dst_zip_tool.py list modutil
-```
-
-Search for a symbol:
+Search official source:
 
 ```bash
 python scripts/dst_zip_tool.py grep AddPrefabPostInit --path-glob "scripts/*.lua"
@@ -97,93 +95,58 @@ Read a source range:
 python scripts/dst_zip_tool.py show scripts/entityscript.lua --start 600 --end 700
 ```
 
-Extract one official file:
-
-```bash
-python scripts/dst_zip_tool.py extract scripts/modutil.lua --output tmp/modutil.lua
-```
-
 Scaffold a new mod:
 
 ```bash
 python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --description "Short summary" --mod-type all-clients
 ```
 
-Bundle a release directory:
+Build a release directory:
 
 ```bash
 python scripts/bundle_release.py . --output ..\MyMod_release
 ```
 
-Unpack an official icon atlas:
+Unpack an official atlas:
 
 ```bash
 python scripts/tex_atlas_tool.py unpack inventoryimages1
 ```
 
-Pack multiple PNGs into one atlas:
-
-```bash
-python scripts/tex_atlas_tool.py pack path/to/png_dir my_atlas
-```
-
-Resize one icon:
+Resize an icon:
 
 ```bash
 python scripts/resize_png.py path/to/icon.png 64x64
 ```
 
-Run a lightweight skill integrity check:
+Run a quick repository check:
 
 ```bash
 python scripts/check_skill.py
 ```
 
-## Recommended Reading
+## Where To Start
 
-High-value docs under `references/` include:
+If you are new to the repository, the most useful entry points are:
 
-- `official-files.md`
-  - official file map and where to read first
-- `modinfo-patterns.md`
-  - `modinfo.lua` metadata, dependencies, configuration layout, and its constrained execution environment
-- `component-patterns.md`
-  - component routing, intent-to-component bundles, negative constraints, and links into `references/components/`
-- `feature-recipes.md`
-  - whole-feature entry points such as weapon, container, creature, structure, and playable-character tasks
-- `tag-patterns.md`
-  - high-frequency prefab tags and the difference between prefab-added and component-managed tags
-- `world-system-patterns.md`
-  - common world-system combinations such as `fueled`, `burnable`, `freezable`, `lootdropper`, `trader`, `hauntable`, and `deployable`
-- `networking-templates.md`
-  - small implementation templates for netvars, replica, classified entities, and RPC
-- `stategraph-patterns.md`
-  - SG object shape, `wilson` versus `wilson_client`, prediction clues, and SG hook routing
-- `effects-patterns.md`
-  - official light, FX prefab, particle, and sound patterns
-- `texture-patterns.md`
-  - atlas `tex+xml` packing and unpacking, official `images.zip` texture lookup, and PNG resize workflow
-- `runtime-i18n-patterns.md`
-  - recommended runtime localization structure, locale loaders, character speech inheritance, and optional `.po` route
-- `task-playbook.md`
-  - compact task routing and validation order
-- `creation-patterns.md`
-  - prefab, component, replica, and shared factory structure
-- `animstate-patterns.md`
-  - `inst.AnimState` patterns, symbol overrides, layer versus symbol, and animation progress control
-- `template-patterns.md`
-  - minimal templates plus a shared `table + factory + unpack` prefab-family template
-- `diagnostic-patterns.md`
-  - symptom-driven debugging checklists
-- `debug-techniques.md`
-  - Lua `debug` techniques such as narrow upvalue patching
+- `SKILL.md`
+- `references/task-playbook.md`
+- `references/official-examples.md`
+- `references/modinfo-patterns.md`
+- `references/modmain-patterns.md`
+- `references/component-patterns.md`
+- `references/feature-recipes.md`
+- `references/networking-patterns.md`
+- `references/persistence-patterns.md`
+- `references/shard-patterns.md`
+- `references/ui-patterns.md`
+- `references/effects-patterns.md`
 
-## Recommended Agent Flow
+## Recommended Workflow
 
-When this skill is used in an agent workflow, the recommended flow is:
-
-1. confirm the local DST path
-2. read the target mod's `modinfo.lua`
-3. classify the mod type
-4. inspect the smallest relevant official source
-5. only then implement changes
+1. Confirm the local DST path if it is not in a standard location.
+2. Read the target mod's `modinfo.lua`.
+3. Classify the mod type before touching runtime code.
+4. Inspect the smallest official source file that already matches the requested feature.
+5. Implement with the narrowest hook that fits.
+6. Validate the result instead of assuming the first patch point is correct.

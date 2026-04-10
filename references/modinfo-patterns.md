@@ -51,7 +51,7 @@ local MODINFO_TRANSLATIONS = {
         ModName = "Example Mod",
     },
     zh = {
-        ModName = "示例模组",
+        ModName = "Example Mod (ZH)",
     },
 }
 

@@ -100,17 +100,17 @@ Rules:
 
 ## Intent Index
 
-- "解包官方图集"
+- "unpack an official atlas"
   - use `python scripts/tex_atlas_tool.py unpack <atlas_name>`
-- "解包本地 tex+xml"
+- "unpack a local tex+xml pair"
   - use `python scripts/tex_atlas_tool.py unpack --tex ... --xml ...`
-- "把多张 PNG 打成一个 atlas"
+- "pack many PNGs into one atlas"
   - use `python scripts/tex_atlas_tool.py pack <input_dir> <atlas_name>`
-- "把图片改成 64x64 / 128x128"
+- "resize an image to 64x64 or 128x128"
   - use `python scripts/resize_png.py ... <size>`
-- "把一批图缩放后再打包"
+- "resize many images, then pack them"
   - resize first with `resize_png.py`, then pack with `tex_atlas_tool.py`
-- "看看官方物品贴图"
+- "inspect official inventory textures"
   - unpack `inventoryimages1`
 
 ## Rule Of Thumb

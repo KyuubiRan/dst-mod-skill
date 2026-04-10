@@ -2,104 +2,99 @@
 
 [English](./README.md)
 
-这是一个面向《饥荒联机版》Mod 开发的本地 Skill 仓库，用于帮助 Codex 在编写、分析、调试 DST Mod 时参考官方游戏脚本。
+[![QQ Group](https://img.shields.io/badge/QQ-%E7%82%B9%E5%87%BB%E5%8A%A0%E7%BE%A4-12B7F5?style=for-the-badge&logo=tencentqq&logoColor=white&labelColor=111111)](https://qm.qq.com/cgi-bin/qm/qr?k=5hu7noeDQkIOMUGOXOCXa7Ot6DSAU2U0&jump_from=webapi&authKey=2L/jTywWWu78ZMpASDZC0YCfJXnwLHKiIvCBIobvVQmcBEqUSUfVbwG2/r+sSt4g)
 
-它的核心目标很简单：
+这个仓库是一套面向《饥荒联机版》Mod 开发的本地 Skill。
+它的目标不是替你“猜” DST 的实现，而是让 Codex 先查官方源码，再用更稳、更窄的方式完成 Mod 开发与排错。
 
-- 先查官方 `scripts.zip`
-- 再确认运行上下文和主客机边界
-- 最后用最窄、最稳的方式实现或修复功能
+## 这个 Skill 能做什么
 
-## 适用范围
+- 阅读 `modinfo.lua`、`modmain.lua` 和相关入口文件
+- 判断一个 Mod 是 `all-clients`、`client-only` 还是 `server-only`
+- 把需求路由到 prefab、component、brain、stategraph、widget、screen、RPC、replica、persistence、shard 等正确层级
+- 根据需求推断常见组件组合和 prefab tag
+- 排查主机和远端客户端不一致、存档读档异常、Master 与 Caves 分片问题
+- 快速检索官方 `scripts.zip` 与 `images.zip`
 
-这个 Skill 主要覆盖以下工作：
+## 仓库里包含什么
 
-- 分析 `modinfo.lua` / `modmain.lua`
-- 判断 Mod 类型：`all-clients` / `client-only` / `server-only`
-- 查找和验证常用 Hook，如 `AddPrefabPostInit`、`AddComponentPostInit`
-- 分析 prefab / component / stategraph / brain / widget / screen
-- 把用户意图映射到常见组件组合与 prefab tag
-- 处理 recipe、placer、asset、RPC、replica、classified、netvar
-- 用共享工厂模式组织重复度高的 prefab 家族
-- 做症状驱动的排查和 Lua 调试
+- `SKILL.md`
+  - Skill 的核心说明、工作原则和路由规则
+- `references/`
+  - 分主题的参考文档，覆盖组件、创建流程、UI、网络同步、存档、分片、资源、动画、调试等
+- `scripts/check_skill.py`
+  - 轻量自检脚本
+- `scripts/dst_zip_tool.py`
+  - 用于检索、阅读、提取官方 DST `scripts.zip`
+- `scripts/init_dst_mod.py`
+  - 用于生成基础 DST Mod 骨架
+- `scripts/bundle_release.py`
+  - 用于按排除规则和增量同步生成发布目录
+- `scripts/tex_atlas_tool.py`
+  - 用于解包官方或本地 atlas TEX/XML，或把多张 PNG 打成一个 atlas
+- `scripts/resize_png.py`
+  - 用于调整单张或整批 PNG 的尺寸，方便贴图工作流
 
 ## 设计原则
 
-- 以本地 DST 官方安装文件为准
-- 默认优先读取 `data/databundles/scripts.zip`
-- 能用现成 Hook 时，不整段复制官方函数
-- 先分清 server / client / local UI，再写代码
-- 对已有 Mod，先读 `modinfo.lua` 判断类型，再决定实现路径
+这套 Skill 主要遵循三条规则：
 
-## 仓库结构
+- 优先以本地官方 DST 文件为准
+- 能用更窄的 Hook，就不整段复制官方实现
+- 写代码前先分清 server、client、local UI、persistence 和 shard 边界
 
-```text
-.
-├─ SKILL.md
-├─ agents/
-├─ references/
-└─ scripts/
-```
+实际使用时通常会优先查看：
 
-- `SKILL.md`
-  - Skill 主说明，定义工作流、使用原则和阅读顺序
-- `agents/`
-  - agent 元信息
-- `references/`
-  - 主题化速查文档，包括 creation、UI、action、networking、brain、recipe、assets、diagnostics 等
-- `scripts/`
-  - 辅助脚本
-  - `check_skill.py`：轻量自检，检查引用页、脚本和关键路由目标是否存在
-  - `dst_zip_tool.py`：直接检索官方 `scripts.zip`
-  - `init_dst_mod.py`：生成基础 Mod 骨架
-  - `bundle_release.py`：按排除规则和增量同步生成发布目录
-  - `tex_atlas_tool.py`：把多张 PNG 打成一个 atlas `tex+xml`，或解包官方/本地 atlas TEX/XML
-  - `resize_png.py`：单张或批量调整 PNG 尺寸，便于适配游戏贴图
+- `data/databundles/scripts.zip`
+- `data/databundles/images.zip`
 
-## 依赖环境
+## 适合处理的任务
+
+- “先看一下这个 Mod 到底是什么类型。”
+- “帮我做一个武器 / 容器 / 生物 / 建筑 prefab。”
+- “给现有 UI 或 HUD 打一个小补丁，不要整段重写。”
+- “为什么主机上能用，远端客户端不生效？”
+- “这个数据到底应该放在 `OnSave`、`OnLoadPostPass` 还是 `LongUpdate`？”
+- “官方分片迁移是怎么处理这个问题的？”
+- “帮我解包官方物品图集看看贴图内容。”
+
+## 环境要求
 
 - 本地安装《饥荒联机版》
-- 常见 Windows 游戏路径：
-  - `C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together`
-- 常见 Windows 脚本包路径：
-  - `C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together\data\databundles\scripts.zip`
-- 常见 Linux 游戏路径：
-  - `~/.local/share/Steam/steamapps/common/Don't Starve Together`
-- 常见 Linux 脚本包路径：
-  - `~/.local/share/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
-- 常见 macOS 游戏路径：
-  - `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together`
-- 常见 macOS 脚本包路径：
-  - `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
 - Python 3
-- `tex_atlas_tool.py` 与 `resize_png.py` 需要 `Pillow`
+- `tex_atlas_tool.py` 和 `resize_png.py` 需要 `Pillow`
 
-如果你的游戏路径不同，建议在使用时明确提供路径，避免引用错误的官方文件。
+常见游戏路径：
+
+- Windows：
+  - `C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together`
+- Linux：
+  - `~/.local/share/Steam/steamapps/common/Don't Starve Together`
+- macOS：
+  - `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together`
+
+常见脚本包路径：
+
+- `data/databundles/scripts.zip`
+
+常见贴图包路径：
+
+- `data/databundles/images.zip`
+
+如果你的游戏安装在非默认目录，使用时最好明确告诉它路径。
 
 ## 常用命令
 
-列出匹配文件：
-
-```bash
-python scripts/dst_zip_tool.py list modutil
-```
-
-搜索符号：
+检索官方源码：
 
 ```bash
 python scripts/dst_zip_tool.py grep AddPrefabPostInit --path-glob "scripts/*.lua"
 ```
 
-查看源码片段：
+查看一段官方源码：
 
 ```bash
 python scripts/dst_zip_tool.py show scripts/entityscript.lua --start 600 --end 700
-```
-
-提取官方文件：
-
-```bash
-python scripts/dst_zip_tool.py extract scripts/modutil.lua --output tmp/modutil.lua
 ```
 
 生成新 Mod：
@@ -114,75 +109,46 @@ python scripts/init_dst_mod.py .\MyNewMod --display-name "My New Mod" --descript
 python scripts/bundle_release.py . --output ..\MyMod_release
 ```
 
-解包官方物品图集：
+解包官方图集：
 
 ```bash
 python scripts/tex_atlas_tool.py unpack inventoryimages1
 ```
 
-把多张 PNG 打成一个 atlas：
-
-```bash
-python scripts/tex_atlas_tool.py pack path/to/png_dir my_atlas
-```
-
-调整单张图尺寸：
+调整贴图尺寸：
 
 ```bash
 python scripts/resize_png.py path/to/icon.png 64x64
 ```
 
-运行轻量自检：
+运行仓库自检：
 
 ```bash
 python scripts/check_skill.py
 ```
 
-## 文档重点
+## 建议先看哪些文档
 
-`references/` 里比较常用的几类文档：
+如果你第一次接触这个仓库，优先看这些入口：
 
-- `official-files.md`
-  - 先看哪些官方文件
-- `modinfo-patterns.md`
-  - `modinfo.lua` 的元信息、依赖、配置项布局，以及它的受限执行环境
-- `component-patterns.md`
-  - 高频组件路由、组件组合、反向约束，以及 `references/components/` 细节入口
-- `feature-recipes.md`
-  - 武器、容器、生物、建筑、角色等整类需求的入口路由
-- `tag-patterns.md`
-  - 高频 tag、tag 来源、tag 路由含义
-- `world-system-patterns.md`
-  - 高频世界系统组合，如 `fueled`、`burnable`、`freezable`、`lootdropper`、`trader`、`hauntable`、`deployable`
-- `networking-templates.md`
-  - netvar、replica、classified、RPC 的小型实现模板
-- `stategraph-patterns.md`
-  - stategraph 结构、`wilson` / `wilson_client`、预测相关线索、SG Hook 路由
-- `effects-patterns.md`
-  - 灯光、FX prefab、粒子特效、音效触发的官方模式
-- `texture-patterns.md`
-  - atlas `tex+xml` 打包解包、官方 `images.zip` 贴图检索、PNG 缩放工作流
-- `runtime-i18n-patterns.md`
-  - 推荐的 runtime 本地化结构、locale loader、角色台词继承方式，以及可选 `.po` 路线
-- `task-playbook.md`
-  - 任务分流与排查顺序
-- `creation-patterns.md`
-  - prefab / component / replica 的创建与加载
-- `animstate-patterns.md`
-  - `AnimState`、动画切换、图层与通道
-- `template-patterns.md`
-  - 常见最小模板与变体 prefab 工厂模式
-- `diagnostic-patterns.md`
-  - 按症状排查问题
-- `debug-techniques.md`
-  - Lua `debug` 高级技巧，如 upvalue patch
+- `SKILL.md`
+- `references/task-playbook.md`
+- `references/official-examples.md`
+- `references/modinfo-patterns.md`
+- `references/modmain-patterns.md`
+- `references/component-patterns.md`
+- `references/feature-recipes.md`
+- `references/networking-patterns.md`
+- `references/persistence-patterns.md`
+- `references/shard-patterns.md`
+- `references/ui-patterns.md`
+- `references/effects-patterns.md`
 
-## 推荐的 Agent 工作流
+## 推荐使用方式
 
-当这个 Skill 被用于 agent 工作流时，推荐流程是：
-
-1. 先确认本地 DST 路径可读
-2. 先读目标 Mod 的 `modinfo.lua`
-3. 判断它是客户端、服务端还是全端 Mod
-4. 再去查最小的官方源码入口
-5. 最后才动代码
+1. 如果 DST 不在默认目录，先告诉它本地游戏路径。
+2. 先让它读目标 Mod 的 `modinfo.lua`。
+3. 先判断 Mod 类型，再进入运行时实现。
+4. 让它先查最接近需求的官方源码文件。
+5. 再根据官方实现选择最窄的 Hook 或补丁位置。
+6. 最后再做验证，不要只凭第一次 patch 成功就结束。
