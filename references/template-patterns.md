@@ -37,6 +37,49 @@ Use this when:
 - `modmain.lua` is the normal runtime entry point
 - you still want the usual global passthrough and authority split
 
+## Minimal Character Registration In `modmain.lua`
+
+```lua
+local GLOBAL = GLOBAL
+setmetatable(env, {
+    __index = function(_, key)
+        return GLOBAL.rawget(GLOBAL, key)
+    end,
+})
+
+PrefabFiles = {
+    "mychar",
+}
+
+Assets = {
+    Asset("IMAGE", "images/avatars/avatar_mychar.tex"),
+    Asset("ATLAS", "images/avatars/avatar_mychar.xml"),
+    Asset("IMAGE", "images/avatars/avatar_ghost_mychar.tex"),
+    Asset("ATLAS", "images/avatars/avatar_ghost_mychar.xml"),
+    Asset("IMAGE", "images/avatars/self_inspect_mychar.tex"),
+    Asset("ATLAS", "images/avatars/self_inspect_mychar.xml"),
+    Asset("IMAGE", "images/saveslot_portraits/mychar.tex"),
+    Asset("ATLAS", "images/saveslot_portraits/mychar.xml"),
+    Asset("IMAGE", "images/selectscreen_portraits/mychar.tex"),
+    Asset("ATLAS", "images/selectscreen_portraits/mychar.xml"),
+    Asset("IMAGE", "images/selectscreen_portraits/mychar_silho.tex"),
+    Asset("ATLAS", "images/selectscreen_portraits/mychar_silho.xml"),
+    Asset("IMAGE", "bigportraits/mychar.tex"),
+    Asset("ATLAS", "bigportraits/mychar.xml"),
+    Asset("IMAGE", "bigportraits/mychar_none.tex"),
+    Asset("ATLAS", "bigportraits/mychar_none.xml"),
+}
+
+AddMinimapAtlas("images/map_icons/mychar.xml")
+AddModCharacter("mychar", "FEMALE")
+```
+
+Use this when:
+
+- the task is a real character mod
+- the main missing piece is registration plus frontend assets
+- the actual player logic will live in `prefabs/mychar.lua`
+
 ## Minimal `modworldgenmain.lua`
 
 ```lua

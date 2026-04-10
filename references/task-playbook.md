@@ -231,6 +231,7 @@ If the prefab is a creature or NPC, also route through brain and SG placement ea
 6. Keep stat tuning, server-only components, and authoritative listeners in `master_postinit`.
 7. If the character needs progression, read `scripts/prefabs/skilltree_defs.lua` and the closest `scripts/prefabs/skilltree_<character>.lua`.
 8. Only add a skill tree when the design actually needs unlockable progression or skill-gated recipes.
+9. If portraits, avatar icons, or self-inspect art are wrong, inspect `scripts/screens/lobbyscreen.lua`, `scripts/screens/redux/serverslotscreen.lua`, and `scripts/widgets/inventorybar.lua` before changing unrelated gameplay code.
 
 ### Adjust Numbers Or Balance
 

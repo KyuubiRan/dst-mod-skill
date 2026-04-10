@@ -5,6 +5,7 @@ Use this file when the task is a playable character mod rather than a normal cre
 If the task is mainly about entry-file choice first, read `references/entrypoint-patterns.md`.
 If the task is mainly about runtime i18n layout, also read `references/runtime-i18n-patterns.md`.
 If the task is mainly about recipes unlocked by character progression, also read `references/recipe-patterns.md`.
+If the task is mainly about general atlases, icons, or anim zips beyond character-specific frontend assets, also read `references/asset-patterns.md`.
 
 ## Playable Characters Do Not Start From A Normal Creature Prefab
 
@@ -40,6 +41,58 @@ Common asset families:
 - `images/selectscreen_portraits/`
 - `bigportraits/`
 - optional skill atlas or skill background art
+
+## Character Frontend Asset Contract
+
+Character mods usually need a frontend asset set in addition to the gameplay prefab.
+
+High-frequency file paths:
+
+- `images/avatars/avatar_<character>.xml`
+- `images/avatars/avatar_ghost_<character>.xml`
+- `images/avatars/self_inspect_<character>.xml`
+- `images/saveslot_portraits/<character>.xml`
+- `images/selectscreen_portraits/<character>.xml`
+- `images/selectscreen_portraits/<character>_silho.xml`
+- `bigportraits/<character>.xml`
+- optional `bigportraits/<character>_none.xml`
+- optional `images/names_<character>.xml`
+
+Observed official consumers:
+
+- `scripts/widgets/targetindicator.lua`
+  - looks up `avatar_<character>.xml` or `avatar_ghost_<character>.xml`
+- `scripts/widgets/inventorybar.lua`
+  - looks up `images/avatars/self_inspect_<character>.xml`
+- `scripts/screens/redux/serverslotscreen.lua`
+  - for mod characters, resolves save-slot portraits from `images/saveslot_portraits/<character>.xml`
+- `scripts/screens/lobbyscreen.lua`
+  - reads `images/names_<character>.xml`
+  - reads `bigportraits/<character>.xml`
+  - prefers `bigportraits/<character>_none.xml` when available
+
+Practical rule:
+
+- if a character shows the wrong portrait or fallback art, check the exact UI-facing file path before debugging gameplay code
+- register map icons with `AddMinimapAtlas(...)`, but treat portraits and avatar atlases as separate assets with their own file names
+
+## Big Portrait Naming Is Slightly Tricky
+
+Observed official portrait calls:
+
+- some frontend paths read `bigportraits/<character>.xml` with `<character>.tex`
+- lobby and loadout flows can prefer `bigportraits/<character>_none.xml`
+- the lobby path may ask that `_none.xml` atlas for `<character>_none_oval.tex`
+
+Practical consequence:
+
+- if you ship `bigportraits/<character>_none.xml`, verify the atlas element names it exposes, not only the texture filename
+- when portrait selection behaves strangely, inspect the actual atlas element name the consuming screen asks for
+
+Good conservative rule:
+
+- keep the common portrait files named exactly after the prefab
+- if you add `_none` or skin-style portrait variants, verify them against the real frontend call site
 
 ## What Belongs In `modmain.lua`
 
@@ -127,6 +180,8 @@ Read next:
 - `references/string-patterns.md`
 - `references/runtime-i18n-patterns.md`
 
+For frontend title-card text, also verify whether the character should ship `images/names_<character>.xml`.
+
 ## Optional Skill Tree
 
 Treat the skill tree as optional character-specific progression, not mandatory boilerplate.
@@ -198,6 +253,51 @@ if data.CUSTOM_FUNCTIONS ~= nil then
     skilltreedefs.CUSTOM_FUNCTIONS.mychar = data.CUSTOM_FUNCTIONS
 end
 ```
+
+## Skill-Tree String And Art Contract
+
+Observed official skill-tree UI behavior:
+
+- `scripts/widgets/redux/skilltreewidget.lua`
+  - asks for a background image named `<character>_background.tex`
+- `scripts/widgets/redux/skilltreebuilder.lua`
+  - turns each node `icon` value into `<icon>.tex`
+  - resolves the atlas through `GetSkilltreeIconAtlas(...)`
+- vanilla skill-tree files read localized text from `STRINGS.SKILLTREE.<CHARACTER_BUCKET>`
+
+Practical consequence:
+
+- keep node titles and descriptions in `STRINGS.SKILLTREE.<UPPERCASE_CHARACTER>`
+- each skill key usually wants one `_TITLE` string and one `_DESC` string
+- keep node `icon` names stable because the widget looks them up by filename
+- if the character has a custom tree background, name the image `<character>_background.tex`
+
+Recommended string shape:
+
+```lua
+STRINGS.SKILLTREE.MYCHAR = {
+    MYCHAR_BRANCH_1_TITLE = "Branch One",
+    MYCHAR_BRANCH_1_DESC = "Unlocks the first branch.",
+}
+```
+
+Recommended skill data shape:
+
+```lua
+mychar_branch_1 = {
+    title = STRINGS.SKILLTREE.MYCHAR.MYCHAR_BRANCH_1_TITLE,
+    desc = STRINGS.SKILLTREE.MYCHAR.MYCHAR_BRANCH_1_DESC,
+    icon = "mychar_branch_1",
+    root = true,
+    group = "core",
+    pos = { x = 0, y = 0 },
+}
+```
+
+Important note:
+
+- the exact atlas resolver behind `GetSkilltreeIconAtlas(...)` is not defined in normal Lua files
+- when you add custom skill icons, verify in the real UI that the atlas lookup succeeds instead of assuming the helper will find them automatically
 
 ## Skill-Tree Data Rules Worth Remembering
 

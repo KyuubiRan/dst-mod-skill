@@ -76,6 +76,16 @@ Read next:
   - central skill-tree registry, validation helpers, and `CreateSkillTreeFor(...)`
 - `scripts/prefabs/skilltree_wilson.lua`
   - character-local skill-tree data module
+- `scripts/screens/lobbyscreen.lua`
+  - frontend consumer for `images/names_<character>.xml` and `bigportraits/...`
+- `scripts/screens/redux/serverslotscreen.lua`
+  - mod-character save-slot portrait lookup
+- `scripts/widgets/inventorybar.lua`
+  - self-inspect avatar lookup
+- `scripts/widgets/redux/skilltreewidget.lua`
+  - skill-tree background image contract
+- `scripts/widgets/redux/skilltreebuilder.lua`
+  - skill-tree icon lookup contract
 
 Read next:
 
