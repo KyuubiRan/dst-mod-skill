@@ -128,6 +128,24 @@ If the only viable patch point is a closed-over helper function, read `reference
 5. Use `OnLoadPostPass(...)` for cross-entity repair and `LongUpdate(dt)` for offline progression.
 6. Keep saved data minimal and canonical.
 
+### Persist Local Settings Or Cross-Save Profile Data
+
+1. Read `references/persistent-string-patterns.md`.
+2. Decide whether the data is truly local process data, not one world save or one entity.
+3. If the user actually wants host-visible mod config, stop and route back to `references/modinfo-patterns.md`.
+4. If malformed or old payloads are plausible, read `references/protected-call-patterns.md`.
+5. Serialize the table to string first, usually with `json.encode(...)`.
+6. Load through the callback of `TheSim:GetPersistentString(...)`; do not treat it as a synchronous return.
+7. Prefix the file key with a stable mod namespace.
+
+### Guard Serialization, Deserialization, Or Optional `require(...)`
+
+1. Read `references/protected-call-patterns.md`.
+2. Keep the protected boundary narrow: decode, encode, or one optional `require(...)`.
+3. Prefer `pcall(...)` by default.
+4. Reach for `xpcall(...)` only when a custom error handler materially improves the failure path.
+5. Validate the decoded result after the protected call; `ok == true` is not enough.
+
 ### Patch UI
 
 1. Read `references/ui-patterns.md`.
@@ -300,6 +318,8 @@ If the prefab is a creature or NPC, also route through brain and SG placement ea
 - Check that server and client code are not mixed accidentally.
 - Check that the chosen hook is the narrowest one that matches the target.
 - Check that save/load logic uses the right phase: `OnLoad`, `OnLoadPostPass`, or `LongUpdate`.
+- Check whether the data should be world-save lifecycle or `TheSim` persistent-string storage.
+- Check that fragile decode, encode, or optional `require(...)` boundaries use `pcall(...)` or `xpcall(...)` appropriately.
 - Check that shard-aware logic distinguishes current shard, master shard, and cross-shard behavior.
 - Check that local UI patches target the right layer: `controls`, `playerhud`, transient widget, popup screen, or `frontend`.
 - Check that UI handlers, listeners, and tasks are cleaned up on close or destroy.

@@ -1,8 +1,10 @@
 # Persistence Patterns
 
-Use this file when the task needs save or load behavior, offline progression, post-load reference repair, or nested owned-entity persistence.
+Use this file when the task needs entity or world save lifecycle, offline progression, post-load reference repair, or nested owned-entity persistence.
 
 If the task mainly needs ready-to-copy shapes, also read `references/persistence-templates.md`.
+If the task is really about cross-save local settings or `TheSim:SetPersistentString(...)`, read `references/persistent-string-patterns.md` instead.
+If the task needs guarded decode or encode around serialized payloads, also read `references/protected-call-patterns.md`.
 
 ## Official Lifecycle Order
 
@@ -43,6 +45,8 @@ Practical consequence:
   - `GetSaveRecord()` and `SpawnSaveRecord(...)`
 - helper child only needs its inner persist data, not a full top-level prefab record
   - `GetPersistData()` and `SetPersistData(...)`
+- local profile-like settings, cache, or cross-save local mod data
+  - `references/persistent-string-patterns.md`
 
 ## Scalar State
 
@@ -179,3 +183,4 @@ Use this only when old saves may load into a newer prefab shape that now needs t
 - cross-entity links: `LoadPostPass`
 - owned child entities: `GetSaveRecord()` and `SpawnSaveRecord(...)`
 - offline elapsed time: `LongUpdate(dt)`
+- cross-save local settings or cache: `TheSim:SetPersistentString(...)` and `GetPersistentString(...)`

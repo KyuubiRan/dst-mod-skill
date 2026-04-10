@@ -241,6 +241,47 @@ Also read:
 - `references/persistence-patterns.md`
 - `references/persistence-pitfalls.md`
 
+## Local Settings Or Cache Reset After Full Restart
+
+Check in this order:
+
+1. Is this data really local cross-save data rather than one world-save entity state?
+2. Was the table serialized to string before `TheSim:SetPersistentString(...)`?
+3. Does `TheSim:GetPersistentString(...)` restore inside its callback instead of expecting an immediate return value?
+4. Is the file key stable and namespaced for this mod?
+5. If the data should be host-configurable from the mod settings screen, did the task actually belong in `modinfo.lua` instead?
+
+Common misses:
+
+- used `OnSave(...)` and `OnLoad(...)` for data that should survive across different worlds
+- used plain persistent strings for something that should have stayed world-specific
+- forgot to decode JSON or handle decode failure
+
+Also read:
+
+- `references/persistent-string-patterns.md`
+- `references/modinfo-patterns.md`
+
+## Decode, Encode, Or Optional `require(...)` Fails Intermittently
+
+Check in this order:
+
+1. Is the fragile boundary wrapped narrowly with `pcall(...)` or `xpcall(...)`?
+2. If this is a decode path, is the decoded value also type-checked before use?
+3. If this is an encode path, is there a sane fallback when serialization fails?
+4. If this is `require(...)`, is the module truly optional rather than a hidden hard dependency?
+5. Is the code protecting only the risky call instead of a huge unrelated logic block?
+
+Common misses:
+
+- called the risky function before `pcall(...)` actually runs
+- treated `ok == true` as if the decoded structure must already be valid
+- used a broad protected block that hides the real failing line
+
+Also read:
+
+- `references/protected-call-patterns.md`
+
 ## Works On Master But Breaks On Caves Or During Migration
 
 Check in this order:

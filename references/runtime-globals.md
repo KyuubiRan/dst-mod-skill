@@ -8,6 +8,8 @@ Read only the narrow page you need:
   - `TheWorld.ismastersim`, `TheNet:IsDedicated()`, `TheNet:GetIsServer()`, `TheWorld.state`, `TheWorld.Map`
 - `runtime-local-ui.md`
   - `ThePlayer`, `TheFrontEnd`, local HUD usage
+- `persistent-string-patterns.md`
+  - `TheSim:SetPersistentString(...)`, `GetPersistentString(...)`, and cross-save local storage
 - `input-patterns.md`
   - `TheInput`, keyboard, mouse, move, and control handler usage
 - `entity-query-patterns.md`
@@ -19,6 +21,8 @@ Read only the narrow page you need:
   - read `runtime-authority.md`
 - "Can I use `ThePlayer`, HUD, or screens here?"
   - read `runtime-local-ui.md`
+- "How do I save local settings or cache across world saves?"
+  - read `persistent-string-patterns.md`
 - "Should this input or hotkey be local-only?"
   - read `input-patterns.md`
 - "How do I scan nearby entities safely?"

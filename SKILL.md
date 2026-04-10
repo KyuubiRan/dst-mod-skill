@@ -135,6 +135,8 @@ python scripts/check_skill.py
 - Read `references/runtime-i18n-patterns.md` when the task designs or refactors runtime localization, locale loaders, character speech inheritance, or `.po` versus Lua-table i18n strategy.
 - Read `references/persistence-patterns.md` when the task needs `OnSave(...)`, `OnLoad(...)`, `OnPreLoad(...)`, `OnLoadPostPass(...)`, `LongUpdate(...)`, nested save records, or save-migration logic.
 - Read `references/persistence-templates.md` when the task already knows it needs save/load code and now wants the smallest correct shape.
+- Read `references/persistent-string-patterns.md` when the task needs `TheSim:SetPersistentString(...)`, `TheSim:GetPersistentString(...)`, local profile-like cache files, or cross-save local mod settings.
+- Read `references/protected-call-patterns.md` when the task needs `pcall(...)`, `xpcall(...)`, safe `json.decode(...)`, safe `json.encode(...)`, or optional `require(...)` around fragile serialization or deserialization boundaries.
 - Read `references/asset-patterns.md` when the task adds anim zips, atlases, inventory icons, or minimap assets.
 - Read `references/texture-patterns.md` when the task packs or unpacks atlas `tex+xml`, inspects official icon atlases from `images.zip`, or resizes PNG files for DST texture fitting.
 - Read `references/animstate-patterns.md` when the task touches `inst.AnimState`, animation playback flow, symbol overrides, or animation-driven UI state.

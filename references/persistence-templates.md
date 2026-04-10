@@ -1,8 +1,10 @@
 # Persistence Templates
 
-Use this file when a task already knows it needs save or load logic and now wants the smallest practical implementation shape.
+Use this file when a task already knows it needs entity or world save logic and now wants the smallest practical implementation shape.
 
 Read `references/persistence-patterns.md` first for lifecycle and routing.
+If the task is actually a local persistent file such as mod settings or cached profile data, read `references/persistent-string-patterns.md` instead.
+If the task needs safe decode or encode wrappers, also read `references/protected-call-patterns.md`.
 
 ## Template: Plain Scalar State
 

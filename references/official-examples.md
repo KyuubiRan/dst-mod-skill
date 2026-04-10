@@ -262,6 +262,48 @@ Read next:
 - `references/persistence-templates.md`
 - `references/diagnostic-patterns.md`
 
+## Persistent String And Local Profile Storage Examples
+
+- `scripts/mainfunctions.lua`
+  - `SavePersistentString(...)` and `ErasePersistentString(...)` wrappers around `TheSim`
+- `scripts/util/savedata.lua`
+  - reusable persistent-file wrapper with dirty flag, load, save, and erase flow
+- `scripts/generickv.lua`
+  - simple key-value storage persisted through one file
+- `scripts/craftingmenuprofile.lua`
+  - local crafting UI preferences saved as JSON
+- `scripts/plantregistrydata.lua`
+  - larger local registry data saved with `DataDumper(...)`
+- `scripts/skilltreedata.lua`
+  - local profile progression data persisted outside one world save
+
+Read next:
+
+- `references/persistent-string-patterns.md`
+- `references/persistence-patterns.md`
+- `references/modinfo-patterns.md`
+
+## Protected Call And Safe Decode Examples
+
+- `scripts/craftingmenuprofile.lua`
+  - `pcall(...)` around JSON decode for persistent local UI profile data
+- `scripts/screens/modsscreen.lua`
+  - `pcall(...)` around remote JSON decode
+- `scripts/screens/multiplayermainscreen.lua`
+  - `pcall(...)` around cached MOTD JSON decode
+- `scripts/screens/redux/multiplayermainscreen.lua`
+  - `pcall(...)` around stored JSON from generic KV
+- `scripts/tools/getmissingstrings.lua`
+  - `pcall(require, ...)` for optional speech files
+- `scripts/screens/worldgenscreen.lua`
+  - `xpcall(..., generic_error)` around JSON encode with fallback
+
+Read next:
+
+- `references/protected-call-patterns.md`
+- `references/persistent-string-patterns.md`
+- `references/diagnostic-patterns.md`
+
 ## Shard And Migration Examples
 
 - `scripts/prefabs/world.lua`

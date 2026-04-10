@@ -14,6 +14,10 @@ Use this file when save or load logic technically runs, but restored state is wr
   - it likely needed `GetSaveRecord()` or `GetPersistData()`
 - old saves crash or lose new behavior
   - optional component migration may need `add_component_if_missing`
+- local settings keep resetting between runs
+  - the task may have used entity save hooks instead of `TheSim` persistent strings
+- world-specific data leaks across different saves
+  - plain persistent strings were used where world or entity save lifecycle was required
 
 ## Practical Rules
 
@@ -26,6 +30,10 @@ Use this file when save or load logic technically runs, but restored state is wr
 
 - lifecycle order is unclear
   - read `persistence-patterns.md`
+- cross-save local config or cache is the real need
+  - read `persistent-string-patterns.md`
+- malformed serialized data may be the real problem
+  - read `protected-call-patterns.md`
 - need minimal implementation shape
   - read `persistence-templates.md`
 - symptom-led debugging
