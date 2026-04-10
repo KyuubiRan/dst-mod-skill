@@ -4,49 +4,22 @@ Use this file when the task is about how DST mod content is defined and loaded.
 
 This page focuses on the common creation path:
 
-- `modmain.lua`
+- `modmain.lua` as the registration source
 - `PrefabFiles`
 - `prefabs/*.lua`
 - `inst:AddComponent("name")`
 - `scripts/components/*.lua`
 - replica-side component support
 
+Read `references/modmain-patterns.md` first when the task is mainly about the entry file itself, shared startup glue, `modimport(...)`, or top-level asset registration.
+
 If the task is specifically about common official components such as `health`, `hunger`, `sanity`, `combat`, `equippable`, `armor`, `weapon`, or `container`, also read `references/component-patterns.md`.
 If the prefab is mainly a light helper, FX prefab, particle effect, or sound proxy, also read `references/effects-patterns.md`.
 If the prefab also needs replicated client state, also read `references/networking-templates.md`.
 
-## `modmain.lua` Is The Main Bootstrap
-
-The official loader executes `modmain.lua` for enabled gameplay mods from `scripts/mods.lua`.
-
-Observed flow:
-
-- `ModWrangler:InitializeModMain(modname, mod, "modmain.lua")`
-- the mod environment is prepared first
-- `modimport(...)` is installed into that environment
-- the mod's `scripts/` directory is added to `package.path`
-
-Practical consequence:
-
-- declare `PrefabFiles` in `modmain.lua`
-- declare mod-level `Assets` in `modmain.lua`
-- use `modimport("scripts/foo")` when you want to split logic into additional Lua files
-
-`modimport(...)` is a direct file loader, not the same thing as `require(...)`.
-
-Observed official behavior in `scripts/mods.lua`:
-
-- it loads from `env.MODROOT .. modulename`
-- it appends `.lua` if missing
-
-Practical rule:
-
-- use `modimport("scripts/foo")` when you want an explicit file load by mod-root path
-- use `require("widgets/foo")`, `require("brains/foo")`, or similar when you want package-style module loading through the mod `scripts/` path
-
 ## How `PrefabFiles` Are Loaded
 
-After `modmain.lua` runs, the loader checks `mod.PrefabFiles` and loads each entry from `prefabs/<name>.lua`.
+After `modmain.lua` declares `PrefabFiles`, the loader checks `mod.PrefabFiles` and loads each entry from `prefabs/<name>.lua`.
 
 Observed official flow in `scripts/mods.lua`:
 
@@ -61,6 +34,8 @@ Practical consequence:
   - `prefabs/my_item.lua`
   - `prefabs/my_structure.lua`
 - the string in `PrefabFiles` is the prefab file path without `.lua`
+
+If the task is really "what should stay in `modmain.lua` versus move elsewhere", switch back to `references/modmain-patterns.md`.
 
 ## Typical Prefab File Shape
 

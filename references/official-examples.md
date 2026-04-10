@@ -28,6 +28,20 @@ Read next:
 - `references/world-system-patterns.md`
 - `references/animstate-patterns.md`
 
+## Bootstrap And Registration Examples
+
+- `scripts/mods.lua`
+  - loader flow for mod environment setup, `modimport(...)`, `modmain.lua`, `PrefabFiles`, and mod-level `Assets`
+- `scripts/modutil.lua`
+  - registration APIs that `modmain.lua` usually calls
+- `scripts/prefabs/staff.lua`
+  - a grouped prefab-file family that shows what `PrefabFiles` can point at after bootstrap
+
+Read next:
+
+- `references/modmain-patterns.md`
+- `references/creation-patterns.md`
+
 ## Creature, Brain, And SG Examples
 
 - `scripts/prefabs/glommer.lua`

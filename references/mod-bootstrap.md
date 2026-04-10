@@ -89,6 +89,8 @@ Add `--with-config` if the user wants starter `configuration_options`.
 
 The next file depends on the first real feature:
 
+- entry-point layout, `PrefabFiles`, `Assets`, or `modimport(...)`
+  - read `references/modmain-patterns.md`
 - item, creature, structure, or FX prefab
   - read `references/template-patterns.md`
 - metadata, dependencies, or key config
@@ -107,3 +109,5 @@ The next file depends on the first real feature:
   - unnecessary file surface makes routing worse
 - started writing prefabs before `PrefabFiles` exists in `modmain.lua`
   - registration path breaks later
+- kept too much real gameplay logic at the top level of `modmain.lua`
+  - move instance behavior back into prefab, component, brain, SG, or post-init code

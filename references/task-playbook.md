@@ -6,13 +6,14 @@ Use this file as a compact decision tree.
 
 1. Check whether `modinfo.lua` and `modmain.lua` exist.
 2. If `modinfo.lua` exists, read `references/modinfo-patterns.md` when metadata, dependencies, or config layout may matter.
-3. If `modinfo.lua` exists, classify the mod as all-clients gameplay, client-only, or server-only from its flags before reading runtime APIs.
-4. If the task is runtime-side, read `references/runtime-globals.md` and decide whether it is authority logic, local UI, local input, or entity-query logic.
-5. Identify the smallest official file that already matches the feature shape.
-6. If you still need a concrete official starter, read `references/official-examples.md`.
-7. Inspect the exact hook or helper definition in official code.
-8. Check whether the behavior is server-only, client-only, or replicated.
-9. Keep the implementation smaller than the official source you inspected.
+3. If the task is mainly about bootstrap wiring, `PrefabFiles`, top-level assets, `modimport(...)`, or character registration, read `references/modmain-patterns.md`.
+4. If `modinfo.lua` exists, classify the mod as all-clients gameplay, client-only, or server-only from its flags before reading runtime APIs.
+5. If the task is runtime-side, read `references/runtime-globals.md` and decide whether it is authority logic, local UI, local input, or entity-query logic.
+6. Identify the smallest official file that already matches the feature shape.
+7. If you still need a concrete official starter, read `references/official-examples.md`.
+8. Inspect the exact hook or helper definition in official code.
+9. Check whether the behavior is server-only, client-only, or replicated.
+10. Keep the implementation smaller than the official source you inspected.
 
 ## Edit `modinfo.lua`
 
@@ -28,7 +29,8 @@ Use this file as a compact decision tree.
 2. Classify the mod as all-clients gameplay, client-only, or server-only.
 3. Generate only `modinfo.lua` and `modmain.lua` first unless worldgen or host setup files are clearly required.
 4. If the user wants deterministic output, use `scripts/init_dst_mod.py`.
-5. After the scaffold exists, route the first real feature through `references/template-patterns.md` or the narrower subsystem page.
+5. Read `references/modmain-patterns.md` before turning the fresh `modmain.lua` into a registration hub.
+6. After the scaffold exists, route the first real feature through `references/template-patterns.md` or the narrower subsystem page.
 
 ## Debug A Broken Feature
 
@@ -109,6 +111,14 @@ If the only viable patch point is a closed-over helper function, read `reference
 4. If the UI should request real gameplay changes, route the authoritative side through networking or action flow instead of mutating gameplay directly from the widget.
 5. Reach for `AddClassPostConstruct`.
 6. Patch narrowly instead of replacing the whole widget.
+
+### Understand Or Refactor `modmain.lua`
+
+1. Read `references/modmain-patterns.md`.
+2. Read `scripts/mods.lua` when load order, `modimport(...)`, `PrefabFiles`, or top-level `Assets` behavior is unclear.
+3. Read `scripts/modutil.lua` when the task depends on registration helpers exposed to `modmain.lua`.
+4. Decide which code is true bootstrap glue and which code should move into prefabs, components, widgets, brains, SG files, or helper modules.
+5. If the file is large, split registration work into `scripts/modmain/*.lua` and keep the root `modmain.lua` small and ordered.
 
 ### Add Recipes, Actions, Or Stategraph Changes
 
@@ -196,13 +206,14 @@ If the request is actually a built-in world interaction with prediction, inspect
 
 ### Add A New Prefab Or Item
 
-1. Read `references/creation-patterns.md` for the loader path from `modmain.lua` to `prefabs/*.lua`.
-2. Read `references/feature-recipes.md` if the request is phrased as a whole feature such as a weapon, container, creature, structure, or playable character.
-3. Read `references/animstate-patterns.md` if the prefab has custom `AnimState` behavior beyond a basic idle clip.
-4. Pick the closest official prefab.
-5. Read that prefab and any helper calls in `scripts/standardcomponents.lua`.
-6. Reuse helper constructors for burnable, freezable, physics, hauntable, floatable, and similar setup.
-7. Register the prefab in `PrefabFiles` and keep assets relative to the mod root.
+1. Read `references/modmain-patterns.md` for the registration side of `modmain.lua`.
+2. Read `references/creation-patterns.md` for the loader path from `modmain.lua` to `prefabs/*.lua`.
+3. Read `references/feature-recipes.md` if the request is phrased as a whole feature such as a weapon, container, creature, structure, or playable character.
+4. Read `references/animstate-patterns.md` if the prefab has custom `AnimState` behavior beyond a basic idle clip.
+5. Pick the closest official prefab.
+6. Read that prefab and any helper calls in `scripts/standardcomponents.lua`.
+7. Reuse helper constructors for burnable, freezable, physics, hauntable, floatable, and similar setup.
+8. Register the prefab in `PrefabFiles` and keep assets relative to the mod root.
 
 If the mod owns a family of near-identical prefab variants, prefer a shared factory pattern over repeated constructors. Use `scripts/prefabs/staff.lua` as the official shape reference.
 

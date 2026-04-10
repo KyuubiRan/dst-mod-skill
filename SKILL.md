@@ -112,6 +112,7 @@ python scripts/check_skill.py
 - Read `references/official-examples.md` when you already know the subsystem but need the closest concrete official prefab, widget, SG, map, or networking example to open first.
 - Read `references/mod-api-map.md` for the highest-value mod APIs and where they live.
 - Read `references/modinfo-patterns.md` when the task edits `modinfo.lua`, compatibility flags, dependencies, or `configuration_options`.
+- Read `references/modmain-patterns.md` when the task is mainly about `modmain.lua` as the gameplay entry hub, including `PrefabFiles`, top-level `Assets`, `modimport(...)`, `AddModCharacter(...)`, or shared startup glue.
 - Read `references/creation-patterns.md` when the task is about how prefabs, components, or helper modules are created and loaded.
 - Read `references/feature-recipes.md` when the user describes a whole feature such as a weapon, container, creature, structure, or playable character and you need the likely file set before drilling into subsystems.
 - Read `references/component-patterns.md` when the task is mainly about high-frequency official components such as `inspectable`, `inventoryitem`, `stackable`, `finiteuses`, `inventory`, `container`, `edible`, `cookable`, `fuel`, `tool`, `pickable`, `workable`, `timer`, `talker`, `health`, `hunger`, `sanity`, `combat`, `equippable`, `armor`, or `weapon`. Use it as the routing page, then open the matching detail file under `references/components/`.
@@ -152,6 +153,7 @@ python scripts/check_skill.py
 - Do not guess DST signatures or execution context.
 - Do not use `ThePlayer` or HUD globals without guarding local-client availability.
 - Do not copy large official files when a post-init, helper, or smaller override is enough.
+- Do not treat `modmain.lua` like a prefab constructor; keep it focused on registration, routing, and startup glue.
 - Do not modify the user's animation asset files by default, especially `.scml`.
 - In animation-related work, default to inspection, explanation, routing, validation, or compile-flow guidance unless the user explicitly asks for an animation asset edit.
 - If an animation asset edit appears necessary, stop first, tell the user which files would be changed, and get consent before editing them.
