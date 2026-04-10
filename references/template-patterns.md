@@ -37,6 +37,28 @@ Use this when:
 - `modmain.lua` is the normal runtime entry point
 - you still want the usual global passthrough and authority split
 
+## Minimal Player-Wide Patch In `modmain.lua`
+
+```lua
+AddPlayerPostInit(function(inst)
+    inst:AddTag("my_mod_player")
+
+    if not TheWorld.ismastersim then
+        return
+    end
+
+    inst:ListenForEvent("death", function(player)
+        -- authoritative player-wide behavior
+    end)
+end)
+```
+
+Use this when:
+
+- the feature should affect every player, not one character prefab
+- the main missing piece is a safe `AddPlayerPostInit(...)` skeleton
+- local HUD or screen work, if any, will be guarded separately
+
 ## Minimal Character Registration In `modmain.lua`
 
 ```lua

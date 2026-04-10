@@ -51,6 +51,7 @@ Common routing:
 - read `references/component-patterns.md`
 - read `references/animstate-patterns.md`
 - read `references/asset-patterns.md`
+- read `references/standard-helper-patterns.md` if the item needs stock physics, floating, or haunt helper setup
 
 ## Armor Or Clothing
 
@@ -120,6 +121,7 @@ Common routing:
 - read `references/components/items-and-storage.md`
 - read `references/ui-patterns.md`
 - read `references/tag-patterns.md` if interaction filtering matters
+- read `references/standard-helper-patterns.md` if the item or structure uses stock floater, burnable, or obstacle helpers
 
 ## Pickable Plant Or Harvest Node
 
@@ -150,6 +152,7 @@ Common routing:
 - read `references/components/world-and-utility.md`
 - read `references/world-system-patterns.md`
 - read `references/animstate-patterns.md`
+- read `references/standard-helper-patterns.md` if the plant uses snow, seasonal, obstacle, or haunt helpers
 
 ## Creature Or Mob
 
@@ -187,6 +190,7 @@ Common routing:
 - read `references/stategraph-patterns.md`
 - read `references/components/combat-and-equipment.md`
 - read `references/components/world-and-utility.md`
+- read `references/standard-helper-patterns.md` if the creature setup depends on stock physics, burnable, or freezable helpers
 
 ## Structure
 
@@ -223,6 +227,7 @@ Common routing:
 - read `references/world-system-patterns.md`
 - read `references/recipe-patterns.md`
 - read `references/effects-patterns.md` if the structure glows or emits FX
+- read `references/standard-helper-patterns.md` if the structure uses stock burnable, obstacle, snow, or haunt helpers
 
 ## Playable Character
 
