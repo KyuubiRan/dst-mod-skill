@@ -184,15 +184,21 @@ Read next:
 - `scripts/screens/playerhud.lua`
   - player HUD lifecycle and screen-owned UI flow
 - `scripts/widgets/containerwidget.lua`
-  - container UI behavior
+  - transient open or close widget with per-open listeners and cleanup
+- `scripts/screens/redux/popupdialog.lua`
+  - compact modal screen with `default_focus`, `OnControl(...)`, and `Close()`
+- `scripts/widgets/screen.lua`
+  - base screen lifecycle, focus restore, and `OnBecomeActive()` or `OnBecomeInactive()`
 - `scripts/screens/redux/servercreationscreen.lua`
   - server setup screen flow
 - `scripts/frontend.lua`
-  - screen stack and frontend sound helpers
+  - screen stack, top-level input plumbing, fade flow, and frontend sound helpers
 
 Read next:
 
 - `references/ui-patterns.md`
+- `references/ui-patch-patterns.md`
+- `references/ui-pitfalls.md`
 - `references/hook-selection-patterns.md`
 - `references/input-patterns.md`
 - `references/runtime-local-ui.md`
@@ -232,6 +238,54 @@ Read next:
 - `references/networking-templates.md`
 - `references/player-network-patterns.md`
 - `references/runtime-authority.md`
+
+## Save, Load, And Offline Progress Examples
+
+- `scripts/entityscript.lua`
+  - core save and load lifecycle: `GetPersistData()`, `SetPersistData()`, `LoadPostPass()`, `LongUpdate()`
+- `scripts/components/childspawner.lua`
+  - save refs plus `LoadPostPass(...)` reference repair
+- `scripts/components/slingshotmods.lua`
+  - nested helper persist data via `GetPersistData()` and `SetPersistData(...)`
+- `scripts/prefabs/player_common.lua`
+  - special-case nested save records on players
+- `scripts/prefabs/winona_battery_low.lua`
+  - `OnLoadPostPass(...)` for post-load reconnection
+- `scripts/components/timer.lua`
+  - timer persistence plus `LongUpdate(dt)`
+- `scripts/components/pickable.lua`
+  - regrowth catch-up through `LongUpdate(dt)`
+
+Read next:
+
+- `references/persistence-patterns.md`
+- `references/persistence-templates.md`
+- `references/diagnostic-patterns.md`
+
+## Shard And Migration Examples
+
+- `scripts/prefabs/world.lua`
+  - `TheWorld.ismastershard` setup
+- `scripts/prefabs/world_network.lua`
+  - world-side shard client runtime
+- `scripts/prefabs/shard_network.lua`
+  - shard-side runtime aggregation object
+- `scripts/components/worldmigrator.lua`
+  - portal availability and migration activation
+- `scripts/components/playerspawner.lua`
+  - player migration save and spawn flow
+- `scripts/components/recallmark.lua`
+  - same-shard versus different-shard mark storage
+- `scripts/components/shard_players.lua`
+  - master-shard cluster player count aggregation
+- `scripts/components/shardtransactionsteps.lua`
+  - robust shard-to-shard transfer reference
+
+Read next:
+
+- `references/shard-patterns.md`
+- `references/persistence-patterns.md`
+- `references/networking-patterns.md`
 
 ## Worldgen And Preset Examples
 

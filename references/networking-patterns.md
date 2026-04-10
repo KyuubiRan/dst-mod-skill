@@ -4,6 +4,7 @@ Use this file when the task needs RPC, client-readable replicated state, classif
 Use `references/networking-templates.md` when the task has already been classified and now needs the smallest practical implementation shape.
 Use `references/runtime-authority.md` too when the real confusion is "which side owns this mutation?"
 Use `references/player-network-patterns.md` too when the task is specifically about player-owned state, `player_classified`, or owner-only HUD data.
+Use `references/shard-patterns.md` too when the task crosses Master/Caves boundaries or needs shard-aware migration or shard RPC.
 
 ## Decide The Lowest Necessary Networking Tool
 
@@ -19,6 +20,8 @@ Use the simplest tool that matches the need:
   - player-classified-style pattern
 - client needs to request an authoritative action
   - mod RPC or an existing action flow
+- data must cross shard boundaries at runtime
+  - shard pattern or shard mod RPC
 
 Fast router:
 
@@ -30,6 +33,8 @@ Fast router:
   - classified
 - local input or UI asks the server to do something
   - action flow or mod RPC
+- feature crosses shard boundaries
+  - `references/shard-patterns.md`
 
 ## Mod RPC Registration
 

@@ -139,6 +139,7 @@ Practical rule:
 
 - patch the smallest class that is actually instantiated in the flow you care about
 - this affects future instances only
+- if the hard part is choosing the class rather than the hook, read `references/ui-patch-patterns.md`
 
 ## `_G`-Resolved UI Choice: `AddGlobalClassPostConstruct`
 

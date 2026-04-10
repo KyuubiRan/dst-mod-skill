@@ -7,7 +7,31 @@ If the task also depends on lighting, FX prefabs, or sound playback, read `refer
 
 This page is the routing and prediction layer. Method lists and per-component pitfalls live under `references/components/`.
 
-## Detail Pages
+## Per-Component Detail Pages
+
+- [components/health.md](components/health.md)
+- [components/hunger.md](components/hunger.md)
+- [components/sanity.md](components/sanity.md)
+- [components/inspectable.md](components/inspectable.md)
+- [components/inventoryitem.md](components/inventoryitem.md)
+- [components/stackable.md](components/stackable.md)
+- [components/finiteuses.md](components/finiteuses.md)
+- [components/inventory.md](components/inventory.md)
+- [components/container.md](components/container.md)
+- [components/edible.md](components/edible.md)
+- [components/cookable.md](components/cookable.md)
+- [components/fuel.md](components/fuel.md)
+- [components/tool.md](components/tool.md)
+- [components/combat.md](components/combat.md)
+- [components/weapon.md](components/weapon.md)
+- [components/equippable.md](components/equippable.md)
+- [components/armor.md](components/armor.md)
+- [components/pickable.md](components/pickable.md)
+- [components/workable.md](components/workable.md)
+- [components/timer.md](components/timer.md)
+- [components/talker.md](components/talker.md)
+
+## Bundle Summary Pages
 
 - [components/survival.md](components/survival.md)
   - `health`, `hunger`, `sanity`
@@ -202,13 +226,15 @@ Apply subtractive reasoning here: if the request rules out a capability, remove 
 ## Practical Reading Order
 
 1. Use this page to predict the likely component bundle.
-2. Open the matching detail page under `references/components/`.
-3. Read the official component file itself under `scripts/components/`.
-4. Read the closest official prefab that uses the component in the same way.
-5. If the component affects animation, actions, or networking, also inspect the matching narrow reference page.
+2. Open the matching per-component page under `references/components/`.
+3. Use the bundle summary pages only when the task spans several neighboring components.
+4. Read the official component file itself under `scripts/components/`.
+5. Read the closest official prefab that uses the component in the same way.
+6. If the component affects animation, actions, or networking, also inspect the matching narrow reference page.
 
 ## Rule Of Thumb
 
 - Use this page to decide what probably belongs on the prefab.
-- Use `references/components/*.md` to inspect methods and common pitfalls.
+- Use the per-component files under `references/components/` to inspect methods and common pitfalls.
+- Use the bundle summary pages when several adjacent components are involved at once.
 - Then verify everything against the closest official prefab.

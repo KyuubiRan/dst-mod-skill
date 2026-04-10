@@ -127,11 +127,14 @@ python scripts/check_skill.py
 - Read `references/brain-patterns.md` when the task creates or patches NPC AI behavior.
 - Read `references/worldgen-patterns.md` when the task touches `modworldgenmain.lua`, `modservercreationmain.lua`, presets, or generation-time logic.
 - Read `references/ui-patterns.md` when the task creates or patches widgets, screens, HUD, or local UI flows.
+- Read `references/ui-patch-patterns.md` when the hard part is choosing between `widgets/controls`, `screens/playerhud`, transient widgets, popup screens, `widgets/screen`, or `frontend`.
 - Read `references/action-patterns.md` when the task adds custom actions or stategraph action routing.
 - Read `references/stategraph-patterns.md` when the task adds or patches states, SG events, player action performer states, prediction flow, or `wilson` versus `wilson_client` behavior.
 - Read `references/world-system-patterns.md` when the task combines common world systems such as `fueled`, `burnable`, `freezable`, `lootdropper`, `trader`, `hauntable`, or `deployable`.
 - Read `references/string-patterns.md` when the task adds names, inspect text, UI text, speech, or localized metadata.
 - Read `references/runtime-i18n-patterns.md` when the task designs or refactors runtime localization, locale loaders, character speech inheritance, or `.po` versus Lua-table i18n strategy.
+- Read `references/persistence-patterns.md` when the task needs `OnSave(...)`, `OnLoad(...)`, `OnPreLoad(...)`, `OnLoadPostPass(...)`, `LongUpdate(...)`, nested save records, or save-migration logic.
+- Read `references/persistence-templates.md` when the task already knows it needs save/load code and now wants the smallest correct shape.
 - Read `references/asset-patterns.md` when the task adds anim zips, atlases, inventory icons, or minimap assets.
 - Read `references/texture-patterns.md` when the task packs or unpacks atlas `tex+xml`, inspects official icon atlases from `images.zip`, or resizes PNG files for DST texture fitting.
 - Read `references/animstate-patterns.md` when the task touches `inst.AnimState`, animation playback flow, symbol overrides, or animation-driven UI state.
@@ -143,6 +146,7 @@ python scripts/check_skill.py
 - Read `references/input-patterns.md` for `TheInput`, keyboard, mouse, and control handlers.
 - Read `references/networking-patterns.md` when the task needs RPC, replica, classified entities, or netvars.
 - Read `references/networking-templates.md` when the task needs implementation-ready netvar, replica, classified, or RPC templates.
+- Read `references/shard-patterns.md` when the task is specifically about Master/Caves runtime boundaries, shard-aware world ids, player or item migration, cluster-wide shard state, or shard mod RPC.
 - Read `references/hook-selection-patterns.md` when the task is mainly about choosing between `AddPrefabPostInit(...)`, `AddPrefabPostInitAny(...)`, `AddPlayerPostInit(...)`, `AddComponentPostInit(...)`, `AddClassPostConstruct(...)`, and related patch hooks.
 - Read `references/entity-query-patterns.md` for `TheSim:FindEntities(...)`.
 - Read `references/execution-contexts.md` before deciding whether code should be all-clients, client-only, or server-only.
@@ -151,7 +155,7 @@ python scripts/check_skill.py
 - Read `references/debug-techniques.md` when a task needs narrow closure patching or deeper Lua-side debugging.
 - Read `references/pitfalls.md` first, then the narrow pitfalls page you need.
 - Read `references/diagnostic-patterns.md` when the task is mostly symptom-based debugging or feature triage.
-- Read `references/context-pitfalls.md`, `references/networking-pitfalls.md`, or `references/performance-pitfalls.md` for common mistakes.
+- Read `references/context-pitfalls.md`, `references/networking-pitfalls.md`, `references/performance-pitfalls.md`, `references/persistence-pitfalls.md`, `references/shard-pitfalls.md`, or `references/ui-pitfalls.md` for common mistakes.
 - Read `references/mod-bootstrap.md` when the task looks like a new mod scaffold.
 - Read `references/task-playbook.md` for a compact decision tree and validation checklist.
 

@@ -41,6 +41,13 @@ AddMinimapAtlas(atlaspath)
 AddReplicableComponent(name)
 AddModRPCHandler(namespace, name, fn)
 AddClientModRPCHandler(namespace, name, fn)
+AddShardModRPCHandler(namespace, name, fn)
+GetModRPC(namespace, name)
+GetClientModRPC(namespace, name)
+GetShardModRPC(namespace, name)
+SendModRPCToServer(id_table, ...)
+SendModRPCToClient(id_table, ...)
+SendModRPCToShard(id_table, ...)
 LoadPOFile(path, lang)
 ```
 
@@ -59,6 +66,6 @@ LoadPOFile(path, lang)
 - register a playable character, optionally with wardrobe or loadout preview modes
   - `AddModCharacter`
 - add networking glue
-  - `AddReplicableComponent`, `AddModRPCHandler`, `AddClientModRPCHandler`
+  - `AddReplicableComponent`, `AddModRPCHandler`, `AddClientModRPCHandler`, `AddShardModRPCHandler`, `Get*RPC`, `SendModRPCTo*`
 - add explicit minimap or runtime `.po` translation support
   - `AddMinimapAtlas`, `LoadPOFile`

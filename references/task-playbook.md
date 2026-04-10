@@ -119,15 +119,25 @@ If the only viable patch point is a closed-over helper function, read `reference
 6. If the component has a replica, inspect replica and classified patterns before writing net code.
 7. Register replica support with `AddReplicableComponent` when needed.
 
+### Persist State Across Save Or Load
+
+1. Read `references/persistence-patterns.md`.
+2. If the task needs a ready shape, read `references/persistence-templates.md`.
+3. Decide whether the data is plain scalar state, cross-entity references, nested owned entities, or offline time catch-up.
+4. Read `scripts/entityscript.lua` for lifecycle order before inventing a custom flow.
+5. Use `OnLoadPostPass(...)` for cross-entity repair and `LongUpdate(dt)` for offline progression.
+6. Keep saved data minimal and canonical.
+
 ### Patch UI
 
 1. Read `references/ui-patterns.md`.
-2. Read the concrete class under `scripts/widgets/` or `scripts/screens/`.
-3. Read `references/input-patterns.md` if the patch listens to keyboard, mouse, or mapped controls.
-4. If the UI should request real gameplay changes, route the authoritative side through networking or action flow instead of mutating gameplay directly from the widget.
-5. Read `references/hook-selection-patterns.md`.
-6. Reach for `AddClassPostConstruct`.
-7. Patch narrowly instead of replacing the whole widget.
+2. If the hard part is ownership or lifecycle routing, read `references/ui-patch-patterns.md`.
+3. Read the concrete class under `scripts/widgets/` or `scripts/screens/`.
+4. Read `references/input-patterns.md` if the patch listens to keyboard, mouse, or mapped controls.
+5. If the UI should request real gameplay changes, route the authoritative side through networking or action flow instead of mutating gameplay directly from the widget.
+6. Read `references/hook-selection-patterns.md`.
+7. Reach for `AddClassPostConstruct` unless the UI is fully mod-owned and should be a new widget or screen.
+8. Patch narrowly and define teardown for any handlers, listeners, or tasks.
 
 ### Understand Or Refactor `modmain.lua`
 
@@ -220,6 +230,14 @@ If the request is actually a local screen or HUD interaction, stop and reroute t
 6. Read `scripts/entityreplica.lua` and a similar official prefab or component before adding replica or classified logic.
 7. Keep client reads on replica or netvars, not server-only components.
 
+### Add Shard-Aware Runtime Behavior
+
+1. Read `references/shard-patterns.md`.
+2. Decide whether the feature is current-shard only, master-shard only, or truly cross-shard.
+3. If the task also saves shard-aware positions or migration state, read `references/persistence-patterns.md`.
+4. Use existing migration, `worldmigrator`, or shard aggregation patterns before inventing a new protocol.
+5. Reach for shard mod RPC only when ordinary client/server RPC and saved world state are not enough.
+
 ### Choose A Patch Hook
 
 1. Read `references/hook-selection-patterns.md`.
@@ -281,6 +299,10 @@ If the prefab is a creature or NPC, also route through brain and SG placement ea
 - Check that `PrefabFiles` and `Assets` cover any new prefab or asset.
 - Check that server and client code are not mixed accidentally.
 - Check that the chosen hook is the narrowest one that matches the target.
+- Check that save/load logic uses the right phase: `OnLoad`, `OnLoadPostPass`, or `LongUpdate`.
+- Check that shard-aware logic distinguishes current shard, master shard, and cross-shard behavior.
+- Check that local UI patches target the right layer: `controls`, `playerhud`, transient widget, popup screen, or `frontend`.
+- Check that UI handlers, listeners, and tasks are cleaned up on close or destroy.
 - Check that RPC namespace and name pairs match on both sides.
 - Check that replica-only reads do not call server-only components.
 - Check that the final implementation still matches the official pattern you inspected.

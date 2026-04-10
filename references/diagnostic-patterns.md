@@ -113,6 +113,11 @@ Common misses:
 - trying to patch gameplay code as if it were UI code
 - UI patch runs only on clients, but the test was done in the wrong context
 
+Also read:
+
+- `references/ui-patch-patterns.md`
+- `references/ui-pitfalls.md`
+
 ## Local FX Or Sound Works Only On One Side
 
 Check in this order:
@@ -213,6 +218,50 @@ Common misses:
 - netvar exists but nothing listens for updates
 
 If this is specifically a player HUD or owner-only player sync issue, also read `references/player-network-patterns.md`.
+
+## State Resets After Save, Reload, Or Time Skip
+
+Check in this order:
+
+1. Was the state actually written in `OnSave(...)`?
+2. Is the restore happening in the right phase: `OnPreLoad(...)`, `OnLoad(...)`, or `OnLoadPostPass(...)`?
+3. If the data points at other entities, are those links repaired in `LoadPostPass(...)` instead of ordinary `OnLoad(...)`?
+4. If time should advance while unloaded, does the entity or component implement `LongUpdate(dt)`?
+5. If a helper child or owned item should persist, should it use `GetSaveRecord()` or `GetPersistData()`?
+
+Common misses:
+
+- saved a live entity reference instead of a GUID or save record
+- restored cross-entity links too early in `OnLoad(...)`
+- forgot offline catch-up with `LongUpdate(dt)`
+- recreated the helper entity but never called `SetPersistData(...)`
+
+Also read:
+
+- `references/persistence-patterns.md`
+- `references/persistence-pitfalls.md`
+
+## Works On Master But Breaks On Caves Or During Migration
+
+Check in this order:
+
+1. Is this logic meant for the current shard, the master shard, or any shard?
+2. Did the code confuse `TheWorld.ismastersim` with `TheWorld.ismastershard`?
+3. If the feature depends on a location or recall target, was `worldid` stored and compared?
+4. If the destination shard can disappear or fill up, was `Shard_IsWorldAvailable(...)` checked?
+5. If the behavior happens during migration, did the code treat migration differently from ordinary despawn?
+
+Common misses:
+
+- counted only local `AllPlayers`
+- used one-shard RPC for a cross-shard problem
+- forgot shard-aware position checks
+- portal visuals were patched without `worldmigrator` status logic
+
+Also read:
+
+- `references/shard-patterns.md`
+- `references/shard-pitfalls.md`
 
 ## Brain Does Not Seem To Control The Creature
 
