@@ -36,8 +36,19 @@ Use this file as a compact decision tree.
 
 1. Read `references/worldgen-patterns.md`.
 2. Decide whether the task belongs in `modworldgenmain.lua` or `modservercreationmain.lua`.
-3. Read the smallest official worldgen or server-creation file that matches the feature shape.
-4. Keep worldgen-time logic separate from normal gameplay bootstrap.
+3. If the task is rooms or tasks, read `scripts/map/rooms.lua`, `scripts/map/tasks.lua`, or `scripts/map/tasksets.lua`.
+4. If the task is host customization, preset ids, or start-location selection, read `scripts/map/customize.lua`, `scripts/map/levels.lua`, and `scripts/map/startlocations.lua`.
+5. If the task is server-creation screen behavior, read `scripts/widgets/redux/worldsettings/worldsettingstab.lua` or the matching screen/widget file.
+6. Keep worldgen-time logic separate from normal gameplay bootstrap.
+
+### Add Or Remove World Customization Options
+
+1. Read `references/worldgen-patterns.md`.
+2. Read `scripts/map/customize.lua` first.
+3. Decide whether the option belongs to `LEVELCATEGORY.SETTINGS` or `LEVELCATEGORY.WORLDGEN`.
+4. Use `AddCustomizeGroup(...)`, `AddCustomizeItem(...)`, `RemoveCustomizeGroup(...)`, or `RemoveCustomizeItem(...)` from `modutil.lua`.
+5. If the option is really a new start type, also inspect `scripts/map/startlocations.lua`.
+6. If the task mentions presets, verify whether settings and worldgen sides both need changes.
 
 ### Patch An Existing Prefab
 

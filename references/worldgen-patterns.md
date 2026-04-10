@@ -73,6 +73,67 @@ High-frequency pairs:
 
 Official helper registration for these APIs is in `scripts/modutil.lua:237-309`.
 
+## Host Customization And Preset Data
+
+Not every worldgen task is "add a room" or "patch a task".
+Some tasks are really about host-visible world customization options or preset composition.
+
+Key official files:
+
+- `scripts/map/customize.lua`
+  - customization groups and items
+  - `LEVELCATEGORY.SETTINGS` versus `LEVELCATEGORY.WORLDGEN`
+  - start-location option wiring
+- `scripts/map/levels.lua`
+  - preset lookup, preset ids, preset names and descriptions
+  - combined preset behavior across settings and worldgen
+- `scripts/widgets/redux/worldsettings/worldsettingstab.lua`
+  - server-creation UI flow
+  - collects worldgen and settings options separately, then merges them
+- `scripts/map/startlocations.lua`
+  - start-location registration and frontend refresh
+
+High-frequency customization helpers from `scripts/modutil.lua`:
+
+- `AddCustomizeGroup(category, name, text, desc, atlas, order)`
+- `RemoveCustomizeGroup(category, name)`
+- `AddCustomizeItem(category, group, name, itemsettings)`
+- `RemoveCustomizeItem(category, name)`
+
+## `LEVELCATEGORY.SETTINGS` Vs `LEVELCATEGORY.WORLDGEN`
+
+Official `scripts/map/customize.lua` assigns world customization items to one of two main categories:
+
+- `LEVELCATEGORY.SETTINGS`
+  - world settings such as simulation or seasonal behavior
+- `LEVELCATEGORY.WORLDGEN`
+  - map-generation options such as generated content distribution
+
+If the task is about what appears in the host customization screen, confirm which category the option belongs to before adding it.
+Do not throw all options into worldgen by default.
+
+## Start Location Is Also A Customization Option
+
+Official `scripts/map/customize.lua` wires `start_location` to `startlocations.GetGenStartLocations`.
+That means a custom start location is not only generation data.
+It also affects what the host can select in the world customization screen.
+
+Practical consequence:
+
+- register the location with `AddStartLocation(...)`
+- then verify the host-facing selection flow in `scripts/map/customize.lua`
+- if the task is about display or grouping in the setup UI, inspect `modservercreationmain.lua` too
+
+## Preset Composition
+
+Official `scripts/map/levels.lua` and `scripts/widgets/redux/worldsettings/worldsettingstab.lua` keep settings presets and worldgen presets separate, then combine them when needed.
+
+Practical consequence:
+
+- a "preset" may actually involve both `LEVELCATEGORY.SETTINGS` and `LEVELCATEGORY.WORLDGEN`
+- changing one side does not automatically rewrite the other side
+- if the user says "custom preset", confirm whether they mean worldgen-only, settings-only, or combined behavior
+
 ## Why Duplicate Names Fail
 
 Official map modules reject duplicate room/task names:
@@ -116,6 +177,19 @@ Use this as a fast router from user intent to file and API.
 - "Change what the host sees in the world setup screen"
   - start from `modservercreationmain.lua`
   - then verify whether the real data mutation still belongs in `modworldgenmain.lua`
+- "Add a world customization option"
+  - inspect `scripts/map/customize.lua`
+  - usually `AddCustomizeGroup(...)` and `AddCustomizeItem(...)`
+  - choose `LEVELCATEGORY.SETTINGS` or `LEVELCATEGORY.WORLDGEN` explicitly
+- "Hide or remove one vanilla customization option"
+  - inspect `scripts/map/customize.lua`
+  - usually `RemoveCustomizeItem(...)` or `RemoveCustomizeGroup(...)`
+- "Add a new host-selectable start type"
+  - inspect both `scripts/map/startlocations.lua` and `scripts/map/customize.lua`
+  - usually `AddStartLocation(...)`
+- "Patch preset ids, descriptions, or combined preset behavior"
+  - inspect `scripts/map/levels.lua`
+  - inspect `scripts/widgets/redux/worldsettings/worldsettingstab.lua`
 
 ## Common Failure Points
 
@@ -129,6 +203,12 @@ Use this as a fast router from user intent to file and API.
   - Many normal gameplay assumptions from `modmain.lua` do not belong in worldgen bootstrap.
 - Host setup changes are mistaken for generated-world changes.
   - Preset panel text and actual world content are related, but they are not the same step.
+- Wrong customization category.
+  - `LEVELCATEGORY.SETTINGS` and `LEVELCATEGORY.WORLDGEN` are not interchangeable.
+- Start location is treated as pure backend data.
+  - It also feeds the frontend customization selector.
+- Combined preset assumptions are too broad.
+  - Settings presets and worldgen presets can be resolved separately, then merged.
 
 ## Minimal Rule Of Thumb
 

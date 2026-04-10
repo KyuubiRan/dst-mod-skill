@@ -41,6 +41,14 @@ Read exact signatures from the official source before writing code.
   - Register client-side mod RPC handlers.
 - `AddModCharacter`
   - Register a mod character and its metadata.
+- `AddCustomizeGroup`
+  - Register a host-visible world customization group.
+- `RemoveCustomizeGroup`
+  - Hide or remove a customization group.
+- `AddCustomizeItem`
+  - Register one world settings or worldgen customization option.
+- `RemoveCustomizeItem`
+  - Hide or remove one customization option.
 
 ## Worldgen Registration APIs In `scripts/modutil.lua`
 
@@ -70,6 +78,15 @@ Use these when the task belongs in `modworldgenmain.lua` or `modservercreationma
   - Register a start location for world generation.
 - `AddLocation`
   - Register a location entry used by generation-side data.
+
+Customization-side routing:
+
+- `AddCustomizeGroup` and `AddCustomizeItem`
+  - route through `scripts/map/customize.lua`
+  - usually affect host setup UI and preset data
+- `AddStartLocation`
+  - route through `scripts/map/startlocations.lua`
+  - also appears in world customization UI via `startlocations.GetGenStartLocations`
 
 ## Instance Methods In `scripts/entityscript.lua`
 

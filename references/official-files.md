@@ -93,9 +93,12 @@ Use the worldgen or server-creation entry files only when the task is specific t
 - `scripts/map/startlocations.lua`
   - Start-location definitions and world-entry routing.
   - Read this when the task changes spawn starts or custom start locations.
-- `scripts/leveldataoverride.lua`
-  - World customization override flow and preset data handling.
-  - Read this when a task depends on world customization settings rather than only map content.
+- `scripts/map/customize.lua`
+  - World customization option definitions, categories, and mod-added customization groups or items.
+  - Read this when the task adds or removes host-visible world settings or worldgen options.
+- `scripts/map/levels.lua`
+  - Preset lists, preset lookup by `LEVELCATEGORY`, and settings/worldgen preset composition.
+  - Read this when the task depends on preset ids, preset descriptions, or combined preset behavior.
 - `scripts/constants.lua`
   - Core constants, enums, and identifiers used throughout the codebase.
 - `scripts/tuning.lua`
@@ -126,6 +129,8 @@ Use the worldgen or server-creation entry files only when the task is specific t
   - AI decision logic.
 - `scripts/map/levels/*.lua`
   - Concrete level definitions for forest, caves, events, and special modes.
+- `scripts/map/customize.lua`
+  - Category and option wiring for world settings and worldgen customization screens.
 - `scripts/map/rooms/**`
   - Concrete room definitions grouped by biome or content family.
 - `scripts/map/tasks/*.lua`

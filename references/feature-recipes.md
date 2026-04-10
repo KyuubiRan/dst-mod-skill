@@ -284,6 +284,46 @@ Common routing:
 - read `references/animstate-patterns.md`
 - read `references/asset-patterns.md`
 
+## World Preset, Customization Option, Or Start Location
+
+Use this when the user wants a host-selectable world option, a preset-facing tweak, or a custom spawn start.
+
+Usually involved:
+
+- `modworldgenmain.lua`
+  - generation-side registration
+- sometimes `modservercreationmain.lua`
+  - host-facing setup or preset-facing frontend behavior
+- `scripts/map/customize.lua`
+  - category and option routing
+- `scripts/map/levels.lua`
+  - preset lookup and combined preset behavior
+- `scripts/map/startlocations.lua`
+  - start-location definitions
+
+Typical helpers:
+
+- `AddCustomizeGroup`
+- `AddCustomizeItem`
+- `RemoveCustomizeGroup`
+- `RemoveCustomizeItem`
+- `AddStartLocation`
+- sometimes `AddLevelPreInit`
+- sometimes `AddTaskSetPreInit`
+
+Common adjacent work:
+
+- choosing `LEVELCATEGORY.SETTINGS` versus `LEVELCATEGORY.WORLDGEN`
+- confirming whether the change is preset-facing, generation-facing, or both
+- checking combined preset behavior
+- verifying host setup UI refresh behavior
+
+Common routing:
+
+- read `references/worldgen-patterns.md`
+- read `references/task-playbook.md`
+- read `references/mod-api-map.md`
+
 ## Rule Of Thumb
 
 - Use this page to map the requested feature to the likely file set.
