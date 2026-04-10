@@ -1,6 +1,7 @@
 # String Patterns
 
 Use this file when the task adds names, inspect text, UI text, speech, or localization-related content.
+Read `references/runtime-i18n-patterns.md` too when the task is about the overall runtime i18n architecture rather than one or two direct `STRINGS` writes.
 
 ## Runtime Strings Usually Modify `STRINGS` Directly
 
@@ -19,6 +20,9 @@ Practical consequence:
 
 - there is no special mod string file required for basic runtime localization
 - many mods keep string writes in a separate helper file and call `modimport("strings")`
+
+For larger runtime localization systems, do not stop at ad hoc assignments.
+Use a locale loader plus sparse locale tables as described in `references/runtime-i18n-patterns.md`.
 
 ## Keep Keys Uppercase
 
@@ -89,3 +93,4 @@ modimport("scripts/my_strings")
 - Use `STRINGS` for runtime names, descriptions, speech, and UI text.
 - Use `ChooseTranslationTable` only for `modinfo.lua` metadata localization.
 - Split large string blocks into helper files, but keep the loading path explicit.
+- When the mod has real runtime localization, prefer sparse locale tables and a dedicated loader module.

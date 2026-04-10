@@ -300,6 +300,66 @@ STRINGS.RECIPE_DESC.MY_STRUCTURE = "Place a structure."
 STRINGS.CHARACTERS.GENERIC.DESCRIBE.MY_ITEM = "A custom thing."
 ```
 
+## Minimal Runtime I18n Loader
+
+Use this when the mod needs real runtime localization instead of a few direct string writes.
+
+```lua
+local supported = {
+    en = true,
+    zh = true,
+}
+
+local function ResolveLocale()
+    local locale = GetModConfigData("LANGUAGE")
+    if locale == nil or locale == "auto" then
+        locale = LOC.GetLocaleCode()
+    end
+    if not supported[locale] then
+        locale = "en"
+    end
+    return locale
+end
+
+local function DeepCopy(value)
+    if type(value) ~= "table" then
+        return value
+    end
+    local result = {}
+    for k, v in pairs(value) do
+        result[k] = DeepCopy(v)
+    end
+    return result
+end
+
+local function DeepMerge(dst, src)
+    for k, v in pairs(src) do
+        if type(v) == "table" then
+            if type(dst[k]) ~= "table" then
+                dst[k] = {}
+            end
+            DeepMerge(dst[k], v)
+        else
+            dst[k] = v
+        end
+    end
+end
+
+local locale = ResolveLocale()
+
+DeepMerge(STRINGS, require("languages/common_" .. locale))
+
+local speech = DeepCopy(STRINGS.CHARACTERS.GENERIC)
+DeepMerge(speech, require("languages/speech_mychar_" .. locale))
+STRINGS.CHARACTERS.MYCHAR = speech
+```
+
+This is the recommended baseline when:
+
+- the mod has common locale data and character speech overrides
+- you want sparse locale files
+- you want character speech to inherit missing lines from the default generic base
+
 ## Minimal Brain
 
 ```lua

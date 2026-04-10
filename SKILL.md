@@ -102,6 +102,7 @@ python scripts/bundle_release.py . --output ..\MyMod_release
 - Read `references/stategraph-patterns.md` when the task adds or patches states, SG events, player action performer states, prediction flow, or `wilson` versus `wilson_client` behavior.
 - Read `references/world-system-patterns.md` when the task combines common world systems such as `fueled`, `burnable`, `freezable`, `lootdropper`, `trader`, `hauntable`, or `deployable`.
 - Read `references/string-patterns.md` when the task adds names, inspect text, UI text, speech, or localized metadata.
+- Read `references/runtime-i18n-patterns.md` when the task designs or refactors runtime localization, locale loaders, character speech inheritance, or `.po` versus Lua-table i18n strategy.
 - Read `references/asset-patterns.md` when the task adds anim zips, atlases, inventory icons, or minimap assets.
 - Read `references/animstate-patterns.md` when the task touches `inst.AnimState`, animation playback flow, symbol overrides, or animation-driven UI state.
 - Read `references/effects-patterns.md` when the task adds lighting, a visual FX prefab, particle FX, or sound playback.

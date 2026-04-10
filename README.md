@@ -131,6 +131,8 @@ High-value docs under `references/` include:
   - SG object shape, `wilson` versus `wilson_client`, prediction clues, and SG hook routing
 - `effects-patterns.md`
   - official light, FX prefab, particle, and sound patterns
+- `runtime-i18n-patterns.md`
+  - recommended runtime localization structure, locale loaders, character speech inheritance, and optional `.po` route
 - `task-playbook.md`
   - compact task routing and validation order
 - `creation-patterns.md`

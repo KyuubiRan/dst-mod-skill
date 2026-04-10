@@ -130,6 +130,8 @@ python scripts/bundle_release.py . --output ..\MyMod_release
   - stategraph 结构、`wilson` / `wilson_client`、预测相关线索、SG Hook 路由
 - `effects-patterns.md`
   - 灯光、FX prefab、粒子特效、音效触发的官方模式
+- `runtime-i18n-patterns.md`
+  - 推荐的 runtime 本地化结构、locale loader、角色台词继承方式，以及可选 `.po` 路线
 - `task-playbook.md`
   - 任务分流与排查顺序
 - `creation-patterns.md`

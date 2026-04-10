@@ -116,7 +116,8 @@ If the only viable patch point is a closed-over helper function, read `reference
 
 1. Read `references/string-patterns.md` first.
 2. Decide whether the text belongs in runtime `STRINGS` or in localized `modinfo.lua` metadata.
-3. Keep prefab and action keys aligned with uppercase `STRINGS` entries.
+3. If the task is really about runtime i18n architecture, read `references/runtime-i18n-patterns.md`.
+4. Keep prefab and action keys aligned with uppercase `STRINGS` entries.
 
 ### Add Assets Or Icons
 
