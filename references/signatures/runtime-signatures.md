@@ -30,6 +30,7 @@ Notes:
 - `TheSim:FindEntities` is engine-provided, so treat this as an observed official usage shape.
 - `TheSim:GetPersistentString(...)` is callback-driven; observed usage shape is `function(success, data) ... end`.
 - `TheSim:SetPersistentString(...)` and `ErasePersistentString(...)` are also commonly used with callbacks.
+- for local mod config, `data` should usually be a JSON string produced by `json.encode(...)`, then restored with guarded `json.decode(...)`.
 - `TheWorld.ismastersim` is a field check, not a function call.
 - `ThePlayer` is a global local-player reference, not a function call.
 - `TheInput` is local input state; use dedicated-server guards and prefer narrow handlers.

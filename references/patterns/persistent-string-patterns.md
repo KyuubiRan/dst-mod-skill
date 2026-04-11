@@ -77,6 +77,7 @@ Observed official serialization choices:
 Practical rule:
 
 - prefer `json.encode/decode` for ordinary mod settings and cache tables
+- for mod-local config saved through `TheSim:SetPersistentString(...)`, treat JSON as the default storage format unless the task explicitly requires another official format
 - use `DataDumper` only when the data already matches that official Lua-chunk style and the loader intentionally uses `RunInSandbox(...)`
 - protect decode or encode boundaries with `pcall(...)` or `xpcall(...)` when malformed data is plausible
 
@@ -148,7 +149,8 @@ Do not default to those cluster-slot variants for ordinary local mod preferences
 
 ## Recommended Mod Pattern
 
-Use this shape for mod-owned cross-save local settings:
+Use this shape for mod-owned cross-save local settings.
+This is also the default pattern for local mod config stored through `TheSim:SetPersistentString(...)`:
 
 ```lua
 local SETTINGS_KEY = "my_mod_local_settings"
