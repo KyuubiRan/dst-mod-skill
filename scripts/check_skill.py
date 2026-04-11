@@ -15,17 +15,23 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+REFERENCES_ROOT = REPO_ROOT / "references"
+COMPONENT_REFERENCES_ROOT = REFERENCES_ROOT / "components"
 DOC_FILES = [
     REPO_ROOT / "SKILL.md",
     REPO_ROOT / "README.md",
     REPO_ROOT / "README_zh.md",
 ]
 SCRIPT_FILES = sorted((REPO_ROOT / "scripts").glob("*.py"))
-REFERENCE_FILES = sorted((REPO_ROOT / "references").glob("*.md"))
-COMPONENT_REFERENCE_FILES = sorted((REPO_ROOT / "references" / "components").glob("*.md"))
+REFERENCE_FILES = sorted(
+    path
+    for path in REFERENCES_ROOT.rglob("*.md")
+    if COMPONENT_REFERENCES_ROOT not in path.parents
+)
+COMPONENT_REFERENCE_FILES = sorted(COMPONENT_REFERENCES_ROOT.rglob("*.md"))
 OFFICIAL_REFERENCE_DOCS = [
-    REPO_ROOT / "references" / "official-files.md",
-    REPO_ROOT / "references" / "official-examples.md",
+    REFERENCES_ROOT / "official-files.md",
+    REFERENCES_ROOT / "official-examples.md",
 ]
 CRITICAL_PATHS = [
     REPO_ROOT / "SKILL.md",
@@ -36,14 +42,18 @@ CRITICAL_PATHS = [
     REPO_ROOT / "scripts" / "bundle_release.py",
     REPO_ROOT / "scripts" / "tex_atlas_tool.py",
     REPO_ROOT / "scripts" / "resize_png.py",
-    REPO_ROOT / "references" / "task-playbook.md",
-    REPO_ROOT / "references" / "official-files.md",
-    REPO_ROOT / "references" / "component-patterns.md",
-    REPO_ROOT / "references" / "feature-recipes.md",
-    REPO_ROOT / "references" / "texture-patterns.md",
+    REFERENCES_ROOT / "task-playbook.md",
+    REFERENCES_ROOT / "official-files.md",
+    REFERENCES_ROOT / "patterns.md",
+    REFERENCES_ROOT / "component-patterns.md",
+    REFERENCES_ROOT / "feature-recipes.md",
+    REFERENCES_ROOT / "patterns" / "modinfo-patterns.md",
+    REFERENCES_ROOT / "patterns" / "modmain-patterns.md",
+    REFERENCES_ROOT / "patterns" / "texture-patterns.md",
 ]
 
 PATH_PATTERN = re.compile(r"(references/[A-Za-z0-9_./-]+\.md|scripts/[A-Za-z0-9_./-]+\.py)")
+MARKDOWN_LINK_PATTERN = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
 OFFICIAL_SCRIPT_PATTERN = re.compile(r"`(scripts/[^`]+)`")
 
 
@@ -67,15 +77,67 @@ def check_exists(errors: list[str]) -> None:
             errors.append(f"missing critical path: {to_repo_relative(path)}")
 
 
+def normalize_markdown_link_target(target: str) -> str | None:
+    value = target.strip()
+    if not value:
+        return None
+    if value.startswith("<") and value.endswith(">"):
+        value = value[1:-1].strip()
+    if not value:
+        return None
+    if value.startswith(("http://", "https://", "mailto:", "#")):
+        return None
+    value = value.split("#", 1)[0].strip()
+    if not value:
+        return None
+    if " " in value:
+        value = value.split(" ", 1)[0]
+    if not value.endswith((".md", ".py")):
+        return None
+    return value
+
+
+def resolve_markdown_target(doc: Path, target: str) -> Path:
+    if target.startswith(("references/", "scripts/")) or target in {
+        "SKILL.md",
+        "README.md",
+        "README_zh.md",
+    }:
+        return (REPO_ROOT / Path(target)).resolve(strict=False)
+    return (doc.parent / Path(target)).resolve(strict=False)
+
+
 def check_markdown_references(errors: list[str]) -> None:
-    markdown_files = DOC_FILES + REFERENCE_FILES + COMPONENT_REFERENCE_FILES
+    markdown_files = sorted({*DOC_FILES, *REFERENCE_FILES, *COMPONENT_REFERENCE_FILES})
     for doc in markdown_files:
         text = doc.read_text(encoding="utf-8")
+        seen_repo_refs: set[str] = set()
         for match in PATH_PATTERN.findall(text):
+            if match in seen_repo_refs:
+                continue
+            seen_repo_refs.add(match)
             target = REPO_ROOT / Path(match)
             if not target.exists():
                 errors.append(
                     f"broken reference in {to_repo_relative(doc)}: {match}"
+                )
+        seen_links: set[str] = set()
+        for raw_target in MARKDOWN_LINK_PATTERN.findall(text):
+            target_ref = normalize_markdown_link_target(raw_target)
+            if target_ref is None or target_ref in seen_links:
+                continue
+            seen_links.add(target_ref)
+            target = resolve_markdown_target(doc, target_ref)
+            try:
+                target.relative_to(REPO_ROOT)
+            except ValueError:
+                errors.append(
+                    f"out-of-repo markdown link in {to_repo_relative(doc)}: {target_ref}"
+                )
+                continue
+            if not target.exists():
+                errors.append(
+                    f"broken markdown link in {to_repo_relative(doc)}: {target_ref}"
                 )
 
 

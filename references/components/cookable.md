@@ -28,4 +28,4 @@ Common pitfalls:
 Read next:
 
 - `references/components/edible.md`
-- `references/creation-patterns.md`
+- `references/patterns/creation-patterns.md`

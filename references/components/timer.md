@@ -37,5 +37,5 @@ Common pitfalls:
 
 Read next:
 
-- `references/persistence-patterns.md`
-- `references/diagnostic-patterns.md`
+- `references/patterns/persistence-patterns.md`
+- `references/patterns/diagnostic-patterns.md`

@@ -2,8 +2,8 @@
 
 Use this file when a task is mainly about common official components rather than a whole subsystem.
 
-If the task also depends on prefab tags or action/query routing, read `references/tag-patterns.md`.
-If the task also depends on lighting, FX prefabs, or sound playback, read `references/effects-patterns.md`.
+If the task also depends on prefab tags or action/query routing, read `references/patterns/tag-patterns.md`.
+If the task also depends on lighting, FX prefabs, or sound playback, read `references/patterns/effects-patterns.md`.
 
 This page is the routing and prediction layer. Method lists and per-component pitfalls live under `references/components/`.
 

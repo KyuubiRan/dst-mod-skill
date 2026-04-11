@@ -37,4 +37,4 @@ Common pitfalls:
 Read next:
 
 - `references/components/health.md`
-- `references/persistence-patterns.md`
+- `references/patterns/persistence-patterns.md`

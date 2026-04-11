@@ -38,5 +38,5 @@ Common pitfalls:
 
 Read next:
 
-- `references/stategraph-patterns.md`
-- `references/player-network-patterns.md`
+- `references/patterns/stategraph-patterns.md`
+- `references/patterns/player-network-patterns.md`

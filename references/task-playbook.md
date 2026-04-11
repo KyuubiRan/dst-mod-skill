@@ -5,21 +5,21 @@ Use this file as a compact decision tree.
 ## Before Coding
 
 1. Check whether `modinfo.lua` and the relevant root entry files such as `modmain.lua`, `modworldgenmain.lua`, or `modservercreationmain.lua` exist.
-2. If `modinfo.lua` exists, read `references/modinfo-patterns.md` when metadata, dependencies, or config layout may matter.
-3. If the task is mainly about which root file should own the feature, read `references/entrypoint-patterns.md`.
-4. If the task is mainly about bootstrap wiring, `PrefabFiles`, top-level assets, `modimport(...)`, or character registration, read `references/modmain-patterns.md`.
+2. If `modinfo.lua` exists, read `references/patterns/modinfo-patterns.md` when metadata, dependencies, or config layout may matter.
+3. If the task is mainly about which root file should own the feature, read `references/patterns/entrypoint-patterns.md`.
+4. If the task is mainly about bootstrap wiring, `PrefabFiles`, top-level assets, `modimport(...)`, or character registration, read `references/patterns/modmain-patterns.md`.
 5. If `modinfo.lua` exists, classify the mod as all-clients gameplay, client-only, or server-only from its flags before reading runtime APIs.
-6. If the task is runtime-side, read `references/runtime-globals.md` and decide whether it is authority logic, local UI, local input, or entity-query logic.
+6. If the task is runtime-side, read `references/patterns/runtime-globals.md` and decide whether it is authority logic, local UI, local input, or entity-query logic.
 7. Identify the smallest official file that already matches the feature shape.
 8. If you still need a concrete official starter, read `references/official-examples.md`.
 9. Inspect the exact hook or helper definition in official code.
-10. If the real question is patch-hook choice, read `references/hook-selection-patterns.md`.
+10. If the real question is patch-hook choice, read `references/patterns/hook-selection-patterns.md`.
 11. Check whether the behavior is server-only, client-only, or replicated.
 12. Keep the implementation smaller than the official source you inspected.
 
 ## Edit `modinfo.lua`
 
-1. Read `references/modinfo-patterns.md`.
+1. Read `references/patterns/modinfo-patterns.md`.
 2. Classify the mod from `client_only_mod` and `all_clients_require_mod`.
 3. Keep metadata localization inside `modinfo.lua`, not in runtime `STRINGS`.
 4. Keep config helpers tiny and avoid Lua standard-library assumptions.
@@ -31,13 +31,13 @@ Use this file as a compact decision tree.
 2. Classify the mod as all-clients gameplay, client-only, or server-only.
 3. Generate only `modinfo.lua` and `modmain.lua` first unless worldgen or host setup files are clearly required.
 4. If the user wants deterministic output, use `scripts/init_dst_mod.py`.
-5. Read `references/entrypoint-patterns.md` if the first real feature might belong in worldgen or host setup instead of ordinary runtime.
-6. Read `references/modmain-patterns.md` before turning the fresh `modmain.lua` into a registration hub.
-7. After the scaffold exists, route the first real feature through `references/template-patterns.md` or the narrower subsystem page.
+5. Read `references/patterns/entrypoint-patterns.md` if the first real feature might belong in worldgen or host setup instead of ordinary runtime.
+6. Read `references/patterns/modmain-patterns.md` before turning the fresh `modmain.lua` into a registration hub.
+7. After the scaffold exists, route the first real feature through `references/templates/template-patterns.md` or the narrower subsystem page.
 
 ## Debug A Broken Feature
 
-1. Read `references/diagnostic-patterns.md`.
+1. Read `references/patterns/diagnostic-patterns.md`.
 2. Classify the symptom before touching code:
    - missing registration
    - wrong runtime context
@@ -48,17 +48,17 @@ Use this file as a compact decision tree.
 
 ### Decide Runtime Context
 
-1. Read `references/runtime-globals.md`.
-2. If the code mutates real gameplay state, read `references/runtime-authority.md`.
-3. If the code touches HUD, screens, or local player state, read `references/runtime-local-ui.md`.
-4. If the code listens for local controls, read `references/input-patterns.md`.
-5. If the code scans nearby entities, read `references/entity-query-patterns.md`.
+1. Read `references/patterns/runtime-globals.md`.
+2. If the code mutates real gameplay state, read `references/patterns/runtime-authority.md`.
+3. If the code touches HUD, screens, or local player state, read `references/patterns/runtime-local-ui.md`.
+4. If the code listens for local controls, read `references/patterns/input-patterns.md`.
+5. If the code scans nearby entities, read `references/patterns/entity-query-patterns.md`.
 
 ## Common Task Routes
 
 ### Patch Worldgen Or Presets
 
-1. Read `references/worldgen-patterns.md`.
+1. Read `references/patterns/worldgen-patterns.md`.
 2. Decide whether the task belongs in `modworldgenmain.lua` or `modservercreationmain.lua`.
 3. If the task is rooms or tasks, read `scripts/map/rooms.lua`, `scripts/map/tasks.lua`, or `scripts/map/tasksets.lua`.
 4. If the task is host customization, preset ids, or start-location selection, read `scripts/map/customize.lua`, `scripts/map/levels.lua`, and `scripts/map/startlocations.lua`.
@@ -67,7 +67,7 @@ Use this file as a compact decision tree.
 
 ### Add Or Remove World Customization Options
 
-1. Read `references/worldgen-patterns.md`.
+1. Read `references/patterns/worldgen-patterns.md`.
 2. Read `scripts/map/customize.lua` first.
 3. Decide whether the option belongs to `LEVELCATEGORY.SETTINGS` or `LEVELCATEGORY.WORLDGEN`.
 4. Use `AddCustomizeGroup(...)`, `AddCustomizeItem(...)`, `RemoveCustomizeGroup(...)`, or `RemoveCustomizeItem(...)` from `modutil.lua`.
@@ -78,24 +78,24 @@ Use this file as a compact decision tree.
 
 1. Read `scripts/prefabs/<prefab>.lua`.
 2. Read the component files that drive the target behavior.
-3. Read `references/hook-selection-patterns.md` if the hook choice is not obvious.
+3. Read `references/patterns/hook-selection-patterns.md` if the hook choice is not obvious.
 4. Reach for `AddPrefabPostInit` unless the change clearly belongs elsewhere.
 5. Add only the missing behavior instead of replacing the prefab wholesale.
 
-If the only viable patch point is a closed-over helper function, read `references/debug-techniques.md` before copying a large outer function.
+If the only viable patch point is a closed-over helper function, read `references/patterns/debug-techniques.md` before copying a large outer function.
 
 ### Add Player-Wide Behavior
 
-1. Read `references/player-patterns.md`.
+1. Read `references/patterns/player-patterns.md`.
 2. Read `scripts/prefabs/player_common.lua` and any involved components.
-3. If the task needs owner-only player replication, HUD sync, or `player_classified`, read `references/player-network-patterns.md`.
+3. If the task needs owner-only player replication, HUD sync, or `player_classified`, read `references/patterns/player-network-patterns.md`.
 4. Reach for `AddPlayerPostInit` or a component hook.
 5. Guard master-sim and client logic explicitly.
 
 ### Use Standard Helper Constructors
 
-1. Read `references/standard-helper-patterns.md`.
-2. Read `references/helper-signatures.md` for exact argument order.
+1. Read `references/patterns/standard-helper-patterns.md`.
+2. Read `references/signatures/helper-signatures.md` for exact argument order.
 3. Read `scripts/standardcomponents.lua`.
 4. Read the closest official prefab that already uses the same helper family.
 5. Verify whether the helper belongs before `SetPristine()` or only on the master path.
@@ -111,18 +111,18 @@ If the only viable patch point is a closed-over helper function, read `reference
 
 ### Add Or Extend A Component
 
-1. Read `references/creation-patterns.md` for the base loading path.
+1. Read `references/patterns/creation-patterns.md` for the base loading path.
 2. Read `references/component-patterns.md` if the task targets a common official component.
 3. Read the official component with the closest lifecycle and networking shape.
-4. Read `references/hook-selection-patterns.md` if the task is really about patch-hook choice.
+4. Read `references/patterns/hook-selection-patterns.md` if the task is really about patch-hook choice.
 5. Reach for `AddComponentPostInit` for small extensions.
 6. If the component has a replica, inspect replica and classified patterns before writing net code.
 7. Register replica support with `AddReplicableComponent` when needed.
 
 ### Persist State Across Save Or Load
 
-1. Read `references/persistence-patterns.md`.
-2. If the task needs a ready shape, read `references/persistence-templates.md`.
+1. Read `references/patterns/persistence-patterns.md`.
+2. If the task needs a ready shape, read `references/templates/persistence-templates.md`.
 3. Decide whether the data is plain scalar state, cross-entity references, nested owned entities, or offline time catch-up.
 4. Read `scripts/entityscript.lua` for lifecycle order before inventing a custom flow.
 5. Use `OnLoadPostPass(...)` for cross-entity repair and `LongUpdate(dt)` for offline progression.
@@ -130,17 +130,17 @@ If the only viable patch point is a closed-over helper function, read `reference
 
 ### Persist Local Settings Or Cross-Save Profile Data
 
-1. Read `references/persistent-string-patterns.md`.
+1. Read `references/patterns/persistent-string-patterns.md`.
 2. Decide whether the data is truly local process data, not one world save or one entity.
-3. If the user actually wants host-visible mod config, stop and route back to `references/modinfo-patterns.md`.
-4. If malformed or old payloads are plausible, read `references/protected-call-patterns.md`.
+3. If the user actually wants host-visible mod config, stop and route back to `references/patterns/modinfo-patterns.md`.
+4. If malformed or old payloads are plausible, read `references/patterns/protected-call-patterns.md`.
 5. Serialize the table to string first, usually with `json.encode(...)`.
 6. Load through the callback of `TheSim:GetPersistentString(...)`; do not treat it as a synchronous return.
 7. Prefix the file key with a stable mod namespace.
 
 ### Guard Serialization, Deserialization, Or Optional `require(...)`
 
-1. Read `references/protected-call-patterns.md`.
+1. Read `references/patterns/protected-call-patterns.md`.
 2. Keep the protected boundary narrow: decode, encode, or one optional `require(...)`.
 3. Prefer `pcall(...)` by default.
 4. Reach for `xpcall(...)` only when a custom error handler materially improves the failure path.
@@ -148,18 +148,18 @@ If the only viable patch point is a closed-over helper function, read `reference
 
 ### Patch UI
 
-1. Read `references/ui-patterns.md`.
-2. If the hard part is ownership or lifecycle routing, read `references/ui-patch-patterns.md`.
+1. Read `references/patterns/ui-patterns.md`.
+2. If the hard part is ownership or lifecycle routing, read `references/patterns/ui-patch-patterns.md`.
 3. Read the concrete class under `scripts/widgets/` or `scripts/screens/`.
-4. Read `references/input-patterns.md` if the patch listens to keyboard, mouse, or mapped controls.
+4. Read `references/patterns/input-patterns.md` if the patch listens to keyboard, mouse, or mapped controls.
 5. If the UI should request real gameplay changes, route the authoritative side through networking or action flow instead of mutating gameplay directly from the widget.
-6. Read `references/hook-selection-patterns.md`.
+6. Read `references/patterns/hook-selection-patterns.md`.
 7. Reach for `AddClassPostConstruct` unless the UI is fully mod-owned and should be a new widget or screen.
 8. Patch narrowly and define teardown for any handlers, listeners, or tasks.
 
 ### Understand Or Refactor `modmain.lua`
 
-1. Read `references/modmain-patterns.md`.
+1. Read `references/patterns/modmain-patterns.md`.
 2. Read `scripts/mods.lua` when load order, `modimport(...)`, `PrefabFiles`, or top-level `Assets` behavior is unclear.
 3. Read `scripts/modutil.lua` when the task depends on registration helpers exposed to `modmain.lua`.
 4. Decide which code is true bootstrap glue and which code should move into prefabs, components, widgets, brains, SG files, or helper modules.
@@ -167,18 +167,18 @@ If the only viable patch point is a closed-over helper function, read `reference
 
 ### Add Recipes, Actions, Or Stategraph Changes
 
-1. Read `references/action-patterns.md`.
-2. Read `references/stategraph-patterns.md` when the task touches performer states, events, prediction, or SG timing.
+1. Read `references/patterns/action-patterns.md`.
+2. Read `references/patterns/stategraph-patterns.md` when the task touches performer states, events, prediction, or SG timing.
 3. Read the relevant registration function in `scripts/modutil.lua`.
 4. Read the target stategraph under `scripts/stategraphs/`.
 5. Reuse an existing official action flow whenever possible.
 6. Prefer `AddRecipe2` over deprecated recipe APIs.
 
-If the request is actually a local screen or HUD interaction, stop and reroute to `references/ui-patterns.md`.
+If the request is actually a local screen or HUD interaction, stop and reroute to `references/patterns/ui-patterns.md`.
 
 ### Patch Common World Systems
 
-1. Read `references/world-system-patterns.md`.
+1. Read `references/patterns/world-system-patterns.md`.
 2. Open the exact official component files under `scripts/components/`.
 3. Check `scripts/standardcomponents.lua` for an existing helper before hand-rolling setup.
 4. Read the closest official prefab that combines the same systems.
@@ -186,14 +186,14 @@ If the request is actually a local screen or HUD interaction, stop and reroute t
 
 ### Add Recipes Or Placers
 
-1. Read `references/recipe-patterns.md`.
+1. Read `references/patterns/recipe-patterns.md`.
 2. Use `AddRecipe2` unless the task explicitly needs legacy behavior.
 3. Use `MakePlacer` for placeable structures or deployables.
 4. Keep recipe names, placer names, and prefab names aligned.
 
 ### Add Or Patch Brain AI
 
-1. Read `references/brain-patterns.md`.
+1. Read `references/patterns/brain-patterns.md`.
 2. Read the closest official prefab and note which brain file it requires.
 3. Read the matching file under `scripts/brains/`.
 4. Read the matching SG too, because AI choice and performer execution are separate layers.
@@ -202,29 +202,29 @@ If the request is actually a local screen or HUD interaction, stop and reroute t
 
 ### Add Strings Or Localization
 
-1. Read `references/string-patterns.md`.
+1. Read `references/patterns/string-patterns.md`.
 2. Decide whether the text belongs in runtime `STRINGS` or localized `modinfo.lua` metadata.
-3. If the task is really about runtime i18n architecture, read `references/runtime-i18n-patterns.md`.
+3. If the task is really about runtime i18n architecture, read `references/patterns/runtime-i18n-patterns.md`.
 4. Keep prefab and action keys aligned with uppercase `STRINGS` entries.
-5. If art or icon issues are mixed in, inspect `references/asset-patterns.md` separately instead of treating it as a string bug.
+5. If art or icon issues are mixed in, inspect `references/patterns/asset-patterns.md` separately instead of treating it as a string bug.
 
 ### Add Assets Or Icons
 
-1. Read `references/asset-patterns.md`.
+1. Read `references/patterns/asset-patterns.md`.
 2. Decide whether the asset belongs in a prefab-local `assets` table or top-level mod `Assets`.
 3. Keep atlas and texture paths explicit when a recipe or UI element depends on them.
 
 ### Pack, Unpack, Or Resize Textures
 
-1. Read `references/texture-patterns.md`.
+1. Read `references/patterns/texture-patterns.md`.
 2. Decide whether the task is official-atlas unpacking, local TEX/XML unpacking, atlas packing, or PNG resizing.
 3. Use `scripts/tex_atlas_tool.py` for atlas pack or unpack tasks.
 4. Use `scripts/resize_png.py` when the task is mainly about fitting icon dimensions.
-5. If the task also changes asset declarations, read `references/asset-patterns.md`.
+5. If the task also changes asset declarations, read `references/patterns/asset-patterns.md`.
 
 ### Add Or Patch Animation State
 
-1. Read `references/animstate-patterns.md`.
+1. Read `references/patterns/animstate-patterns.md`.
 2. Identify whether the task is about startup animation, SG-driven flow, symbol override, layer toggling, or progress-driven UI animation.
 3. Read the closest official prefab, SG, widget, or screen that already uses the same pattern.
 4. Verify bank, build, animation, symbol, and layer names before changing code.
@@ -232,17 +232,17 @@ If the request is actually a local screen or HUD interaction, stop and reroute t
 
 ### Add Lighting, FX, Or Sound
 
-1. Read `references/effects-patterns.md`.
+1. Read `references/patterns/effects-patterns.md`.
 2. Decide whether the task is a lit gameplay prefab, a local-only helper, a network proxy, a particle effect, or SG-timed sound.
 3. Read the closest official prefab that already matches that shape.
-4. If interaction or timing also changes, inspect `references/tag-patterns.md` or `references/stategraph-patterns.md`.
-5. If the task needs new textures, shaders, or sound assets, inspect `references/asset-patterns.md`.
+4. If interaction or timing also changes, inspect `references/patterns/tag-patterns.md` or `references/patterns/stategraph-patterns.md`.
+5. If the task needs new textures, shaders, or sound assets, inspect `references/patterns/asset-patterns.md`.
 
 ### Add RPC, Replica, Or Netvars
 
-1. Read `references/networking-patterns.md`.
-2. Read `references/networking-templates.md` for the smallest implementation shape that fits.
-3. If the task is player-owned or owner-only, also read `references/player-network-patterns.md`.
+1. Read `references/patterns/networking-patterns.md`.
+2. Read `references/templates/networking-templates.md` for the smallest implementation shape that fits.
+3. If the task is player-owned or owner-only, also read `references/patterns/player-network-patterns.md`.
 4. Decide whether the need is RPC intent, replicated state, or both.
 5. Read `scripts/networkclientrpc.lua` for RPC routing.
 6. Read `scripts/entityreplica.lua` and a similar official prefab or component before adding replica or classified logic.
@@ -250,15 +250,15 @@ If the request is actually a local screen or HUD interaction, stop and reroute t
 
 ### Add Shard-Aware Runtime Behavior
 
-1. Read `references/shard-patterns.md`.
+1. Read `references/patterns/shard-patterns.md`.
 2. Decide whether the feature is current-shard only, master-shard only, or truly cross-shard.
-3. If the task also saves shard-aware positions or migration state, read `references/persistence-patterns.md`.
+3. If the task also saves shard-aware positions or migration state, read `references/patterns/persistence-patterns.md`.
 4. Use existing migration, `worldmigrator`, or shard aggregation patterns before inventing a new protocol.
 5. Reach for shard mod RPC only when ordinary client/server RPC and saved world state are not enough.
 
 ### Choose A Patch Hook
 
-1. Read `references/hook-selection-patterns.md`.
+1. Read `references/patterns/hook-selection-patterns.md`.
 2. If the target is one prefab, prefer `AddPrefabPostInit(...)`.
 3. If the target is all players, prefer `AddPlayerPostInit(...)`.
 4. If the target is a component family, prefer `AddComponentPostInit(...)`.
@@ -269,10 +269,10 @@ If the request is actually a built-in world interaction with prediction, inspect
 
 ### Add A New Prefab Or Item
 
-1. Read `references/modmain-patterns.md` for the registration side of `modmain.lua`.
-2. Read `references/creation-patterns.md` for the loader path from `modmain.lua` to `prefabs/*.lua`.
+1. Read `references/patterns/modmain-patterns.md` for the registration side of `modmain.lua`.
+2. Read `references/patterns/creation-patterns.md` for the loader path from `modmain.lua` to `prefabs/*.lua`.
 3. Read `references/feature-recipes.md` if the request is phrased as a whole feature such as a weapon, container, creature, structure, or playable character.
-4. Read `references/animstate-patterns.md` if the prefab has custom `AnimState` behavior beyond a basic idle clip.
+4. Read `references/patterns/animstate-patterns.md` if the prefab has custom `AnimState` behavior beyond a basic idle clip.
 5. Pick the closest official prefab.
 6. Read that prefab and any helper calls in `scripts/standardcomponents.lua`.
 7. Reuse helper constructors for burnable, freezable, physics, hauntable, floatable, and similar setup.
@@ -284,8 +284,8 @@ If the prefab is a creature or NPC, also route through brain and SG placement ea
 
 ### Add Or Refactor A Playable Character
 
-1. Read `references/character-patterns.md`.
-2. Read `references/modmain-patterns.md` for character registration and shared assets.
+1. Read `references/patterns/character-patterns.md`.
+2. Read `references/patterns/modmain-patterns.md` for character registration and shared assets.
 3. Read `scripts/prefabs/player_common.lua` before writing the character prefab from scratch.
 4. Read the closest official character prefab such as `scripts/prefabs/wilson.lua` or `scripts/prefabs/wormwood.lua`.
 5. Keep character identity tags and client-visible animation setup in `common_postinit`.
@@ -297,7 +297,7 @@ If the prefab is a creature or NPC, also route through brain and SG placement ea
 
 ### Add Or Patch Official Skin Data
 
-1. Read `references/skin-patterns.md`.
+1. Read `references/patterns/skin-patterns.md`.
 2. Decide whether the task really needs the official skin system or only preview modes or runtime build swaps.
 3. Inspect `scripts/prefabskin.lua`, `scripts/prefabskins.lua`, and `scripts/prefabs/skinprefabs.lua`.
 4. Inspect `scripts/widgets/redux/loadoutselect.lua` and `scripts/screens/redux/defaultskinselection.lua` before promising wardrobe behavior.

@@ -25,8 +25,8 @@ Pick one close official file, read it, then drill into the subsystem page that e
 Read next:
 
 - `references/component-patterns.md`
-- `references/world-system-patterns.md`
-- `references/animstate-patterns.md`
+- `references/patterns/world-system-patterns.md`
+- `references/patterns/animstate-patterns.md`
 
 ## Bootstrap And Registration Examples
 
@@ -39,9 +39,9 @@ Read next:
 
 Read next:
 
-- `references/entrypoint-patterns.md`
-- `references/modmain-patterns.md`
-- `references/creation-patterns.md`
+- `references/patterns/entrypoint-patterns.md`
+- `references/patterns/modmain-patterns.md`
+- `references/patterns/creation-patterns.md`
 
 ## Creature, Brain, And SG Examples
 
@@ -60,9 +60,9 @@ Read next:
 
 Read next:
 
-- `references/brain-patterns.md`
-- `references/stategraph-patterns.md`
-- `references/networking-patterns.md`
+- `references/patterns/brain-patterns.md`
+- `references/patterns/stategraph-patterns.md`
+- `references/patterns/networking-patterns.md`
 
 ## Playable Character And Skill Tree Examples
 
@@ -97,9 +97,9 @@ Read next:
 
 Read next:
 
-- `references/character-patterns.md`
-- `references/runtime-i18n-patterns.md`
-- `references/recipe-patterns.md`
+- `references/patterns/character-patterns.md`
+- `references/patterns/runtime-i18n-patterns.md`
+- `references/patterns/recipe-patterns.md`
 
 ## Player-Wide Patch Examples
 
@@ -110,11 +110,11 @@ Read next:
 
 Read next:
 
-- `references/player-patterns.md`
-- `references/player-network-patterns.md`
-- `references/hook-selection-patterns.md`
-- `references/runtime-local-ui.md`
-- `references/runtime-authority.md`
+- `references/patterns/player-patterns.md`
+- `references/patterns/player-network-patterns.md`
+- `references/patterns/hook-selection-patterns.md`
+- `references/patterns/runtime-local-ui.md`
+- `references/patterns/runtime-authority.md`
 
 ## Skin System Examples
 
@@ -133,9 +133,9 @@ Read next:
 
 Read next:
 
-- `references/skin-patterns.md`
-- `references/character-patterns.md`
-- `references/creation-patterns.md`
+- `references/patterns/skin-patterns.md`
+- `references/patterns/character-patterns.md`
+- `references/patterns/creation-patterns.md`
 
 ## Standard Helper Examples
 
@@ -152,9 +152,9 @@ Read next:
 
 Read next:
 
-- `references/standard-helper-patterns.md`
-- `references/world-system-patterns.md`
-- `references/helper-signatures.md`
+- `references/patterns/standard-helper-patterns.md`
+- `references/patterns/world-system-patterns.md`
+- `references/signatures/helper-signatures.md`
 
 ## FX, Light, And Sound Examples
 
@@ -173,9 +173,9 @@ Read next:
 
 Read next:
 
-- `references/effects-patterns.md`
-- `references/tag-patterns.md`
-- `references/asset-patterns.md`
+- `references/patterns/effects-patterns.md`
+- `references/patterns/tag-patterns.md`
+- `references/patterns/asset-patterns.md`
 
 ## UI And Frontend Examples
 
@@ -196,12 +196,12 @@ Read next:
 
 Read next:
 
-- `references/ui-patterns.md`
-- `references/ui-patch-patterns.md`
-- `references/ui-pitfalls.md`
-- `references/hook-selection-patterns.md`
-- `references/input-patterns.md`
-- `references/runtime-local-ui.md`
+- `references/patterns/ui-patterns.md`
+- `references/patterns/ui-patch-patterns.md`
+- `references/pitfalls/ui-pitfalls.md`
+- `references/patterns/hook-selection-patterns.md`
+- `references/patterns/input-patterns.md`
+- `references/patterns/runtime-local-ui.md`
 
 ## Action And Interaction Examples
 
@@ -216,8 +216,8 @@ Read next:
 
 Read next:
 
-- `references/action-patterns.md`
-- `references/stategraph-patterns.md`
+- `references/patterns/action-patterns.md`
+- `references/patterns/stategraph-patterns.md`
 
 ## Networking And Classified Examples
 
@@ -234,10 +234,10 @@ Read next:
 
 Read next:
 
-- `references/networking-patterns.md`
-- `references/networking-templates.md`
-- `references/player-network-patterns.md`
-- `references/runtime-authority.md`
+- `references/patterns/networking-patterns.md`
+- `references/templates/networking-templates.md`
+- `references/patterns/player-network-patterns.md`
+- `references/patterns/runtime-authority.md`
 
 ## Save, Load, And Offline Progress Examples
 
@@ -258,9 +258,9 @@ Read next:
 
 Read next:
 
-- `references/persistence-patterns.md`
-- `references/persistence-templates.md`
-- `references/diagnostic-patterns.md`
+- `references/patterns/persistence-patterns.md`
+- `references/templates/persistence-templates.md`
+- `references/patterns/diagnostic-patterns.md`
 
 ## Persistent String And Local Profile Storage Examples
 
@@ -279,9 +279,9 @@ Read next:
 
 Read next:
 
-- `references/persistent-string-patterns.md`
-- `references/persistence-patterns.md`
-- `references/modinfo-patterns.md`
+- `references/patterns/persistent-string-patterns.md`
+- `references/patterns/persistence-patterns.md`
+- `references/patterns/modinfo-patterns.md`
 
 ## Protected Call And Safe Decode Examples
 
@@ -300,9 +300,9 @@ Read next:
 
 Read next:
 
-- `references/protected-call-patterns.md`
-- `references/persistent-string-patterns.md`
-- `references/diagnostic-patterns.md`
+- `references/patterns/protected-call-patterns.md`
+- `references/patterns/persistent-string-patterns.md`
+- `references/patterns/diagnostic-patterns.md`
 
 ## Shard And Migration Examples
 
@@ -325,9 +325,9 @@ Read next:
 
 Read next:
 
-- `references/shard-patterns.md`
-- `references/persistence-patterns.md`
-- `references/networking-patterns.md`
+- `references/patterns/shard-patterns.md`
+- `references/patterns/persistence-patterns.md`
+- `references/patterns/networking-patterns.md`
 
 ## Worldgen And Preset Examples
 
@@ -348,7 +348,7 @@ Read next:
 
 Read next:
 
-- `references/worldgen-patterns.md`
+- `references/patterns/worldgen-patterns.md`
 - `references/task-playbook.md`
 
 ## Text And Localization Examples
@@ -366,9 +366,9 @@ Read next:
 
 Read next:
 
-- `references/string-patterns.md`
-- `references/runtime-i18n-patterns.md`
-- `references/modinfo-patterns.md`
+- `references/patterns/string-patterns.md`
+- `references/patterns/runtime-i18n-patterns.md`
+- `references/patterns/modinfo-patterns.md`
 
 ## Practical Rule
 

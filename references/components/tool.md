@@ -34,4 +34,4 @@ Common pitfalls:
 Read next:
 
 - `references/components/workable.md`
-- `references/action-patterns.md`
+- `references/patterns/action-patterns.md`

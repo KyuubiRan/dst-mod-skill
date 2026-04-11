@@ -39,4 +39,4 @@ Common pitfalls:
 Read next:
 
 - `references/components/workable.md`
-- `references/persistence-patterns.md`
+- `references/patterns/persistence-patterns.md`

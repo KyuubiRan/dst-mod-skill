@@ -44,5 +44,5 @@ Common pitfalls:
 
 Read next:
 
-- `references/ui-patterns.md`
-- `references/player-network-patterns.md`
+- `references/patterns/ui-patterns.md`
+- `references/patterns/player-network-patterns.md`

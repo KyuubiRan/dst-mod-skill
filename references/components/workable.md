@@ -40,4 +40,4 @@ Common pitfalls:
 Read next:
 
 - `references/components/tool.md`
-- `references/world-system-patterns.md`
+- `references/patterns/world-system-patterns.md`

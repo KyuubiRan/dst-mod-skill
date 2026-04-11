@@ -1,7 +1,7 @@
 # Mod Bootstrap
 
 Use this file when `modinfo.lua` or `modmain.lua` is missing and the task looks like a new mod.
-Read `references/modinfo-patterns.md` too when the scaffold should include dependencies or non-trivial `configuration_options`.
+Read `references/patterns/modinfo-patterns.md` too when the scaffold should include dependencies or non-trivial `configuration_options`.
 
 ## When To Offer Scaffolding
 
@@ -90,16 +90,16 @@ Add `--with-config` if the user wants starter `configuration_options`.
 The next file depends on the first real feature:
 
 - entry-point layout, `PrefabFiles`, `Assets`, or `modimport(...)`
-  - read `references/modmain-patterns.md`
+  - read `references/patterns/modmain-patterns.md`
 - item, creature, structure, or FX prefab
-  - read `references/template-patterns.md`
+  - read `references/templates/template-patterns.md`
 - metadata, dependencies, or key config
-  - read `references/modinfo-patterns.md`
+  - read `references/patterns/modinfo-patterns.md`
 - worldgen or presets
-  - read `references/worldgen-patterns.md`
+  - read `references/patterns/worldgen-patterns.md`
 - runtime strings or locale loader
-  - read `references/string-patterns.md`
-  - then `references/runtime-i18n-patterns.md` if needed
+  - read `references/patterns/string-patterns.md`
+  - then `references/patterns/runtime-i18n-patterns.md` if needed
 
 ## Common Failure Points
 

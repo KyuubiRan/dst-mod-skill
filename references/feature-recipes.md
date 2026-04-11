@@ -9,7 +9,7 @@ This page is a task-entry layer:
 - which tags or strings usually matter
 - which adjacent reference pages should be opened next
 
-For minimal code snippets, also read `references/template-patterns.md`.
+For minimal code snippets, also read `references/templates/template-patterns.md`.
 
 ## Weapon Item
 
@@ -49,9 +49,9 @@ Common adjacent work:
 Common routing:
 
 - read `references/component-patterns.md`
-- read `references/animstate-patterns.md`
-- read `references/asset-patterns.md`
-- read `references/standard-helper-patterns.md` if the item needs stock physics, floating, or haunt helper setup
+- read `references/patterns/animstate-patterns.md`
+- read `references/patterns/asset-patterns.md`
+- read `references/patterns/standard-helper-patterns.md` if the item needs stock physics, floating, or haunt helper setup
 
 ## Armor Or Clothing
 
@@ -83,7 +83,7 @@ Common adjacent work:
 Common routing:
 
 - read `references/components/combat-and-equipment.md`
-- read `references/animstate-patterns.md`
+- read `references/patterns/animstate-patterns.md`
 
 ## Container Item Or Structure
 
@@ -119,9 +119,9 @@ Common adjacent work:
 Common routing:
 
 - read `references/components/items-and-storage.md`
-- read `references/ui-patterns.md`
-- read `references/tag-patterns.md` if interaction filtering matters
-- read `references/standard-helper-patterns.md` if the item or structure uses stock floater, burnable, or obstacle helpers
+- read `references/patterns/ui-patterns.md`
+- read `references/patterns/tag-patterns.md` if interaction filtering matters
+- read `references/patterns/standard-helper-patterns.md` if the item or structure uses stock floater, burnable, or obstacle helpers
 
 ## Pickable Plant Or Harvest Node
 
@@ -150,9 +150,9 @@ Common adjacent work:
 Common routing:
 
 - read `references/components/world-and-utility.md`
-- read `references/world-system-patterns.md`
-- read `references/animstate-patterns.md`
-- read `references/standard-helper-patterns.md` if the plant uses snow, seasonal, obstacle, or haunt helpers
+- read `references/patterns/world-system-patterns.md`
+- read `references/patterns/animstate-patterns.md`
+- read `references/patterns/standard-helper-patterns.md` if the plant uses snow, seasonal, obstacle, or haunt helpers
 
 ## Creature Or Mob
 
@@ -186,11 +186,11 @@ Common adjacent work:
 
 Common routing:
 
-- read `references/brain-patterns.md`
-- read `references/stategraph-patterns.md`
+- read `references/patterns/brain-patterns.md`
+- read `references/patterns/stategraph-patterns.md`
 - read `references/components/combat-and-equipment.md`
 - read `references/components/world-and-utility.md`
-- read `references/standard-helper-patterns.md` if the creature setup depends on stock physics, burnable, or freezable helpers
+- read `references/patterns/standard-helper-patterns.md` if the creature setup depends on stock physics, burnable, or freezable helpers
 
 ## Structure
 
@@ -224,10 +224,10 @@ Common adjacent work:
 
 Common routing:
 
-- read `references/world-system-patterns.md`
-- read `references/recipe-patterns.md`
-- read `references/effects-patterns.md` if the structure glows or emits FX
-- read `references/standard-helper-patterns.md` if the structure uses stock burnable, obstacle, snow, or haunt helpers
+- read `references/patterns/world-system-patterns.md`
+- read `references/patterns/recipe-patterns.md`
+- read `references/patterns/effects-patterns.md` if the structure glows or emits FX
+- read `references/patterns/standard-helper-patterns.md` if the structure uses stock burnable, obstacle, snow, or haunt helpers
 
 ## Playable Character
 
@@ -262,13 +262,13 @@ Common adjacent work:
 
 Common routing:
 
-- read `references/character-patterns.md`
-- read `references/player-patterns.md` if the request is really a player-wide patch rather than one character's local identity
-- read `references/runtime-i18n-patterns.md`
-- read `references/string-patterns.md`
-- read `references/stategraph-patterns.md`
-- read `references/recipe-patterns.md` if the character has skill-gated or character-gated crafting
-- read `references/networking-patterns.md` if custom client-visible systems are added
+- read `references/patterns/character-patterns.md`
+- read `references/patterns/player-patterns.md` if the request is really a player-wide patch rather than one character's local identity
+- read `references/patterns/runtime-i18n-patterns.md`
+- read `references/patterns/string-patterns.md`
+- read `references/patterns/stategraph-patterns.md`
+- read `references/patterns/recipe-patterns.md` if the character has skill-gated or character-gated crafting
+- read `references/patterns/networking-patterns.md` if custom client-visible systems are added
 
 ## Lit, FX, Or Sound-Driven Prefab
 
@@ -292,9 +292,9 @@ Typical tags or entity pieces:
 
 Common routing:
 
-- read `references/effects-patterns.md`
-- read `references/animstate-patterns.md`
-- read `references/asset-patterns.md`
+- read `references/patterns/effects-patterns.md`
+- read `references/patterns/animstate-patterns.md`
+- read `references/patterns/asset-patterns.md`
 
 ## World Preset, Customization Option, Or Start Location
 
@@ -332,7 +332,7 @@ Common adjacent work:
 
 Common routing:
 
-- read `references/worldgen-patterns.md`
+- read `references/patterns/worldgen-patterns.md`
 - read `references/task-playbook.md`
 - read `references/mod-api-map.md`
 

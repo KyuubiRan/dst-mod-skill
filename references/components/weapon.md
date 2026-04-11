@@ -39,4 +39,4 @@ Common pitfalls:
 Read next:
 
 - `references/components/combat.md`
-- `references/animstate-patterns.md`
+- `references/patterns/animstate-patterns.md`

@@ -27,7 +27,7 @@ Common pitfalls:
 
 - `inspectable` is so common on player-facing prefabs that its presence is rarely the interesting design choice
 - many inspect issues are actually wrong `STRINGS` keys or wrong prefab naming
-- custom inspect text often also needs `references/string-patterns.md`
+- custom inspect text often also needs `references/patterns/string-patterns.md`
 
 ## `inventoryitem`
 

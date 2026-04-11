@@ -175,11 +175,11 @@ Read this file before hand-rolling common prefab setup.
 - If the task starts with "patch an existing thing", start in `modutil.lua` and the concrete official target file.
 - If the task starts with "why does this instance behave like this", start in `entityscript.lua` and the relevant component file.
 - If the task starts with "set up a new prefab", start in a similar official prefab and `standardcomponents.lua`.
-- If the task depends on server or client context, read `runtime-globals.md` before writing code.
-- If the task depends on world generation, presets, or host setup, also read `references/worldgen-patterns.md`.
-- If the task is mostly about SG routing, prediction, or performer states, also read `references/stategraph-patterns.md`.
-- If the task is mostly about replicated implementation shape, also read `references/networking-templates.md`.
-- If the task is mostly about lighting, FX prefabs, particles, or sound helpers, also read `references/effects-patterns.md`.
+- If the task depends on server or client context, read `references/patterns/runtime-globals.md` before writing code.
+- If the task depends on world generation, presets, or host setup, also read `references/patterns/worldgen-patterns.md`.
+- If the task is mostly about SG routing, prediction, or performer states, also read `references/patterns/stategraph-patterns.md`.
+- If the task is mostly about replicated implementation shape, also read `references/templates/networking-templates.md`.
+- If the task is mostly about lighting, FX prefabs, particles, or sound helpers, also read `references/patterns/effects-patterns.md`.
 
 ## High-Frequency Official Components
 

@@ -21,7 +21,7 @@
 - `SKILL.md`
   - Skill 的核心说明、工作原则和路由规则
 - `references/`
-  - 分主题的参考文档，覆盖组件、创建流程、UI、网络同步、存档、分片、资源、动画、调试等
+  - 顶层索引文档加分层子目录，例如 `patterns/`、`signatures/`、`pitfalls/`、`templates/` 和 `components/`
 - `scripts/check_skill.py`
   - 轻量自检脚本
 - `scripts/dst_zip_tool.py`
@@ -137,15 +137,16 @@ python scripts/check_skill.py
 - `SKILL.md`
 - `references/task-playbook.md`
 - `references/official-examples.md`
-- `references/modinfo-patterns.md`
-- `references/modmain-patterns.md`
+- `references/patterns.md`
+- `references/patterns/modinfo-patterns.md`
+- `references/patterns/modmain-patterns.md`
 - `references/component-patterns.md`
 - `references/feature-recipes.md`
-- `references/networking-patterns.md`
-- `references/persistence-patterns.md`
-- `references/shard-patterns.md`
-- `references/ui-patterns.md`
-- `references/effects-patterns.md`
+- `references/patterns/networking-patterns.md`
+- `references/patterns/persistence-patterns.md`
+- `references/patterns/shard-patterns.md`
+- `references/patterns/ui-patterns.md`
+- `references/patterns/effects-patterns.md`
 
 ## 推荐使用方式
 

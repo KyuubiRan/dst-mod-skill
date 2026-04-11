@@ -37,5 +37,5 @@ Common pitfalls:
 
 Read next:
 
-- `references/player-network-patterns.md`
+- `references/patterns/player-network-patterns.md`
 - `references/components/talker.md`

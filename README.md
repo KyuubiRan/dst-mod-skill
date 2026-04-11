@@ -19,7 +19,7 @@ It is designed to help Codex work from official DST source files first, then cho
 - `SKILL.md`
   - the core skill instructions and routing rules
 - `references/`
-  - focused docs for components, creation flow, UI, networking, persistence, shards, assets, animation, debugging, and more
+  - root router docs plus grouped detail folders such as `patterns/`, `signatures/`, `pitfalls/`, `templates/`, and `components/`
 - `scripts/check_skill.py`
   - lightweight repository validation
 - `scripts/dst_zip_tool.py`
@@ -135,15 +135,16 @@ If you are new to the repository, the most useful entry points are:
 - `SKILL.md`
 - `references/task-playbook.md`
 - `references/official-examples.md`
-- `references/modinfo-patterns.md`
-- `references/modmain-patterns.md`
+- `references/patterns.md`
+- `references/patterns/modinfo-patterns.md`
+- `references/patterns/modmain-patterns.md`
 - `references/component-patterns.md`
 - `references/feature-recipes.md`
-- `references/networking-patterns.md`
-- `references/persistence-patterns.md`
-- `references/shard-patterns.md`
-- `references/ui-patterns.md`
-- `references/effects-patterns.md`
+- `references/patterns/networking-patterns.md`
+- `references/patterns/persistence-patterns.md`
+- `references/patterns/shard-patterns.md`
+- `references/patterns/ui-patterns.md`
+- `references/patterns/effects-patterns.md`
 
 ## Recommended Workflow
 

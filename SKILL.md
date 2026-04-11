@@ -111,54 +111,55 @@ python scripts/check_skill.py
 
 - Read `references/official-files.md` for file paths, entry points, and what each official file family is good for.
 - Read `references/official-examples.md` when you already know the subsystem but need the closest concrete official prefab, widget, SG, map, or networking example to open first.
+- Read `references/patterns.md` when you need a grouped map of the subsystem detail pages under `references/patterns/`.
 - Read `references/mod-api-map.md` for the highest-value mod APIs and where they live.
-- Read `references/modinfo-patterns.md` when the task edits `modinfo.lua`, compatibility flags, dependencies, or `configuration_options`.
-- Read `references/entrypoint-patterns.md` when the task is mainly about choosing between `modinfo.lua`, `modmain.lua`, `modworldgenmain.lua`, and `modservercreationmain.lua`.
-- Read `references/modmain-patterns.md` when the task is mainly about `modmain.lua` as the gameplay entry hub, including `PrefabFiles`, top-level `Assets`, `modimport(...)`, `AddModCharacter(...)`, or shared startup glue.
-- Read `references/creation-patterns.md` when the task is about how prefabs, components, or helper modules are created and loaded.
+- Read `references/patterns/modinfo-patterns.md` when the task edits `modinfo.lua`, compatibility flags, dependencies, or `configuration_options`.
+- Read `references/patterns/entrypoint-patterns.md` when the task is mainly about choosing between `modinfo.lua`, `modmain.lua`, `modworldgenmain.lua`, and `modservercreationmain.lua`.
+- Read `references/patterns/modmain-patterns.md` when the task is mainly about `modmain.lua` as the gameplay entry hub, including `PrefabFiles`, top-level `Assets`, `modimport(...)`, `AddModCharacter(...)`, or shared startup glue.
+- Read `references/patterns/creation-patterns.md` when the task is about how prefabs, components, or helper modules are created and loaded.
 - Read `references/feature-recipes.md` when the user describes a whole feature such as a weapon, container, creature, structure, or playable character and you need the likely file set before drilling into subsystems.
-- Read `references/character-patterns.md` when the task is specifically a playable character mod, especially when it uses `prefabs/player_common.lua`, `MakePlayerCharacter(...)`, character strings, portraits, or an optional skill tree.
-- Read `references/player-patterns.md` when the task patches players as a class, uses `AddPlayerPostInit(...)`, or depends on player lifecycle events such as `playerentered` or `playeractivated`.
-- Read `references/player-network-patterns.md` when the task is specifically about player-owned replicated state, `player_classified`, owner-only HUD or controller data, or deciding between player netvars, replica, and classified patterns.
-- Read `references/skin-patterns.md` when the task is specifically about official skin data, wardrobe or loadout skin selection, `PREFAB_SKINS`, or `CreatePrefabSkin(...)`.
+- Read `references/patterns/character-patterns.md` when the task is specifically a playable character mod, especially when it uses `prefabs/player_common.lua`, `MakePlayerCharacter(...)`, character strings, portraits, or an optional skill tree.
+- Read `references/patterns/player-patterns.md` when the task patches players as a class, uses `AddPlayerPostInit(...)`, or depends on player lifecycle events such as `playerentered` or `playeractivated`.
+- Read `references/patterns/player-network-patterns.md` when the task is specifically about player-owned replicated state, `player_classified`, owner-only HUD or controller data, or deciding between player netvars, replica, and classified patterns.
+- Read `references/patterns/skin-patterns.md` when the task is specifically about official skin data, wardrobe or loadout skin selection, `PREFAB_SKINS`, or `CreatePrefabSkin(...)`.
 - Read `references/component-patterns.md` when the task is mainly about high-frequency official components such as `inspectable`, `inventoryitem`, `stackable`, `finiteuses`, `inventory`, `container`, `edible`, `cookable`, `fuel`, `tool`, `pickable`, `workable`, `timer`, `talker`, `health`, `hunger`, `sanity`, `combat`, `equippable`, `armor`, or `weapon`. Use it as the routing page, then open the matching detail file under `references/components/`.
-- Read `references/standard-helper-patterns.md` when the task is mainly about `Make*` helper constructors from `scripts/standardcomponents.lua`, especially physics, floatable, snow-covered, or haunt helper selection.
-- Read `references/tag-patterns.md` when the task depends on prefab tags, action filters, `FindEntities(...)` queries, AI targeting, or helper-entity interaction rules such as `NOCLICK`, `FX`, or `structure`.
-- Read `references/template-patterns.md` when the task needs a practical starter skeleton for common mod code.
-- Read `references/brain-patterns.md` when the task creates or patches NPC AI behavior.
-- Read `references/worldgen-patterns.md` when the task touches `modworldgenmain.lua`, `modservercreationmain.lua`, presets, or generation-time logic.
-- Read `references/ui-patterns.md` when the task creates or patches widgets, screens, HUD, or local UI flows.
-- Read `references/ui-patch-patterns.md` when the hard part is choosing between `widgets/controls`, `screens/playerhud`, transient widgets, popup screens, `widgets/screen`, or `frontend`.
-- Read `references/action-patterns.md` when the task adds custom actions or stategraph action routing.
-- Read `references/stategraph-patterns.md` when the task adds or patches states, SG events, player action performer states, prediction flow, or `wilson` versus `wilson_client` behavior.
-- Read `references/world-system-patterns.md` when the task combines common world systems such as `fueled`, `burnable`, `freezable`, `lootdropper`, `trader`, `hauntable`, or `deployable`.
-- Read `references/string-patterns.md` when the task adds names, inspect text, UI text, speech, or localized metadata.
-- Read `references/runtime-i18n-patterns.md` when the task designs or refactors runtime localization, locale loaders, character speech inheritance, or `.po` versus Lua-table i18n strategy.
-- Read `references/persistence-patterns.md` when the task needs `OnSave(...)`, `OnLoad(...)`, `OnPreLoad(...)`, `OnLoadPostPass(...)`, `LongUpdate(...)`, nested save records, or save-migration logic.
-- Read `references/persistence-templates.md` when the task already knows it needs save/load code and now wants the smallest correct shape.
-- Read `references/persistent-string-patterns.md` when the task needs `TheSim:SetPersistentString(...)`, `TheSim:GetPersistentString(...)`, local profile-like cache files, or cross-save local mod settings.
-- Read `references/protected-call-patterns.md` when the task needs `pcall(...)`, `xpcall(...)`, safe `json.decode(...)`, safe `json.encode(...)`, or optional `require(...)` around fragile serialization or deserialization boundaries.
-- Read `references/asset-patterns.md` when the task adds anim zips, atlases, inventory icons, or minimap assets.
-- Read `references/texture-patterns.md` when the task packs or unpacks atlas `tex+xml`, inspects official icon atlases from `images.zip`, or resizes PNG files for DST texture fitting.
-- Read `references/animstate-patterns.md` when the task touches `inst.AnimState`, animation playback flow, symbol overrides, or animation-driven UI state.
-- Read `references/effects-patterns.md` when the task adds lighting, a visual FX prefab, particle FX, or sound playback.
-- Read `references/recipe-patterns.md` when the task adds recipes, crafting filters, or placers.
-- Read `references/runtime-globals.md` first, then the specific runtime page you actually need.
-- Read `references/runtime-authority.md` for `TheWorld`, `TheNet`, and authority boundaries.
-- Read `references/runtime-local-ui.md` for `ThePlayer`, HUD, and local UI globals.
-- Read `references/input-patterns.md` for `TheInput`, keyboard, mouse, and control handlers.
-- Read `references/networking-patterns.md` when the task needs RPC, replica, classified entities, or netvars.
-- Read `references/networking-templates.md` when the task needs implementation-ready netvar, replica, classified, or RPC templates.
-- Read `references/shard-patterns.md` when the task is specifically about Master/Caves runtime boundaries, shard-aware world ids, player or item migration, cluster-wide shard state, or shard mod RPC.
-- Read `references/hook-selection-patterns.md` when the task is mainly about choosing between `AddPrefabPostInit(...)`, `AddPrefabPostInitAny(...)`, `AddPlayerPostInit(...)`, `AddComponentPostInit(...)`, `AddClassPostConstruct(...)`, and related patch hooks.
-- Read `references/entity-query-patterns.md` for `TheSim:FindEntities(...)`.
-- Read `references/execution-contexts.md` before deciding whether code should be all-clients, client-only, or server-only.
+- Read `references/patterns/standard-helper-patterns.md` when the task is mainly about `Make*` helper constructors from `scripts/standardcomponents.lua`, especially physics, floatable, snow-covered, or haunt helper selection.
+- Read `references/patterns/tag-patterns.md` when the task depends on prefab tags, action filters, `FindEntities(...)` queries, AI targeting, or helper-entity interaction rules such as `NOCLICK`, `FX`, or `structure`.
+- Read `references/templates/template-patterns.md` when the task needs a practical starter skeleton for common mod code.
+- Read `references/patterns/brain-patterns.md` when the task creates or patches NPC AI behavior.
+- Read `references/patterns/worldgen-patterns.md` when the task touches `modworldgenmain.lua`, `modservercreationmain.lua`, presets, or generation-time logic.
+- Read `references/patterns/ui-patterns.md` when the task creates or patches widgets, screens, HUD, or local UI flows.
+- Read `references/patterns/ui-patch-patterns.md` when the hard part is choosing between `widgets/controls`, `screens/playerhud`, transient widgets, popup screens, `widgets/screen`, or `frontend`.
+- Read `references/patterns/action-patterns.md` when the task adds custom actions or stategraph action routing.
+- Read `references/patterns/stategraph-patterns.md` when the task adds or patches states, SG events, player action performer states, prediction flow, or `wilson` versus `wilson_client` behavior.
+- Read `references/patterns/world-system-patterns.md` when the task combines common world systems such as `fueled`, `burnable`, `freezable`, `lootdropper`, `trader`, `hauntable`, or `deployable`.
+- Read `references/patterns/string-patterns.md` when the task adds names, inspect text, UI text, speech, or localized metadata.
+- Read `references/patterns/runtime-i18n-patterns.md` when the task designs or refactors runtime localization, locale loaders, character speech inheritance, or `.po` versus Lua-table i18n strategy.
+- Read `references/patterns/persistence-patterns.md` when the task needs `OnSave(...)`, `OnLoad(...)`, `OnPreLoad(...)`, `OnLoadPostPass(...)`, `LongUpdate(...)`, nested save records, or save-migration logic.
+- Read `references/templates/persistence-templates.md` when the task already knows it needs save/load code and now wants the smallest correct shape.
+- Read `references/patterns/persistent-string-patterns.md` when the task needs `TheSim:SetPersistentString(...)`, `TheSim:GetPersistentString(...)`, local profile-like cache files, or cross-save local mod settings.
+- Read `references/patterns/protected-call-patterns.md` when the task needs `pcall(...)`, `xpcall(...)`, safe `json.decode(...)`, safe `json.encode(...)`, or optional `require(...)` around fragile serialization or deserialization boundaries.
+- Read `references/patterns/asset-patterns.md` when the task adds anim zips, atlases, inventory icons, or minimap assets.
+- Read `references/patterns/texture-patterns.md` when the task packs or unpacks atlas `tex+xml`, inspects official icon atlases from `images.zip`, or resizes PNG files for DST texture fitting.
+- Read `references/patterns/animstate-patterns.md` when the task touches `inst.AnimState`, animation playback flow, symbol overrides, or animation-driven UI state.
+- Read `references/patterns/effects-patterns.md` when the task adds lighting, a visual FX prefab, particle FX, or sound playback.
+- Read `references/patterns/recipe-patterns.md` when the task adds recipes, crafting filters, or placers.
+- Read `references/patterns/runtime-globals.md` first, then the specific runtime page you actually need.
+- Read `references/patterns/runtime-authority.md` for `TheWorld`, `TheNet`, and authority boundaries.
+- Read `references/patterns/runtime-local-ui.md` for `ThePlayer`, HUD, and local UI globals.
+- Read `references/patterns/input-patterns.md` for `TheInput`, keyboard, mouse, and control handlers.
+- Read `references/patterns/networking-patterns.md` when the task needs RPC, replica, classified entities, or netvars.
+- Read `references/templates/networking-templates.md` when the task needs implementation-ready netvar, replica, classified, or RPC templates.
+- Read `references/patterns/shard-patterns.md` when the task is specifically about Master/Caves runtime boundaries, shard-aware world ids, player or item migration, cluster-wide shard state, or shard mod RPC.
+- Read `references/patterns/hook-selection-patterns.md` when the task is mainly about choosing between `AddPrefabPostInit(...)`, `AddPrefabPostInitAny(...)`, `AddPlayerPostInit(...)`, `AddComponentPostInit(...)`, `AddClassPostConstruct(...)`, and related patch hooks.
+- Read `references/patterns/entity-query-patterns.md` for `TheSim:FindEntities(...)`.
+- Read `references/patterns/execution-contexts.md` before deciding whether code should be all-clients, client-only, or server-only.
 - Read `references/signatures.md` first, then the narrow signature page you need.
-- Read `references/hook-signatures.md`, `references/entityscript-signatures.md`, `references/helper-signatures.md`, or `references/runtime-signatures.md` for exact signatures.
-- Read `references/debug-techniques.md` when a task needs narrow closure patching or deeper Lua-side debugging.
+- Read `references/signatures/hook-signatures.md`, `references/signatures/entityscript-signatures.md`, `references/signatures/helper-signatures.md`, or `references/signatures/runtime-signatures.md` for exact signatures.
+- Read `references/patterns/debug-techniques.md` when a task needs narrow closure patching or deeper Lua-side debugging.
 - Read `references/pitfalls.md` first, then the narrow pitfalls page you need.
-- Read `references/diagnostic-patterns.md` when the task is mostly symptom-based debugging or feature triage.
-- Read `references/context-pitfalls.md`, `references/networking-pitfalls.md`, `references/performance-pitfalls.md`, `references/persistence-pitfalls.md`, `references/shard-pitfalls.md`, or `references/ui-pitfalls.md` for common mistakes.
+- Read `references/patterns/diagnostic-patterns.md` when the task is mostly symptom-based debugging or feature triage.
+- Read `references/pitfalls/context-pitfalls.md`, `references/pitfalls/networking-pitfalls.md`, `references/pitfalls/performance-pitfalls.md`, `references/pitfalls/persistence-pitfalls.md`, `references/pitfalls/shard-pitfalls.md`, or `references/pitfalls/ui-pitfalls.md` for common mistakes.
 - Read `references/mod-bootstrap.md` when the task looks like a new mod scaffold.
 - Read `references/task-playbook.md` for a compact decision tree and validation checklist.
 

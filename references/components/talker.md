@@ -34,5 +34,5 @@ Common pitfalls:
 
 Read next:
 
-- `references/string-patterns.md`
-- `references/player-patterns.md`
+- `references/patterns/string-patterns.md`
+- `references/patterns/player-patterns.md`

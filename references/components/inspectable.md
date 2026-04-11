@@ -27,9 +27,9 @@ Common pitfalls:
 
 - many inspect bugs are really wrong prefab names or wrong `STRINGS` keys.
 - `inspectable` is so common that its absence is usually the interesting choice.
-- special inspect text often needs `references/string-patterns.md`.
+- special inspect text often needs `references/patterns/string-patterns.md`.
 
 Read next:
 
-- `references/string-patterns.md`
-- `references/tag-patterns.md`
+- `references/patterns/string-patterns.md`
+- `references/patterns/tag-patterns.md`

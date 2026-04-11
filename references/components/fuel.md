@@ -28,5 +28,5 @@ Common pitfalls:
 
 Read next:
 
-- `references/world-system-patterns.md`
+- `references/patterns/world-system-patterns.md`
 - `references/components/inventoryitem.md`

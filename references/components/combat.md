@@ -43,5 +43,5 @@ Common pitfalls:
 
 Read next:
 
-- `references/brain-patterns.md`
-- `references/stategraph-patterns.md`
+- `references/patterns/brain-patterns.md`
+- `references/patterns/stategraph-patterns.md`
