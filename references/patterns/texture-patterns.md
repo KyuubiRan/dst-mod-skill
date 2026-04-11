@@ -40,7 +40,7 @@ Use this when the task is about atlas packing or unpacking.
 Current supported workflow:
 
 - unpack official `dxt5` atlases from `images.zip`
-- unpack local `argb` or `dxt5` atlases from a `.tex + .xml` pair
+- unpack local `argb` or `dxt5` atlases from a `.tex + .xml` pair, including official-style KTEX headers where the mip count is encoded in the format code
 - split atlas entries into individual PNG files
 - pack multiple PNGs into one atlas PNG + XML + `argb` TEX
 
@@ -62,8 +62,10 @@ Rules:
 
 - official atlas names are usually read from `images/<name>.tex` and `images/<name>.xml`
 - if the user omits an output path, unpack defaults to `.output/images/`
-- packing currently writes `argb` TEX in pure Python
-- unpacking supports official `dxt5` icon atlases
+- packing writes KTEX headers from the real mip count instead of a fixed format code
+- unpacking supports official `dxt5` icon atlases and other common official UI-atlas headers such as `0xFFFD4220`
+- treat script-packed UI atlases as "needs in-game verification", not as an automatic substitute for official Mod Tools output
+- if a packed UI atlas renders as black, compare its KTEX format code against a known-good official output before blaming XML coordinates or widget code
 
 ### `scripts/resize_png.py`
 

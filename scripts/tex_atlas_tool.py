@@ -9,7 +9,7 @@ Requirements:
 - Pillow for PNG read and write
 
 Supported today:
-- unpack official/local `argb` and `dxt5` KTEX files
+- unpack official/local 2D `argb` and `dxt5` KTEX files whose format code encodes mip count
 - split atlas entries by XML coordinates
 - pack multiple PNGs into one atlas PNG + XML + `argb` or `dxt5` KTEX
 """
@@ -66,15 +66,31 @@ DEFAULT_IMAGES_ZIP_PATHS = [
 KTEX_MAGIC = b"KTEX"
 FORMAT_ARGB = "argb"
 FORMAT_DXT5 = "dxt5"
-FORMAT_CODES_WRITE = {
-    FORMAT_ARGB: 0xFFFC6240,
-    FORMAT_DXT5: 0xFFFC6220,
+
+# Post-caves KTEX headers encode more than just the pixel format.
+# The low bits describe the texture kind, while the mip count lives in bits 13:17.
+KTEX_PLATFORM_SHIFT = 0
+KTEX_PLATFORM_MASK = 0xF
+KTEX_PIXEL_FORMAT_SHIFT = 4
+KTEX_PIXEL_FORMAT_MASK = 0x1F
+KTEX_TEXTURE_TYPE_SHIFT = 9
+KTEX_TEXTURE_TYPE_MASK = 0xF
+KTEX_MIP_COUNT_SHIFT = 13
+KTEX_MIP_COUNT_MASK = 0x1F
+KTEX_FLAGS_SHIFT = 18
+KTEX_FLAGS_MASK = 0x3
+KTEX_PADDING_MASK = 0xFFF00000
+KTEX_TEXTURE_TYPE_2D = 1
+KTEX_FLAGS_DEFAULT = 0x3
+KTEX_PADDING_DEFAULT = 0xFFF00000
+
+KTEX_PIXEL_FORMATS_READ = {
+    2: FORMAT_DXT5,
+    4: FORMAT_ARGB,
 }
-FORMAT_CODES_READ = {
-    0xFFFC6240: FORMAT_ARGB,
-    0xFFFD8240: FORMAT_ARGB,
-    0xFFFC6220: FORMAT_DXT5,
-    0xFFFD8220: FORMAT_DXT5,
+KTEX_PIXEL_FORMATS_WRITE = {
+    FORMAT_DXT5: 2,
+    FORMAT_ARGB: 4,
 }
 
 
@@ -90,6 +106,7 @@ class KTexMip:
 class KTexHeader:
     format_code: int
     format_name: str
+    declared_mip_count: int
     mips: list[KTexMip]
     data_offset: int
 
@@ -237,12 +254,37 @@ def normalize_official_entry(source: str, suffix: str) -> str:
     return f"images/{entry}{suffix}"
 
 
+def parse_format_code(format_code: int) -> tuple[str | None, int]:
+    pixel_format = (format_code >> KTEX_PIXEL_FORMAT_SHIFT) & KTEX_PIXEL_FORMAT_MASK
+    texture_type = (format_code >> KTEX_TEXTURE_TYPE_SHIFT) & KTEX_TEXTURE_TYPE_MASK
+    mip_count = (format_code >> KTEX_MIP_COUNT_SHIFT) & KTEX_MIP_COUNT_MASK
+
+    if texture_type != KTEX_TEXTURE_TYPE_2D:
+        return None, mip_count
+
+    return KTEX_PIXEL_FORMATS_READ.get(pixel_format), mip_count
+
+
+def build_format_code(format_name: str, mip_count: int) -> int:
+    pixel_format = KTEX_PIXEL_FORMATS_WRITE[format_name]
+    if mip_count < 1 or mip_count > KTEX_MIP_COUNT_MASK:
+        raise ValueError(f"Unsupported mip count for KTEX header: {mip_count}")
+
+    return (
+        KTEX_PADDING_DEFAULT
+        | (KTEX_FLAGS_DEFAULT << KTEX_FLAGS_SHIFT)
+        | (mip_count << KTEX_MIP_COUNT_SHIFT)
+        | (KTEX_TEXTURE_TYPE_2D << KTEX_TEXTURE_TYPE_SHIFT)
+        | (pixel_format << KTEX_PIXEL_FORMAT_SHIFT)
+    )
+
+
 def parse_ktex_header(data: bytes) -> KTexHeader:
     if len(data) < 18 or data[:4] != KTEX_MAGIC:
         raise ValueError("Not a valid KTEX file.")
 
     format_code = struct.unpack_from("<I", data, 4)[0]
-    format_name = FORMAT_CODES_READ.get(format_code)
+    format_name, declared_mip_count = parse_format_code(format_code)
     if format_name is None:
         raise ValueError(f"Unsupported KTEX format code: 0x{format_code:08X}")
 
@@ -259,6 +301,7 @@ def parse_ktex_header(data: bytes) -> KTexHeader:
             return KTexHeader(
                 format_code=format_code,
                 format_name=format_name,
+                declared_mip_count=declared_mip_count,
                 mips=mips[:],
                 data_offset=header_size,
             )
@@ -413,8 +456,10 @@ def build_atlas_xml(
         element.set("name", placement.packed.name)
         element.set("u1", repr((inner_x + 0.5) / atlas_size))
         element.set("u2", repr((inner_x + width - 0.5) / atlas_size))
-        element.set("v1", repr((inner_y + 0.5) / atlas_size))
-        element.set("v2", repr((inner_y + height - 0.5) / atlas_size))
+        # DST atlas XML uses vertically flipped UVs relative to the atlas PNG's
+        # top-left image coordinates.
+        element.set("v1", repr(1 - ((inner_y + height - 0.5) / atlas_size)))
+        element.set("v2", repr(1 - ((inner_y + 0.5) / atlas_size)))
 
     ET.indent(root, space="    ")
     return ET.tostring(root, encoding="utf-8", xml_declaration=False)
@@ -658,7 +703,7 @@ def build_argb_ktex(image: Image.Image) -> bytes:
 
     header = bytearray()
     header.extend(KTEX_MAGIC)
-    header.extend(struct.pack("<I", FORMAT_CODES_WRITE[FORMAT_ARGB]))
+    header.extend(struct.pack("<I", build_format_code(FORMAT_ARGB, len(mip_images))))
 
     payload = bytearray()
     for mip in mip_images:
@@ -676,7 +721,7 @@ def build_dxt5_ktex(image: Image.Image) -> bytes:
 
     header = bytearray()
     header.extend(KTEX_MAGIC)
-    header.extend(struct.pack("<I", FORMAT_CODES_WRITE[FORMAT_DXT5]))
+    header.extend(struct.pack("<I", build_format_code(FORMAT_DXT5, len(mip_images))))
 
     payload = bytearray()
     for mip in mip_images:
@@ -749,6 +794,12 @@ def command_unpack(args: argparse.Namespace) -> int:
 
     print(f"atlas: {atlas_name}")
     print(f"format: {header.format_name} (0x{header.format_code:08X})")
+    if header.declared_mip_count != len(header.mips):
+        print(
+            "warning: format code declares "
+            f"{header.declared_mip_count} mips but payload contains {len(header.mips)}",
+            file=sys.stderr,
+        )
     print(f"size: {atlas_image.width}x{atlas_image.height}")
     print(f"elements: {len(elements)}")
     print(f"atlas_png: {atlas_png_path}")
