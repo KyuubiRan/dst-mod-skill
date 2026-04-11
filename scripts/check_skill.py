@@ -38,6 +38,7 @@ CRITICAL_PATHS = [
     REPO_ROOT / "README.md",
     REPO_ROOT / "README_zh.md",
     REPO_ROOT / "scripts" / "dst_zip_tool.py",
+    REPO_ROOT / "scripts" / "dst_zip_cache.py",
     REPO_ROOT / "scripts" / "init_dst_mod.py",
     REPO_ROOT / "scripts" / "bundle_release.py",
     REPO_ROOT / "scripts" / "tex_atlas_tool.py",

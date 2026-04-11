@@ -54,6 +54,16 @@ Practical rule:
 - if it is not installed at all, recommend Steam App ID `245850`
 - on Windows, `start steam://install/245850` opens the Steam install prompt
 
+## Short-Lived Zip Cache
+
+The helper script `scripts/dst_zip_tool.py` may use a short-lived local cache for `scripts.zip` entry names and recently-read text entries.
+
+Practical rule:
+
+- the cache is keyed by absolute zip path plus file size and `mtime_ns`
+- if the game updates and `scripts.zip` changes, the cache namespace changes automatically
+- the cache is intentionally short-lived and should be treated like request context, not a long-term extracted copy
+
 ## Confirmed Mod Entry Points
 
 The official loader code confirms these root-level entry files:

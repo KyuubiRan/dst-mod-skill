@@ -79,6 +79,10 @@ Search for a symbol or string:
 python scripts/dst_zip_tool.py grep AddPrefabPostInit --path-glob "scripts/*.lua"
 ```
 
+`dst_zip_tool.py` keeps a short-lived local cache for archive entry lists and recently-read text files.
+The cache is keyed by zip path plus file size and `mtime`, so a game update invalidates it automatically.
+Treat it like a short context cache, not a persistent extraction mirror.
+
 Read a section with line numbers:
 ```bash
 python scripts/dst_zip_tool.py show scripts/entityscript.lua --start 600 --end 700
