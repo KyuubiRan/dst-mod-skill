@@ -23,6 +23,10 @@ Inspect official scripts before writing mod code and tie conclusions to concrete
 - Treat a workspace under `...\Don't Starve Together\mods\...` as strong evidence that the parent `...\Don't Starve Together` directory is the local game root.
 - Prefer a user-provided game path when the path is not already known.
 - If the user refuses to provide it, say that accuracy may be lower without reading the local official scripts.
+- When the game path is known, also check whether `Don't Starve Mod Tools` exists under the same Steam `common` directory before deciding how to handle texture packing tasks.
+- If Mod Tools is not found in the usual Steam location, ask whether it is installed elsewhere.
+- If the user does not have Mod Tools installed, recommend installing Steam App ID `245850` before relying on atlas packing workflows.
+- On Windows, the install prompt can be launched with `start steam://install/245850`.
 - When passing game paths into shell commands, quote or escape them correctly. Paths such as `Don't Starve Together` contain an apostrophe and can fail on the first command if the shell string is built carelessly.
 - Treat official game files as authoritative. Do not learn default behavior from third-party mods unless the user explicitly asks for comparison.
 
@@ -32,6 +36,8 @@ Inspect official scripts before writing mod code and tie conclusions to concrete
 2. Confirm the local game path if it is not already known.
    - First check whether the current workspace path already sits inside a DST install tree and infer the root from that.
    - Do not recursively scan unrelated directories when the workspace path already gives a clear answer.
+   - Once the game path is known, check for a sibling `Don't Starve Mod Tools` install under the same Steam `common` directory.
+   - If Mod Tools is missing there, ask whether it exists in another location before falling back to non-official texture packing.
 3. Check whether `modinfo.lua` and the relevant root entry files such as `modmain.lua`, `modworldgenmain.lua`, or `modservercreationmain.lua` exist in the target mod folder.
 4. If `modinfo.lua` exists, read it early and classify the mod as all-clients gameplay, client-only, or server-only before choosing hooks or reading runtime globals.
 5. If `modinfo.lua` is missing, ask whether the user wants a new mod skeleton.
@@ -101,6 +107,11 @@ python scripts/tex_atlas_tool.py unpack inventoryimages1
 Pack multiple PNGs into one atlas:
 ```bash
 python scripts/tex_atlas_tool.py pack path/to/png_dir my_atlas
+```
+
+If Mod Tools is missing and texture packing accuracy matters, install it from Steam:
+```bash
+start steam://install/245850
 ```
 
 Resize one icon:

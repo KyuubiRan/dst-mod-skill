@@ -12,6 +12,7 @@ Supported today:
 - unpack official/local 2D `argb` and `dxt5` KTEX files whose format code encodes mip count
 - split atlas entries by XML coordinates
 - pack multiple PNGs into one atlas PNG + XML + `argb` or `dxt5` KTEX
+- prefer Klei `TextureConverter.exe` when local Don't Starve Mod Tools are installed
 """
 
 from __future__ import annotations
@@ -20,7 +21,10 @@ import argparse
 import math
 import os
 import struct
+import subprocess
 import sys
+import tempfile
+from collections import deque
 import xml.etree.ElementTree as ET
 import zipfile
 from dataclasses import dataclass
@@ -61,6 +65,15 @@ DEFAULT_IMAGES_ZIP_PATHS = [
     / "data"
     / "databundles"
     / "images.zip",
+]
+
+DEFAULT_TEXTURE_CONVERTER_PATHS = [
+    Path(
+        r"C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Mod Tools\mod_tools\tools\bin\TextureConverter.exe"
+    ),
+    Path(
+        r"D:\Program Files (x86)\Steam\steamapps\common\Don't Starve Mod Tools\mod_tools\tools\bin\TextureConverter.exe"
+    ),
 ]
 
 KTEX_MAGIC = b"KTEX"
@@ -132,6 +145,14 @@ class Placement:
     packed: PackedImage
     x: int
     y: int
+
+
+@dataclass(frozen=True)
+class BBox:
+    x: int
+    y: int
+    w: int
+    h: int
 
 
 def parse_args() -> argparse.Namespace:
@@ -206,6 +227,25 @@ def parse_args() -> argparse.Namespace:
         default=FORMAT_ARGB,
         help="KTEX output format. Pure Python packing supports argb and dxt5.",
     )
+    pack_parser.add_argument(
+        "--single-mip",
+        action="store_true",
+        help="Write only mip0. Useful for UI textures that are scaled in-game.",
+    )
+    pack_parser.add_argument(
+        "--texture-converter",
+        type=Path,
+        default=None,
+        help=(
+            "Path to Klei TextureConverter.exe. "
+            "If omitted, common Don't Starve Mod Tools locations are tried first."
+        ),
+    )
+    pack_parser.add_argument(
+        "--pure-python",
+        action="store_true",
+        help="Force the fallback pure-Python KTEX writer instead of TextureConverter.exe.",
+    )
 
     return parser.parse_args()
 
@@ -241,6 +281,30 @@ def resolve_images_zip(candidate: Path | None) -> Path:
 def ensure_dir(path: Path) -> Path:
     path.mkdir(parents=True, exist_ok=True)
     return path
+
+
+def resolve_texture_converter(candidate: Path | None) -> Path | None:
+    if candidate is not None:
+        candidate = candidate.expanduser()
+        if candidate.is_file():
+            return candidate
+        raise FileNotFoundError(f"TextureConverter.exe not found at {candidate}")
+
+    env_value = os.environ.get("DST_TEXTURE_CONVERTER")
+    if env_value:
+        path = Path(env_value).expanduser()
+        if path.is_file():
+            return path
+        raise FileNotFoundError(
+            f"TextureConverter.exe not found at {path}. Fix DST_TEXTURE_CONVERTER or pass --texture-converter."
+        )
+
+    for path in DEFAULT_TEXTURE_CONVERTER_PATHS:
+        expanded = path.expanduser()
+        if expanded.is_file():
+            return expanded
+
+    return None
 
 
 def normalize_official_entry(source: str, suffix: str) -> str:
@@ -423,8 +487,10 @@ def read_atlas_xml(xml_bytes: bytes, atlas_width: int, atlas_height: int) -> lis
 
         x1 = round(u1 * atlas_width - 0.5)
         x2 = round(u2 * atlas_width - 0.5)
-        y1 = round(v1 * atlas_height - 0.5)
-        y2 = round(v2 * atlas_height - 0.5)
+        # DST atlas XML stores V coordinates in bottom-left texture space.
+        # Convert them back into top-left image coordinates before cropping.
+        y1 = round((1 - v2) * atlas_height - 0.5)
+        y2 = round((1 - v1) * atlas_height - 0.5)
 
         elements.append(
             AtlasElement(
@@ -439,27 +505,45 @@ def read_atlas_xml(xml_bytes: bytes, atlas_width: int, atlas_height: int) -> lis
     return elements
 
 
+def clamp(lower: float, upper: float, value: float) -> float:
+    return max(lower, min(upper, value))
+
+
 def build_atlas_xml(
-    atlas_name: str, placements: list[Placement], atlas_size: int, padding: int
+    atlas_name: str,
+    placements: list[Placement],
+    atlas_width: int,
+    atlas_height: int,
+    padding: int,
 ) -> bytes:
     root = ET.Element("Atlas")
     texture = ET.SubElement(root, "Texture")
     texture.set("filename", f"{atlas_name}.tex")
     elements_node = ET.SubElement(root, "Elements")
 
+    offset_amount = padding + 0.5
+    offset_amount_x = offset_amount / atlas_width
+    offset_amount_y = offset_amount / atlas_height
+
     for placement in sorted(placements, key=lambda item: item.packed.name.lower()):
-        inner_x = placement.x + padding
-        inner_y = placement.y + padding
-        width, height = placement.packed.image.size
+        bbox = BBox(
+            x=placement.x,
+            y=placement.y,
+            w=placement.packed.image.size[0],
+            h=placement.packed.image.size[1],
+        )
 
         element = ET.SubElement(elements_node, "Element")
         element.set("name", placement.packed.name)
-        element.set("u1", repr((inner_x + 0.5) / atlas_size))
-        element.set("u2", repr((inner_x + width - 0.5) / atlas_size))
-        # DST atlas XML uses vertically flipped UVs relative to the atlas PNG's
-        # top-left image coordinates.
-        element.set("v1", repr(1 - ((inner_y + height - 0.5) / atlas_size)))
-        element.set("v2", repr(1 - ((inner_y + 0.5) / atlas_size)))
+        u1 = clamp(0.0, 1.0, bbox.x / float(atlas_width) + offset_amount_x)
+        v1 = clamp(0.0, 1.0, 1.0 - (bbox.y + bbox.h) / float(atlas_height) + offset_amount_y)
+        u2 = clamp(0.0, 1.0, (bbox.x + bbox.w) / float(atlas_width) - offset_amount_x)
+        v2 = clamp(0.0, 1.0, 1.0 - bbox.y / float(atlas_height) - offset_amount_y)
+
+        element.set("u1", repr(u1))
+        element.set("v1", repr(v1))
+        element.set("u2", repr(u2))
+        element.set("v2", repr(v2))
 
     ET.indent(root, space="    ")
     return ET.tostring(root, encoding="utf-8", xml_declaration=False)
@@ -477,13 +561,121 @@ def build_mip_images(image: Image.Image) -> list[Image.Image]:
     return mip_images
 
 
-def load_pngs(input_dir: Path) -> list[PackedImage]:
+def build_ktex_with_converter(
+    mip_images: list[Image.Image],
+    dest_filename: Path,
+    format_name: str,
+    converter_path: Path,
+) -> None:
+    converter_format = {
+        FORMAT_ARGB: "argb",
+        FORMAT_DXT5: "bc3",
+    }[format_name]
+
+    with tempfile.TemporaryDirectory(prefix="dst_tex_atlas_") as temp_dir_str:
+        temp_dir = Path(temp_dir_str)
+        mip_paths: list[str] = []
+        for index, mip in enumerate(mip_images):
+            mip_path = temp_dir / f"mip{index}.png"
+            mip.save(mip_path)
+            mip_paths.append(str(mip_path))
+
+        command = [
+            str(converter_path),
+            "--swizzle",
+            "--format",
+            converter_format,
+            "--platform",
+            "opengl",
+            "-i",
+            ";".join(mip_paths),
+            "-o",
+            str(dest_filename),
+            "--premultiply",
+        ]
+        if len(mip_images) > 1:
+            command.append("--mipmap")
+
+        result = subprocess.run(command, capture_output=True, text=True)
+        if result.returncode != 0:
+            raise RuntimeError(
+                "TextureConverter.exe failed with exit code "
+                f"{result.returncode}\nstdout:\n{result.stdout}\nstderr:\n{result.stderr}"
+            )
+
+
+def bleed_transparent_pixels(image: Image.Image) -> Image.Image:
+    rgba = image.convert("RGBA")
+    width, height = rgba.size
+    pixels = rgba.load()
+
+    queue: deque[tuple[int, int]] = deque()
+    visited = [[False] * width for _ in range(height)]
+
+    for y in range(height):
+        for x in range(width):
+            if pixels[x, y][3] != 0:
+                visited[y][x] = True
+                queue.append((x, y))
+
+    if not queue or len(queue) == width * height:
+        return rgba
+
+    while queue:
+        x, y = queue.popleft()
+        r, g, b, _ = pixels[x, y]
+
+        for nx, ny in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
+            if nx < 0 or ny < 0 or nx >= width or ny >= height or visited[ny][nx]:
+                continue
+
+            nr, ng, nb, na = pixels[nx, ny]
+            if na == 0:
+                pixels[nx, ny] = (r, g, b, 0)
+                visited[ny][nx] = True
+                queue.append((nx, ny))
+
+    return rgba
+
+
+def expand_with_border(image: Image.Image, border_size: int) -> Image.Image:
+    rgba = image.convert("RGBA")
+    if border_size <= 0:
+        return rgba
+
+    expanded = Image.new(
+        "RGBA",
+        (rgba.size[0] + border_size * 2, rgba.size[1] + border_size * 2),
+        (0, 0, 0, 0),
+    )
+    expanded.paste(rgba, (border_size, border_size))
+
+    for index in range(border_size):
+        left = border_size - index
+        right = border_size + rgba.size[0] + index
+        top = border_size - index
+        bottom = border_size + rgba.size[1] + index - 1
+
+        top_line = expanded.crop((left, top, right, top + 1))
+        bottom_line = expanded.crop((left, bottom, right, bottom + 1))
+        expanded.paste(top_line, (left, top - 1, right, top))
+        expanded.paste(bottom_line, (left, bottom + 1, right, bottom + 2))
+
+        left_line = expanded.crop((left, top - 1, left + 1, bottom + 2))
+        right_line = expanded.crop((right - 1, top - 1, right, bottom + 2))
+        expanded.paste(left_line, (left - 1, top - 1, left, bottom + 2))
+        expanded.paste(right_line, (right, top - 1, right + 1, bottom + 2))
+
+    return expanded
+
+
+def load_pngs(input_dir: Path, padding: int) -> list[PackedImage]:
     if not input_dir.is_dir():
         raise FileNotFoundError(f"Input directory not found: {input_dir}")
 
     packed_images: list[PackedImage] = []
     for path in sorted(input_dir.glob("*.png")):
-        image = Image.open(path).convert("RGBA")
+        image = expand_with_border(bleed_transparent_pixels(Image.open(path)), padding)
         packed_images.append(
             PackedImage(source=path, name=f"{path.stem}.tex", image=image)
         )
@@ -500,97 +692,148 @@ def next_power_of_two(value: int) -> int:
     return 1 << (value - 1).bit_length()
 
 
-def try_pack_square(
-    images: list[PackedImage], atlas_size: int, padding: int
-) -> list[Placement] | None:
-    placements: list[Placement] = []
+def next_multiple_of(value: int, target: int) -> int:
+    mod = value % target
+    if mod == 0:
+        return value
+    return value + (target - mod)
+
+
+def get_atlas_dimension(images: list[PackedImage], max_texture_size: int) -> int:
+    area = sum(image.image.size[0] * image.image.size[1] for image in images)
+    maxdim = next_multiple_of(
+        max(max(image.image.size[0], image.image.size[1]) for image in images),
+        4,
+    )
+    dimension = max(
+        2 ** math.ceil(math.log(math.sqrt(area * 1.25), 2)),
+        2 ** math.ceil(math.log(maxdim, 2)),
+    )
+    return int(min(max_texture_size, dimension))
+
+
+def bbox_intersects(lhs: BBox, rhs: BBox) -> bool:
+    if rhs.x >= lhs.x + lhs.w or rhs.x + rhs.w <= lhs.x:
+        return False
+    if rhs.y + rhs.h <= lhs.y or rhs.y >= lhs.y + lhs.h:
+        return False
+    return True
+
+
+def try_insert_image(width: int, height: int, boxes: list[BBox], atlas_size: int) -> BBox | None:
+    align = 4
     x = 0
     y = 0
-    row_height = 0
 
-    for packed in images:
-        width, height = packed.image.size
-        cell_width = width + 2 * padding
-        cell_height = height + 2 * padding
+    while y + height < atlas_size:
+        min_y: int | None = None
+        y_test_bbox = BBox(0, y, atlas_size, height)
+        overlapping = [box for box in boxes if bbox_intersects(box, y_test_bbox)]
 
-        if cell_width > atlas_size or cell_height > atlas_size:
-            return None
+        while x + width <= atlas_size:
+            test_bbox = BBox(x, y, width, height)
+            intersects = False
+            for box in overlapping:
+                if bbox_intersects(box, test_bbox):
+                    x = next_multiple_of(box.x + box.w, align)
+                    candidate_y = box.h + box.y
+                    min_y = candidate_y if min_y is None else min(min_y, candidate_y)
+                    intersects = True
+                    break
+            if not intersects:
+                return test_bbox
 
-        if x + cell_width > atlas_size:
-            x = 0
-            y += row_height
-            row_height = 0
+        if min_y is not None:
+            y = max(next_multiple_of(min_y, align), y + align)
+        else:
+            y += align
+        x = 0
 
-        if y + cell_height > atlas_size:
-            return None
-
-        placements.append(Placement(packed=packed, x=x, y=y))
-        x += cell_width
-        row_height = max(row_height, cell_height)
-
-    return placements
+    return None
 
 
-def pack_images(
-    images: list[PackedImage], max_size: int, padding: int
-) -> tuple[int, list[Placement]]:
+def pack_images_official(images: list[PackedImage], max_size: int) -> tuple[int, int, list[Placement]]:
     if max_size < 1 or max_size & (max_size - 1) != 0:
         raise ValueError("--max-size must be a positive power of two.")
 
     images_sorted = sorted(
         images,
-        key=lambda packed: (
-            -packed.image.size[1],
-            -packed.image.size[0],
-            packed.name.lower(),
-        ),
+        key=lambda packed: packed.image.size[0] * packed.image.size[1],
+        reverse=True,
     )
+    atlas_size = get_atlas_dimension(images_sorted, max_size)
+    placed_boxes: list[BBox] = []
+    placements: list[Placement] = []
 
-    largest = max(
-        max(image.image.size[0], image.image.size[1]) + 2 * padding
-        for image in images_sorted
-    )
-    size = next_power_of_two(largest)
-    while size <= max_size:
-        placements = try_pack_square(images_sorted, size, padding)
-        if placements is not None:
-            return size, placements
-        size *= 2
+    for packed in images_sorted:
+        width, height = packed.image.size
+        if width > atlas_size or height > atlas_size:
+            raise ValueError(
+                f"Image {packed.source.name} is larger than the atlas size {atlas_size}."
+            )
+        bbox = try_insert_image(width, height, placed_boxes, atlas_size)
+        if bbox is None:
+            raise ValueError(
+                "Could not fit all PNG files into one atlas with the official packing layout. "
+                "Split the atlas, reduce image sizes, or increase --max-size."
+            )
+        placed_boxes.append(bbox)
+        placements.append(Placement(packed=packed, x=bbox.x, y=bbox.y))
 
-    raise ValueError(f"Could not fit atlas into a {max_size}x{max_size} texture.")
+    atlas_width = atlas_size
+    atlas_height = atlas_size
+    max_y = max(placement.y + placement.packed.image.size[1] for placement in placements)
+    max_x = max(placement.x + placement.packed.image.size[0] for placement in placements)
+    if max_y <= atlas_height // 2:
+        atlas_height //= 2
+    if max_x <= atlas_width // 2:
+        atlas_width //= 2
+
+    return atlas_width, atlas_height, placements
 
 
-def paste_with_padding(dst: Image.Image, src: Image.Image, x: int, y: int, padding: int) -> None:
-    width, height = src.size
-    inner_x = x + padding
-    inner_y = y + padding
+def build_atlas_image(
+    atlas_width: int,
+    atlas_height: int,
+    placements: list[Placement],
+) -> Image.Image:
+    atlas_image = Image.new("RGBA", (atlas_width, atlas_height))
+    for placement in placements:
+        atlas_image.paste(placement.packed.image, (placement.x, placement.y))
+    return atlas_image
 
-    dst.paste(src, (inner_x, inner_y))
 
-    if padding <= 0:
-        return
+def build_atlas_mips_official(
+    atlas_width: int,
+    atlas_height: int,
+    placements: list[Placement],
+) -> list[Image.Image]:
+    mips: list[Image.Image] = []
+    divisor = 1
+    width = atlas_width
+    height = atlas_height
 
-    top = src.crop((0, 0, width, 1))
-    bottom = src.crop((0, height - 1, width, height))
-    left = src.crop((0, 0, 1, height))
-    right = src.crop((width - 1, 0, width, height))
-    corner_tl = src.crop((0, 0, 1, 1))
-    corner_tr = src.crop((width - 1, 0, width, 1))
-    corner_bl = src.crop((0, height - 1, 1, height))
-    corner_br = src.crop((width - 1, height - 1, width, height))
+    while width >= 1 or height >= 1:
+        mip_image = Image.new("RGBA", (width, height))
+        for placement in placements:
+            src = placement.packed.image
+            mip_width = src.size[0] // divisor
+            mip_height = src.size[1] // divisor
+            if mip_width > 0 and mip_height > 0:
+                resized = src.resize((mip_width, mip_height), Image.Resampling.LANCZOS)
+                mip_x = placement.x // divisor
+                mip_y = placement.y // divisor
+                mip_image.paste(resized, (mip_x, mip_y))
+        mips.append(mip_image)
 
-    for step in range(padding):
-        dst.paste(top, (inner_x, inner_y - step - 1))
-        dst.paste(bottom, (inner_x, inner_y + height + step))
-        dst.paste(left, (inner_x - step - 1, inner_y))
-        dst.paste(right, (inner_x + width + step, inner_y))
+        if width == 1 and height == 1:
+            break
 
-    for dx in range(padding):
-        for dy in range(padding):
-            dst.paste(corner_tl, (inner_x - dx - 1, inner_y - dy - 1))
-            dst.paste(corner_tr, (inner_x + width + dx, inner_y - dy - 1))
-            dst.paste(corner_bl, (inner_x - dx - 1, inner_y + height + dy))
-            dst.paste(corner_br, (inner_x + width + dx, inner_y + height + dy))
+        divisor <<= 1
+        width = max(1, width >> 1)
+        height = max(1, height >> 1)
+
+    return mips
 
 
 def encode_rgb565(color: tuple[int, int, int]) -> int:
@@ -698,8 +941,8 @@ def encode_dxt5_image(image: Image.Image) -> tuple[int, bytes]:
     return pitch, bytes(payload)
 
 
-def build_argb_ktex(image: Image.Image) -> bytes:
-    mip_images = build_mip_images(image)
+def build_argb_ktex(image: Image.Image, single_mip: bool = False) -> bytes:
+    mip_images = [image.convert("RGBA")] if single_mip else build_mip_images(image)
 
     header = bytearray()
     header.extend(KTEX_MAGIC)
@@ -716,8 +959,8 @@ def build_argb_ktex(image: Image.Image) -> bytes:
     return bytes(header + payload)
 
 
-def build_dxt5_ktex(image: Image.Image) -> bytes:
-    mip_images = build_mip_images(image)
+def build_dxt5_ktex(image: Image.Image, single_mip: bool = False) -> bytes:
+    mip_images = [image.convert("RGBA")] if single_mip else build_mip_images(image)
 
     header = bytearray()
     header.extend(KTEX_MAGIC)
@@ -809,18 +1052,14 @@ def command_unpack(args: argparse.Namespace) -> int:
 
 
 def command_pack(args: argparse.Namespace) -> int:
-    images = load_pngs(args.input_dir)
-    atlas_size, placements = pack_images(images, args.max_size, args.padding)
-
-    atlas_image = Image.new("RGBA", (atlas_size, atlas_size), (0, 0, 0, 0))
-    for placement in placements:
-        paste_with_padding(
-            atlas_image,
-            placement.packed.image,
-            placement.x,
-            placement.y,
-            args.padding,
-        )
+    images = load_pngs(args.input_dir, args.padding)
+    atlas_width, atlas_height, placements = pack_images_official(images, args.max_size)
+    atlas_image = build_atlas_image(atlas_width, atlas_height, placements)
+    mip_images = [atlas_image] if args.single_mip else build_atlas_mips_official(
+        atlas_width,
+        atlas_height,
+        placements,
+    )
 
     output_dir = ensure_dir(args.output)
     atlas_png_path = output_dir / f"{args.atlas_name}.png"
@@ -829,18 +1068,43 @@ def command_pack(args: argparse.Namespace) -> int:
 
     atlas_image.save(atlas_png_path)
     atlas_xml_path.write_bytes(
-        build_atlas_xml(args.atlas_name, placements, atlas_size, args.padding)
+        build_atlas_xml(args.atlas_name, placements, atlas_width, atlas_height, args.padding)
     )
-    if args.format == FORMAT_ARGB:
-        atlas_tex_path.write_bytes(build_argb_ktex(atlas_image))
+
+    converter_path = None if args.pure_python else resolve_texture_converter(args.texture_converter)
+    if converter_path is not None:
+        build_ktex_with_converter(
+            mip_images=mip_images,
+            dest_filename=atlas_tex_path,
+            format_name=args.format,
+            converter_path=converter_path,
+        )
+        writer_label = f"TextureConverter ({converter_path})"
+    elif args.format == FORMAT_ARGB:
+        atlas_tex_path.write_bytes(build_argb_ktex(atlas_image, single_mip=args.single_mip))
+        writer_label = "pure-python fallback"
+        if not args.pure_python:
+            print(
+                "warning: TextureConverter.exe not found. "
+                "For best compatibility, install Don't Starve Mod Tools (Steam App ID 245850).",
+                file=sys.stderr,
+            )
     elif args.format == FORMAT_DXT5:
-        atlas_tex_path.write_bytes(build_dxt5_ktex(atlas_image))
+        atlas_tex_path.write_bytes(build_dxt5_ktex(atlas_image, single_mip=args.single_mip))
+        writer_label = "pure-python fallback"
+        if not args.pure_python:
+            print(
+                "warning: TextureConverter.exe not found. "
+                "For best compatibility, install Don't Starve Mod Tools (Steam App ID 245850).",
+                file=sys.stderr,
+            )
     else:
         raise ValueError(f"Unsupported pack format: {args.format}")
 
     print(f"atlas: {args.atlas_name}")
     print(f"format: {args.format}")
-    print(f"size: {atlas_size}x{atlas_size}")
+    print(f"writer: {writer_label}")
+    print(f"size: {atlas_width}x{atlas_height}")
     print(f"sprites: {len(placements)}")
     print(f"atlas_png: {atlas_png_path}")
     print(f"atlas_xml: {atlas_xml_path}")
@@ -856,6 +1120,9 @@ def main() -> int:
         if args.command == "pack":
             return command_pack(args)
     except (FileNotFoundError, ValueError, zipfile.BadZipFile, ET.ParseError) as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
+    except RuntimeError as exc:
         print(str(exc), file=sys.stderr)
         return 1
     return 0

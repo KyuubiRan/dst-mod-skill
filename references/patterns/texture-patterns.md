@@ -42,7 +42,8 @@ Current supported workflow:
 - unpack official `dxt5` atlases from `images.zip`
 - unpack local `argb` or `dxt5` atlases from a `.tex + .xml` pair, including official-style KTEX headers where the mip count is encoded in the format code
 - split atlas entries into individual PNG files
-- pack multiple PNGs into one atlas PNG + XML + `argb` TEX
+- pack multiple PNGs into one atlas PNG + XML + TEX, preferably through Klei `TextureConverter.exe` when Mod Tools are installed
+- official Mod Tools do support many PNG files packed into one atlas through the same `atlas.Atlas(...)` plus `TextureConverter.exe` flow used by `image_build.py`
 
 Common commands:
 
@@ -62,10 +63,14 @@ Rules:
 
 - official atlas names are usually read from `images/<name>.tex` and `images/<name>.xml`
 - if the user omits an output path, unpack defaults to `.output/images/`
-- packing writes KTEX headers from the real mip count instead of a fixed format code
+- packing should prefer the local Mod Tools `TextureConverter.exe` for TEX output, because that matches Klei's premultiply and platform packing path more closely than the fallback writer
+- when Mod Tools are installed, prefer the official-style atlas layout and XML generation path derived from `klei/atlas.py`, not a hand-rolled packing layout
+- the fallback pure-Python writer is still useful when Mod Tools are unavailable, but it should be treated as a compatibility fallback
 - unpacking supports official `dxt5` icon atlases and other common official UI-atlas headers such as `0xFFFD4220`
 - treat script-packed UI atlases as "needs in-game verification", not as an automatic substitute for official Mod Tools output
 - if a packed UI atlas renders as black, compare its KTEX format code against a known-good official output before blaming XML coordinates or widget code
+- if Mod Tools is missing, ask whether the user installed it outside Steam's default `common` path before falling back
+- if the user does not have it installed, recommend Steam App ID `245850` and the Windows installer command `start steam://install/245850`
 
 ### `scripts/resize_png.py`
 

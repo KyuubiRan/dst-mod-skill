@@ -31,6 +31,29 @@ Practical rule:
 - from that root, derive the script bundle as `data\databundles\scripts.zip`
 - do not recursively scan unrelated directories when the workspace path already points into the install tree
 
+## Check For Mod Tools Beside The Game Install
+
+When the game root is known, also probe the sibling Steam `common` directory for `Don't Starve Mod Tools`.
+
+Common Windows path:
+
+- `C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Mod Tools`
+- `D:\Program Files (x86)\Steam\steamapps\common\Don't Starve Mod Tools`
+
+High-value files for atlas workflows:
+
+- `mod_tools\compiler_scripts\image_build.py`
+- `mod_tools\tools\bin\TextureConverter.exe`
+- `mod_tools\buildtools\windows\Python27\Lib\site-packages\klei\atlas.py`
+- `mod_tools\buildtools\windows\Python27\Lib\site-packages\klei\textureconverter.py`
+
+Practical rule:
+
+- if the user needs PNG to `tex+xml` packing, prefer the local Mod Tools path over ad hoc encoders
+- if Mod Tools is not installed in the usual Steam location, ask whether it exists elsewhere
+- if it is not installed at all, recommend Steam App ID `245850`
+- on Windows, `start steam://install/245850` opens the Steam install prompt
+
 ## Confirmed Mod Entry Points
 
 The official loader code confirms these root-level entry files:
