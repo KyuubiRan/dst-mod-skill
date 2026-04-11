@@ -12,6 +12,7 @@ It is designed to help Codex work from official DST source files first, then cho
 - routing tasks across prefabs, components, brains, stategraphs, widgets, screens, RPC, replica, persistence, and shard runtime
 - matching feature requests to common component bundles and prefab tags
 - debugging host versus client issues, save or load bugs, and Master versus Caves problems
+- reading `client_log.txt`, server logs, and `backup/` history before guessing at error causes
 - inspecting official game source and texture atlases quickly
 
 ## Included In The Repository

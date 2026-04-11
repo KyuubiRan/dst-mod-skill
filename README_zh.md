@@ -14,6 +14,7 @@
 - 把需求路由到 prefab、component、brain、stategraph、widget、screen、RPC、replica、persistence、shard 等正确层级
 - 根据需求推断常见组件组合和 prefab tag
 - 排查主机和远端客户端不一致、存档读档异常、Master 与 Caves 分片问题
+- 在猜错误原因前优先读取 `client_log.txt`、server log 和 `backup/` 历史日志
 - 快速检索官方 `scripts.zip` 与 `images.zip`
 
 ## 仓库里包含什么

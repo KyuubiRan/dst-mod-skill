@@ -34,6 +34,7 @@ Inspect official scripts before writing mod code and tie conclusions to concrete
 7. Reuse official patterns instead of guessing signatures.
 8. Implement the change with the narrowest safe hook.
 9. Re-check server/client boundaries, replica usage, RPC direction, and file placement.
+10. When the user reports an error, crash, red text, or "it broke", inspect the relevant DST log before guessing.
 
 ## Classify Existing Mods Early
 
@@ -106,6 +107,25 @@ Run a lightweight skill integrity check:
 ```bash
 python scripts/check_skill.py
 ```
+
+## Read Logs Early When Debugging
+
+- Windows client log: `~/Documents/Klei/DoNotStarveTogether/client_log.txt`
+- Windows backup logs: `~/Documents/Klei/DoNotStarveTogether/backup/`
+- macOS client log: `~/Documents/Klei/DoNotStarveTogether/client_log.txt`
+- macOS backup logs: `~/Documents/Klei/DoNotStarveTogether/backup/`
+- Linux client log: `~/.klei/DoNotStarveTogether/client_log.txt`
+- Linux backup logs: `~/.klei/DoNotStarveTogether/backup/`
+- For listen-host or shard runtime problems, also inspect `master_server_log.txt` and `caves_server_log.txt`.
+- Search for `LUA ERROR stack traceback:` first when the user reports a Lua exception.
+- If the user already restarted the game, say that the active log may have been refreshed and ask whether `backup/` should be inspected instead.
+- Do not confuse warning noise such as missing default textures or shutdown-time unload messages with a real Lua stack trace.
+- After reading the stack, distinguish between two intents:
+  - explanation only
+  - active mod debugging
+- If the user is actively debugging, confirm whether the failing stack belongs to the current target mod before proposing edits.
+- After you explain the error, ask whether the user wants help fixing it.
+- Do not modify the user's code unless the user clearly confirms that they want a fix, patch, or implementation change.
 
 ## Read These References As Needed
 

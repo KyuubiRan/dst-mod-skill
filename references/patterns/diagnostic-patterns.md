@@ -5,6 +5,50 @@ Use this file when a DST mod feature does not behave as expected and you need a 
 This page is not a replacement for the narrower pitfall pages.
 Use it to choose the first checks quickly.
 
+## Read The Log Before Guessing
+
+Check logs early when the user says things like:
+
+- "报错了"
+- "崩了"
+- "红字"
+- "客户端有问题"
+- "重启后又没了"
+
+Default client-log locations:
+
+- Windows: `~/Documents/Klei/DoNotStarveTogether/client_log.txt`
+- macOS: `~/Documents/Klei/DoNotStarveTogether/client_log.txt`
+- Linux: `~/.klei/DoNotStarveTogether/client_log.txt`
+
+Companion log paths:
+
+- `backup/`
+  - rotated history after a refresh or restart
+- `master_server_log.txt`
+  - listen-host or local master-shard runtime issues
+- `caves_server_log.txt`
+  - local caves-shard runtime issues
+
+Fast rule:
+
+1. Search for `LUA ERROR stack traceback:` first.
+2. If found, identify the first mod-owned file in the stack and work outward from there.
+3. If not found, distinguish between warning noise, asset problems, shutdown noise, and a real hard failure.
+4. If the game has already been restarted, inspect `backup/` before concluding the log is clean.
+5. After extracting the stack, determine whether the user only wants the cause explained or is actively debugging the mod.
+6. If this is active debugging, confirm whether the failing file belongs to the current target mod before planning edits.
+7. Explain the error first, then ask whether the user wants help fixing it.
+8. Do not edit code unless the user clearly confirms that they want a fix.
+
+Common non-fatal noise examples:
+
+- missing default texture warnings
+- shutdown-time `Could not unload undefined prefab (...)`
+- orphaned resource cleanup lines
+
+These may still matter, but they are not the same thing as a Lua exception with a stack trace.
+
 ## Prefab Does Not Exist Or Never Appears
 
 Check in this order:
@@ -371,3 +415,5 @@ Use this mapping:
   - check replica, netvars, and authority split next
 - creature exists but acts wrong
   - check brain and stategraph together
+- explicit error or crash report
+  - read the newest log first, then the newest `backup/` log if the game already restarted
