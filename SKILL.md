@@ -18,6 +18,9 @@ Inspect official scripts before writing mod code and tie conclusions to concrete
 - Common Linux script bundle: `~/.local/share/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
 - Common macOS game root: `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together`
 - Common macOS script bundle: `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
+- If the current workspace path is already inside a DST install tree, infer the game root from the current path before asking the user or scanning anything.
+- Example: if the workspace is `...\Don't Starve Together\mods\Huohuo`, infer the game root as `...\Don't Starve Together`.
+- Treat a workspace under `...\Don't Starve Together\mods\...` as strong evidence that the parent `...\Don't Starve Together` directory is the local game root.
 - Prefer a user-provided game path when the path is not already known.
 - If the user refuses to provide it, say that accuracy may be lower without reading the local official scripts.
 - When passing game paths into shell commands, quote or escape them correctly. Paths such as `Don't Starve Together` contain an apostrophe and can fail on the first command if the shell string is built carelessly.
@@ -27,6 +30,8 @@ Inspect official scripts before writing mod code and tie conclusions to concrete
 
 1. Classify the request.
 2. Confirm the local game path if it is not already known.
+   - First check whether the current workspace path already sits inside a DST install tree and infer the root from that.
+   - Do not recursively scan unrelated directories when the workspace path already gives a clear answer.
 3. Check whether `modinfo.lua` and the relevant root entry files such as `modmain.lua`, `modworldgenmain.lua`, or `modservercreationmain.lua` exist in the target mod folder.
 4. If `modinfo.lua` exists, read it early and classify the mod as all-clients gameplay, client-only, or server-only before choosing hooks or reading runtime globals.
 5. If `modinfo.lua` is missing, ask whether the user wants a new mod skeleton.

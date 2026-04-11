@@ -96,7 +96,7 @@ all_clients_require_mod = {"true" if all_clients_require_mod else "false"}
 
 def build_modmain(mod_type: str) -> str:
     header = """local GLOBAL = GLOBAL
-setmetatable(env, {
+GLOBAL.setmetatable(env, {
     __index = function(_, key)
         return GLOBAL.rawget(GLOBAL, key)
     end,

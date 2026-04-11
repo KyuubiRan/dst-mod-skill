@@ -63,7 +63,7 @@ Many mods use a small passthrough so unprefixed globals resolve against `GLOBAL`
 
 ```lua
 local GLOBAL = GLOBAL
-setmetatable(env, {
+GLOBAL.setmetatable(env, {
     __index = function(_, key)
         return GLOBAL.rawget(GLOBAL, key)
     end,
@@ -77,6 +77,7 @@ Practical rule:
 - use it when the mod will frequently touch global DST APIs
 - keep it near the top of `modmain.lua`
 - do not confuse it with registration; it only changes name lookup behavior
+- in DST's mod environment, prefer `GLOBAL.setmetatable(...)` rather than bare `setmetatable(...)`, because the plain global may be unavailable under strict mod loading
 
 ## `modimport(...)` Versus `require(...)`
 

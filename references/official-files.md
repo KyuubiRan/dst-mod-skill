@@ -16,6 +16,21 @@ Use the local DST install as the source of truth.
 Use the real local install path when it is already known.
 Do not assume the common Windows path is correct on every machine.
 
+## Infer The Game Root From The Workspace First
+
+If the current workspace is already somewhere under the DST install tree, infer the game root directly from that path before asking the user or scanning the disk.
+
+Example:
+
+- workspace: `D:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together\mods\Huohuo`
+- inferred game root: `D:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together`
+
+Practical rule:
+
+- if the workspace path contains `Don't Starve Together\mods\...`, treat the ancestor `Don't Starve Together` directory as the likely game root
+- from that root, derive the script bundle as `data\databundles\scripts.zip`
+- do not recursively scan unrelated directories when the workspace path already points into the install tree
+
 ## Confirmed Mod Entry Points
 
 The official loader code confirms these root-level entry files:

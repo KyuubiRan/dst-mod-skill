@@ -9,7 +9,7 @@ Do not combine unrelated templates just because they all seem useful.
 
 ```lua
 local GLOBAL = GLOBAL
-setmetatable(env, {
+GLOBAL.setmetatable(env, {
     __index = function(_, key)
         return GLOBAL.rawget(GLOBAL, key)
     end,
@@ -63,7 +63,7 @@ Use this when:
 
 ```lua
 local GLOBAL = GLOBAL
-setmetatable(env, {
+GLOBAL.setmetatable(env, {
     __index = function(_, key)
         return GLOBAL.rawget(GLOBAL, key)
     end,
