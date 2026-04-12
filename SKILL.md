@@ -207,6 +207,12 @@ python scripts/check_skill.py
 ## Avoid These Mistakes
 
 - Do not guess DST signatures or execution context.
+- Do not overwrite or rebind engine-managed globals such as `GLOBAL`, `TheSim`, `TheNet`, `TheShard`, `TheInput`, `TheFrontEnd`, `TheMixer`, `TheCamera`, `TheFocalPoint`, `TheWorld`, `ThePlayer`, or `AllPlayers`.
+- Treat those names as engine-owned handles. Read them, call them, and guard them, but do not replace the global itself with a different value.
+- A local passthrough alias such as `local GLOBAL = GLOBAL` is acceptable, but rebinding one of these names to a different value is not.
+- `TheWorld` and `ThePlayer` point at entity instances, so instance-local fields or listeners may be attached to the entity when the feature really belongs there. Do not reassign the global name.
+- Shared registry tables such as `TUNING`, `STRINGS`, `ACTIONS`, `CUSTOM_RECIPETABS`, `MOD_RPC`, `CLIENT_MOD_RPC`, and `SHARD_MOD_RPC` may be extended in the narrow official shape, but do not replace the whole table.
+- Prefer official helpers such as `AddAction(...)`, `AddRecipe2(...)`, `AddRecipeToFilter(...)`, `AddModRPCHandler(...)`, `AddClientModRPCHandler(...)`, and `AddShardModRPCHandler(...)` over direct registry surgery.
 - Do not use `ThePlayer` or HUD globals without guarding local-client availability.
 - Do not copy large official files when a post-init, helper, or smaller override is enough.
 - Do not treat `modmain.lua` like a prefab constructor; keep it focused on registration, routing, and startup glue.

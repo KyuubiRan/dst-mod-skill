@@ -46,6 +46,61 @@ Practical rule:
 
 If an entity callback already gives you `inst` or `doer`, prefer that over reaching for a global.
 
+## Global Safety Boundary
+
+The official runtime uses two different shapes here.
+Do not treat them the same way.
+
+Engine-managed singleton globals:
+
+- `GLOBAL`
+- `TheSim`
+- `TheNet`
+- `TheShard`
+- `TheInput`
+- `TheFrontEnd`
+- `TheMixer`
+- `TheCamera`
+- `TheFocalPoint`
+- `TheWorld`
+- `ThePlayer`
+- `AllPlayers`
+
+Practical rule:
+
+- do not overwrite or rebind these names in mod code
+- read them, call their APIs, and guard availability
+- `TheWorld` and `ThePlayer` are entity references, so entity-local fields may be attached to the entity if the feature really belongs there
+- engine userdata or manager singletons such as `TheSim`, `TheNet`, `TheInput`, `TheFrontEnd`, `TheMixer`, and `TheCamera` should be treated as read or call handles, not ad-hoc storage tables
+
+Shared registry tables that may be extended but not replaced:
+
+- `TUNING`
+- `STRINGS`
+- `ACTIONS`
+- `CUSTOM_RECIPETABS`
+- `MOD_RPC`
+- `CLIENT_MOD_RPC`
+- `SHARD_MOD_RPC`
+
+Practical rule:
+
+- add the smallest needed field or registration
+- do not replace the whole table with a new table
+- prefer official helpers when they exist
+
+Examples from official mod APIs:
+
+- `AddAction(...)`
+  - inserts into `ACTIONS[...]` and `STRINGS.ACTIONS[...]`
+- `AddRecipe2(...)` and `AddRecipeToFilter(...)`
+  - register recipes through the crafting APIs instead of replacing crafting tables
+- `AddModRPCHandler(...)`, `AddClientModRPCHandler(...)`, `AddShardModRPCHandler(...)`
+  - extend mod RPC registries without replacing RPC tables
+
+Do not write custom mod ids directly into core `RPC`, `CLIENT_RPC`, or `SHARD_RPC`.
+Use the mod RPC helper family instead.
+
 ## Common Mistake Pattern
 
 Wrong sequence:

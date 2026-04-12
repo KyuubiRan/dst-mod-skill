@@ -2,6 +2,39 @@
 
 Use this file for server/client/local-player context mistakes.
 
+## Do Not Rebind Engine Globals
+
+- `GLOBAL`, `TheSim`, `TheNet`, `TheShard`, `TheInput`, `TheFrontEnd`, `TheMixer`, `TheCamera`, `TheFocalPoint`, `TheWorld`, `ThePlayer`, and `AllPlayers` are engine-owned globals.
+- Read them, call their APIs, and guard their availability when needed.
+- Do not overwrite them, replace them with a table, or redefine them to mean something else.
+- A local passthrough alias that keeps the same value is fine, for example `local GLOBAL = GLOBAL`.
+- `TheWorld` and `ThePlayer` are entity references, so world- or player-owned fields may live on the entity. Do not replace the global binding itself.
+- Shared registries such as `TUNING`, `STRINGS`, `ACTIONS`, and mod RPC registries may be extended narrowly, but do not replace the entire table.
+
+Wrong shape:
+
+```lua
+TheWorld = {}
+local ThePlayer = inst
+TheSim = nil
+TUNING = {}
+STRINGS = {}
+RPC = {}
+```
+
+Safer shape:
+
+```lua
+local player = inst
+
+TUNING.MYMOD_SPEED = 6
+STRINGS.NAMES.MYMOD_ITEM = "My Item"
+
+if ThePlayer ~= nil and player == ThePlayer then
+    -- local-player-specific logic
+end
+```
+
 ## `ThePlayer` Is Not A Generic Player Handle
 
 - `ThePlayer` is local-process player state.

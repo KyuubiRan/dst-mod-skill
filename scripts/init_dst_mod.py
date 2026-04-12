@@ -96,6 +96,10 @@ all_clients_require_mod = {"true" if all_clients_require_mod else "false"}
 
 def build_modmain(mod_type: str) -> str:
     header = """local GLOBAL = GLOBAL
+-- Read engine globals through this passthrough only.
+-- Do not overwrite GLOBAL, TheSim, TheNet, TheShard, TheInput, TheFrontEnd,
+-- TheMixer, TheCamera, TheFocalPoint, TheWorld, or ThePlayer.
+-- If you extend TUNING or STRINGS, add only the needed keys instead of replacing the table.
 GLOBAL.setmetatable(env, {
     __index = function(_, key)
         return GLOBAL.rawget(GLOBAL, key)

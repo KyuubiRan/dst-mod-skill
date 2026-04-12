@@ -31,6 +31,12 @@ end
 -- Server-authoritative logic goes here.
 ```
 
+Read-only rule for this template:
+
+- use the passthrough only for lookup convenience
+- do not assign to `GLOBAL`, `TheSim`, `TheNet`, `TheShard`, `TheInput`, `TheFrontEnd`, `TheMixer`, `TheCamera`, `TheFocalPoint`, `TheWorld`, or `ThePlayer`
+- if you extend shared registries such as `TUNING` or `STRINGS`, add only the needed keys and do not replace the whole table
+
 Use this when:
 
 - the mod is not purely worldgen-side
@@ -95,6 +101,9 @@ Assets = {
 AddMinimapAtlas("images/map_icons/mychar.xml")
 AddModCharacter("mychar", "FEMALE")
 ```
+
+The same read-only rule applies here.
+Do not rebind engine globals while wiring character registration.
 
 Use this when:
 

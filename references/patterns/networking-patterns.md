@@ -65,6 +65,13 @@ Practical send shape:
 SendModRPCToServer(GetModRPC("mynamespace", "dosomething"), ...)
 ```
 
+Safety rule:
+
+- `MOD_RPC`, `CLIENT_MOD_RPC`, and `SHARD_MOD_RPC` are shared registries
+- extend them through `AddModRPCHandler(...)`, `AddClientModRPCHandler(...)`, and `AddShardModRPCHandler(...)`
+- do not replace those tables with your own table
+- do not write custom mod ids into core `RPC`, `CLIENT_RPC`, or `SHARD_RPC`
+
 ## Netvars
 
 Official prefabs commonly define netvars on the entity itself:

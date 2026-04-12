@@ -71,7 +71,7 @@ Practical rule:
 - `dst_compatible = true`
 - Version string like `0.1.0`
 - Empty `PrefabFiles` and `Assets` lists
-- `modmain.lua` with `GLOBAL` environment passthrough and a clean server/client split
+- `modmain.lua` with read-only `GLOBAL` environment passthrough and a clean server/client split
 
 ## Use The Scaffold Script
 
@@ -111,3 +111,5 @@ The next file depends on the first real feature:
   - registration path breaks later
 - kept too much real gameplay logic at the top level of `modmain.lua`
   - move instance behavior back into prefab, component, brain, SG, or post-init code
+- reassigned engine globals such as `GLOBAL`, `TheSim`, `TheWorld`, or `ThePlayer`
+  - keep engine globals read-only and use them only as lookup handles

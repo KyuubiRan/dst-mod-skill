@@ -332,5 +332,7 @@ If the prefab is a creature or NPC, also route through brain and SG placement ea
 - Check that UI handlers, listeners, and tasks are cleaned up on close or destroy.
 - Check that RPC namespace and name pairs match on both sides.
 - Check that replica-only reads do not call server-only components.
+- Check that engine globals such as `GLOBAL`, `TheSim`, `TheNet`, `TheShard`, `TheInput`, `TheFrontEnd`, `TheWorld`, and `ThePlayer` were not overwritten or rebound.
+- Check that shared registries such as `TUNING`, `STRINGS`, `ACTIONS`, and mod RPC registries were extended narrowly instead of being replaced wholesale.
 - Check that the final implementation still matches the official pattern you inspected.
 - Run `python scripts/check_skill.py` after documentation or helper-script refactors.

@@ -79,6 +79,46 @@ Practical rule:
 - do not confuse it with registration; it only changes name lookup behavior
 - in DST's mod environment, prefer `GLOBAL.setmetatable(...)` rather than bare `setmetatable(...)`, because the plain global may be unavailable under strict mod loading
 
+Read-only rule:
+
+- treat `GLOBAL`, `TheSim`, `TheNet`, `TheShard`, `TheInput`, `TheFrontEnd`, `TheMixer`, `TheCamera`, `TheFocalPoint`, `TheWorld`, `ThePlayer`, and `AllPlayers` as engine-owned globals
+- do not assign to them, nil them out, or replace them with mock tables during normal mod code
+- a local self-alias such as `local GLOBAL = GLOBAL` is fine because it preserves the same object
+- `TheWorld` and `ThePlayer` are entity references, so attaching world- or player-owned fields to the entity can be valid; replacing the global binding is not
+- shared registries such as `TUNING`, `STRINGS`, `ACTIONS`, `CUSTOM_RECIPETABS`, and mod RPC registries may be extended narrowly, but do not replace the whole table
+
+Wrong shape:
+
+```lua
+GLOBAL = {}
+TheNet = nil
+TheWorld = nil
+ThePlayer = inst
+TUNING = {}
+ACTIONS = {}
+MOD_RPC = {}
+RPC = {}
+```
+
+Safer shape:
+
+```lua
+local GLOBAL = GLOBAL
+
+TUNING.MYMOD_DAMAGE_MULT = 1.25
+STRINGS.ACTIONS.MYMOD_ACTION = "Do Thing"
+
+if ThePlayer ~= nil and ThePlayer.HUD ~= nil then
+    -- read local-player state without rebinding engine globals
+end
+```
+
+Prefer official helpers where they exist:
+
+- `AddAction(...)` instead of hand-building `ACTIONS` and `STRINGS.ACTIONS`
+- `AddRecipe2(...)` and `AddRecipeToFilter(...)` instead of replacing recipe registries
+- `AddModRPCHandler(...)`, `AddClientModRPCHandler(...)`, and `AddShardModRPCHandler(...)` instead of touching core `RPC` tables
+
 ## `modimport(...)` Versus `require(...)`
 
 These are different tools.
