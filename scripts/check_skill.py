@@ -19,8 +19,6 @@ REFERENCES_ROOT = REPO_ROOT / "references"
 COMPONENT_REFERENCES_ROOT = REFERENCES_ROOT / "components"
 DOC_FILES = [
     REPO_ROOT / "SKILL.md",
-    REPO_ROOT / "README.md",
-    REPO_ROOT / "README_zh.md",
 ]
 SCRIPT_FILES = sorted((REPO_ROOT / "scripts").glob("*.py"))
 REFERENCE_FILES = sorted(
@@ -35,8 +33,6 @@ OFFICIAL_REFERENCE_DOCS = [
 ]
 CRITICAL_PATHS = [
     REPO_ROOT / "SKILL.md",
-    REPO_ROOT / "README.md",
-    REPO_ROOT / "README_zh.md",
     REPO_ROOT / "scripts" / "dst_zip_tool.py",
     REPO_ROOT / "scripts" / "dst_zip_cache.py",
     REPO_ROOT / "scripts" / "init_dst_mod.py",
@@ -102,7 +98,7 @@ def resolve_markdown_target(doc: Path, target: str) -> Path:
     if target.startswith(("references/", "scripts/")) or target in {
         "SKILL.md",
         "README.md",
-        "README_zh.md",
+        "README_en.md",
     }:
         return (REPO_ROOT / Path(target)).resolve(strict=False)
     return (doc.parent / Path(target)).resolve(strict=False)
