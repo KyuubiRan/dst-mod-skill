@@ -193,8 +193,8 @@ def parse_args() -> argparse.Namespace:
     unpack_parser.add_argument(
         "--output",
         type=Path,
-        default=Path(".output") / "images",
-        help="Output root directory. Defaults to ./.output/images",
+        default=Path(".tmp") / ".output" / "images",
+        help="Output root directory. Defaults to ./.tmp/.output/images",
     )
 
     pack_parser = subparsers.add_parser(
@@ -206,8 +206,8 @@ def parse_args() -> argparse.Namespace:
     pack_parser.add_argument(
         "--output",
         type=Path,
-        default=Path(".output") / "images",
-        help="Output directory. Defaults to ./.output/images",
+        default=Path(".tmp") / ".output" / "images",
+        help="Output directory. Defaults to ./.tmp/.output/images",
     )
     pack_parser.add_argument(
         "--max-size",

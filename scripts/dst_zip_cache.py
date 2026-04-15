@@ -14,7 +14,7 @@ from typing import Any
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_CACHE_ROOT = REPO_ROOT / "tmp" / "zip_cache"
+DEFAULT_CACHE_ROOT = REPO_ROOT / ".tmp" / "zip_cache"
 DEFAULT_INDEX_TTL_SECONDS = 300
 DEFAULT_TEXT_TTL_SECONDS = 180
 DEFAULT_MAX_TEXT_ENTRIES = 64
@@ -191,4 +191,3 @@ class ZipContextCache:
         files.sort(key=lambda path: path.stat().st_mtime, reverse=True)
         for stale in files[self.max_text_entries :]:
             stale.unlink(missing_ok=True)
-

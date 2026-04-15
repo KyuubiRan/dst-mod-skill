@@ -29,7 +29,7 @@ Useful official entries:
 
 Default unpack output:
 
-- `.output/images/`
+- `.tmp/.output/images/`
 
 ## Helper Scripts
 
@@ -62,7 +62,7 @@ python scripts/tex_atlas_tool.py pack path/to/png_dir my_atlas
 Rules:
 
 - official atlas names are usually read from `images/<name>.tex` and `images/<name>.xml`
-- if the user omits an output path, unpack defaults to `.output/images/`
+- if the user omits an output path, unpack defaults to `.tmp/.output/images/`
 - packing should prefer the local Mod Tools `TextureConverter.exe` for TEX output, because that matches Klei's premultiply and platform packing path more closely than the fallback writer
 - when Mod Tools are installed, prefer the official-style atlas layout and XML generation path derived from `klei/atlas.py`, not a hand-rolled packing layout
 - the fallback pure-Python writer is still useful when Mod Tools are unavailable, but it should be treated as a compatibility fallback
@@ -83,7 +83,7 @@ python scripts/resize_png.py path/to/icon.png 64x64
 ```
 
 ```bash
-python scripts/resize_png.py path/to/icon_dir 64x64 --mode contain --output .output/resized_icons
+python scripts/resize_png.py path/to/icon_dir 64x64 --mode contain --output .tmp/.output/resized_icons
 ```
 
 Supported resize modes:

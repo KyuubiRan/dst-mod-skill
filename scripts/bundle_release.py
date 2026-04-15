@@ -20,7 +20,7 @@ DEFAULT_EXCLUDES = (
     ".gitignore",
     "exported/**",
 )
-EXCLUDED_DIR_NAMES = {"__pycache__", "exported", "tmp"}
+EXCLUDED_DIR_NAMES = {"__pycache__", "exported", ".tmp", "tmp"}
 
 
 def parse_args() -> argparse.Namespace:

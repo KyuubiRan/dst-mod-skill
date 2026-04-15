@@ -90,7 +90,7 @@ python scripts/dst_zip_tool.py show scripts/entityscript.lua --start 600 --end 7
 
 Extract one official file when a local copy is genuinely useful:
 ```bash
-python scripts/dst_zip_tool.py extract scripts/modutil.lua --output tmp/modutil.lua
+python scripts/dst_zip_tool.py extract scripts/modutil.lua --output .tmp/modutil.lua
 ```
 
 Scaffold a new mod:
