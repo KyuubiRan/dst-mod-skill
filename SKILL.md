@@ -23,9 +23,9 @@ Inspect official scripts before writing mod code and tie conclusions to concrete
 - Treat a workspace under `...\Don't Starve Together\mods\...` as strong evidence that the parent `...\Don't Starve Together` directory is the local game root.
 - Prefer a user-provided game path when the path is not already known.
 - If the user refuses to provide it, say that accuracy may be lower without reading the local official scripts.
-- When the game path is known, also check whether `Don't Starve Mod Tools` exists under the same Steam `common` directory before deciding how to handle texture packing tasks.
+- When the game path is known, also check whether `Don't Starve Mod Tools` exists under the same Steam `common` directory before deciding how to handle texture packing or `.scml` animation build tasks.
 - If Mod Tools is not found in the usual Steam location, ask whether it is installed elsewhere.
-- If the user does not have Mod Tools installed, recommend installing Steam App ID `245850` before relying on atlas packing workflows.
+- If the user does not have Mod Tools installed, recommend installing Steam App ID `245850` before relying on atlas packing or `.scml` compilation workflows.
 - On Windows, the install prompt can be launched with `start steam://install/245850`.
 - When passing game paths into shell commands, quote or escape them correctly. Paths such as `Don't Starve Together` contain an apostrophe and can fail on the first command if the shell string is built carelessly.
 - Treat official game files as authoritative. Do not learn default behavior from third-party mods unless the user explicitly asks for comparison.
@@ -37,7 +37,7 @@ Inspect official scripts before writing mod code and tie conclusions to concrete
    - First check whether the current workspace path already sits inside a DST install tree and infer the root from that.
    - Do not recursively scan unrelated directories when the workspace path already gives a clear answer.
    - Once the game path is known, check for a sibling `Don't Starve Mod Tools` install under the same Steam `common` directory.
-   - If Mod Tools is missing there, ask whether it exists in another location before falling back to non-official texture packing.
+   - If Mod Tools is missing there, ask whether it exists in another location before falling back to non-official texture packing or animation compilation.
 3. Check whether `modinfo.lua` and the relevant root entry files such as `modmain.lua`, `modworldgenmain.lua`, or `modservercreationmain.lua` exist in the target mod folder.
 4. If `modinfo.lua` exists, read it early and classify the mod as all-clients gameplay, client-only, or server-only before choosing hooks or reading runtime globals.
 5. If `modinfo.lua` is missing, ask whether the user wants a new mod skeleton.
@@ -113,6 +113,22 @@ Pack multiple PNGs into one atlas:
 python scripts/tex_atlas_tool.py pack path/to/png_dir my_atlas
 ```
 
+Build one `.scml` through official Mod Tools:
+```bash
+python scripts/scml_build_tool.py build .tmp/exported/huohuo/huohuo.scml --output-dir .tmp/exported/compiled
+```
+
+Treat the same-folder `<name>.zip` as an engine-generated intermediate.
+Do not require the user to provide or manually select that zip when the real task is "build this `.scml`".
+
+Compile one already-exported animation zip:
+```bash
+python scripts/scml_build_tool.py compile .tmp/exported/huohuo/huohuo.zip --output-dir .tmp/exported/compiled --force
+```
+
+Only use the intermediate zip compile path when the user already has a valid exported zip and explicitly wants the narrower rebuild loop.
+If the intermediate zip is locked by an archive viewer or editor, explain that `scml.exe` is trying to regenerate its own intermediate file rather than treating the lock as evidence that the animation data is invalid.
+
 If Mod Tools is missing and texture packing accuracy matters, install it from Steam:
 ```bash
 start steam://install/245850
@@ -182,6 +198,7 @@ python scripts/check_skill.py
 - When the task stores local mod config through `TheSim:SetPersistentString(...)` or related persistent-string APIs, default to serializing a Lua table with `json.encode(...)` and loading it with guarded `json.decode(...)`.
 - Read `references/patterns/asset-patterns.md` when the task adds anim zips, atlases, inventory icons, or minimap assets.
 - Read `references/patterns/texture-patterns.md` when the task packs or unpacks atlas `tex+xml`, inspects official icon atlases from `images.zip`, or resizes PNG files for DST texture fitting.
+- Read `references/patterns/animation-build-patterns.md` when the task compiles `.scml`, rebuilds `anim/*.zip`, or works with exported animation folders that contain `.scml`, `build.xml`, `animation.xml`, or intermediate animation zips.
 - Read `references/patterns/animstate-patterns.md` when the task touches `inst.AnimState`, animation playback flow, symbol overrides, or animation-driven UI state.
 - Read `references/patterns/effects-patterns.md` when the task adds lighting, a visual FX prefab, particle FX, or sound playback.
 - Read `references/patterns/recipe-patterns.md` when the task adds recipes, crafting filters, or placers.
@@ -218,4 +235,5 @@ python scripts/check_skill.py
 - Do not treat `modmain.lua` like a prefab constructor; keep it focused on registration, routing, and startup glue.
 - Do not modify the user's animation asset files by default, especially `.scml`.
 - In animation-related work, default to inspection, explanation, routing, validation, or compile-flow guidance unless the user explicitly asks for an animation asset edit.
+- For plain animation rebuild tasks, prefer calling official Mod Tools to regenerate the compiled zip rather than editing `.scml` or compiled outputs.
 - If an animation asset edit appears necessary, stop first, tell the user which files would be changed, and get consent before editing them.

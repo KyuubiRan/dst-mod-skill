@@ -42,6 +42,7 @@ Use this page as the grouped router for detail docs under `references/patterns/`
 - `references/patterns/ui-patch-patterns.md`
 - `references/patterns/asset-patterns.md`
 - `references/patterns/texture-patterns.md`
+- `references/patterns/animation-build-patterns.md`
 - `references/patterns/animstate-patterns.md`
 - `references/patterns/effects-patterns.md`
 - `references/patterns/string-patterns.md`

@@ -47,9 +47,17 @@ High-value files for atlas workflows:
 - `mod_tools\buildtools\windows\Python27\Lib\site-packages\klei\atlas.py`
 - `mod_tools\buildtools\windows\Python27\Lib\site-packages\klei\textureconverter.py`
 
+High-value files for animation workflows:
+
+- `mod_tools\scml.exe`
+- `mod_tools\tools\scripts\buildanimation.py`
+- `mod_tools\compiler_scripts\zipanim.py`
+- `mod_tools\exported\export.py`
+
 Practical rule:
 
 - if the user needs PNG to `tex+xml` packing, prefer the local Mod Tools path over ad hoc encoders
+- if the user needs `.scml` to `anim/*.zip` compilation, prefer the local Mod Tools `scml.exe` and `buildanimation.py`
 - if Mod Tools is not installed in the usual Steam location, ask whether it exists elsewhere
 - if it is not installed at all, recommend Steam App ID `245850`
 - on Windows, `start steam://install/245850` opens the Steam install prompt
