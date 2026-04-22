@@ -44,14 +44,15 @@ Fast rule:
 If the first mod-owned stack frame looks like `../mods/workshop-<workshop-id>/main/hook.lua:116`, treat it as a Workshop-installed mod:
 
 1. Extract the numeric workshop id from `workshop-<workshop-id>`.
-2. Map it to the installed source directory under Steam Workshop content:
-   - Windows common path: `C:\Program Files (x86)\Steam\steamapps\workshop\content\322330\<workshop-id>`
-   - Linux common path: `~/.local/share/Steam/steamapps/workshop/content/322330/<workshop-id>`
-   - macOS common path: `~/Library/Application Support/Steam/steamapps/workshop/content/322330/<workshop-id>`
-3. Open the matching file inside that Workshop mod root, such as `main/hook.lua`.
-4. Read the surrounding function and nearby helpers before deciding whether the immediate line is the real cause.
-5. If the directory is missing, tell the user you detected a crash-related Workshop mod but could not find its install path, then ask for that path explicitly.
-6. Only after reading the real Workshop source should you explain the cause or propose a fix.
+2. Resolve the Workshop root in this order:
+   - infer it from the current workspace if the workspace already sits under `steamapps/workshop/content/322330/...`
+   - otherwise derive it from the already-known game root under the same Steam library
+   - only then try common default Workshop roots for Windows, Linux, or macOS
+3. Map the id to `<workshop-root>/<workshop-id>`.
+4. Open the matching file inside that Workshop mod root, such as `main/hook.lua`.
+5. Read the surrounding function and nearby helpers before deciding whether the immediate line is the real cause.
+6. If the directory is missing, tell the user you detected a crash-related Workshop mod but could not find its install path, then ask for that path explicitly.
+7. Only after reading the real Workshop source should you explain the cause or propose a fix.
 
 Do not assume a `workshop-<id>` stack belongs to the current workspace mod.
 It often points at a separately installed dependency or another active Workshop mod.

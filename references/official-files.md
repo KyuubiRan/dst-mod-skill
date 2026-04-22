@@ -19,7 +19,7 @@ Use the local DST install as the source of truth.
 Use the real local install path when it is already known.
 Do not assume the common Windows path is correct on every machine.
 
-When a crash trace points at `../mods/workshop-<id>/...`, map that id to a child directory under the Workshop mod root and inspect the real installed source there before guessing about the cause.
+When a crash trace points at `../mods/workshop-<id>/...`, first derive the Workshop mod root from the current workspace path or the already-known game path, then map the id to a child directory under that Workshop root and inspect the real installed source there before guessing about the cause.
 
 ## Infer The Game Root From The Workspace First
 
@@ -35,6 +35,23 @@ Practical rule:
 - if the workspace path contains `Don't Starve Together\mods\...`, treat the ancestor `Don't Starve Together` directory as the likely game root
 - from that root, derive the script bundle as `data\databundles\scripts.zip`
 - do not recursively scan unrelated directories when the workspace path already points into the install tree
+
+## Infer The Workshop Root From The Workspace Or Game Root
+
+If the current workspace is already under a Steam Workshop DST mod directory, infer the Workshop root from that path before asking the user for another path.
+
+Examples:
+
+- workspace: `D:\SteamLibrary\steamapps\workshop\content\322330\<workshop-id>`
+- inferred Workshop root: `D:\SteamLibrary\steamapps\workshop\content\322330`
+- inferred current Workshop mod root: `D:\SteamLibrary\steamapps\workshop\content\322330\<workshop-id>`
+
+Practical rule:
+
+- if the workspace path contains `steamapps\workshop\content\322330\...`, treat the ancestor `steamapps\workshop\content\322330` directory as the likely Workshop root
+- if the game root is already known as `...\steamapps\common\Don't Starve Together`, derive the sibling Workshop root as `...\steamapps\workshop\content\322330`
+- when both the workspace and the known game root point at the same Steam library, prefer those inferred paths over generic default locations
+- only ask the user for the Workshop path after those inferred paths fail
 
 ## Check For Mod Tools Beside The Game Install
 

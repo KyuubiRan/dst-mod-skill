@@ -14,15 +14,22 @@ Inspect official scripts before writing mod code and tie conclusions to concrete
 
 - Common Windows game root: `C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together`
 - Common Windows script bundle: `C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together\data\databundles\scripts.zip`
+- Common Windows Workshop mod root: `C:\Program Files (x86)\Steam\steamapps\workshop\content\322330`
 - Common Linux game root: `~/.local/share/Steam/steamapps/common/Don't Starve Together`
 - Common Linux script bundle: `~/.local/share/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
+- Common Linux Workshop mod root: `~/.local/share/Steam/steamapps/workshop/content/322330`
 - Common macOS game root: `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together`
 - Common macOS script bundle: `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
+- Common macOS Workshop mod root: `~/Library/Application Support/Steam/steamapps/workshop/content/322330`
 - If the current workspace path is already inside a DST install tree, infer the game root from the current path before asking the user or scanning anything.
+- If the current workspace path is already inside a Steam Workshop DST mod tree, infer the Workshop root and the Workshop mod root from the current path before asking the user for any extra location.
 - Example: if the workspace is `...\Don't Starve Together\mods\Huohuo`, infer the game root as `...\Don't Starve Together`.
+- Example: if the workspace is `...\Steam\steamapps\workshop\content\322330\<workshop-id>`, infer the Workshop root as `...\Steam\steamapps\workshop\content\322330` and the current Workshop mod root as that `<workshop-id>` directory.
 - Treat a workspace under `...\Don't Starve Together\mods\...` as strong evidence that the parent `...\Don't Starve Together` directory is the local game root.
+- Treat a workspace under `...\steamapps\workshop\content\322330\...` as strong evidence that the matching Steam library also contains the relevant DST Workshop content root.
 - Prefer a user-provided game path when the path is not already known.
 - If the user refuses to provide it, say that accuracy may be lower without reading the local official scripts.
+- When the game path is known, derive the Workshop root from the same Steam library first, such as sibling paths under `...\steamapps\common\` and `...\steamapps\workshop\content\322330`, before falling back to generic default locations.
 - When the game path is known, also check whether `Don't Starve Mod Tools` exists under the same Steam `common` directory before deciding how to handle texture packing or `.scml` animation build tasks.
 - If Mod Tools is not found in the usual Steam location, ask whether it is installed elsewhere.
 - If the user does not have Mod Tools installed, recommend installing Steam App ID `245850` before relying on atlas packing or `.scml` compilation workflows.
@@ -35,7 +42,9 @@ Inspect official scripts before writing mod code and tie conclusions to concrete
 1. Classify the request.
 2. Confirm the local game path if it is not already known.
    - First check whether the current workspace path already sits inside a DST install tree and infer the root from that.
+   - If the current workspace path already sits inside `steamapps/workshop/content/322330/<workshop-id>`, infer that Workshop mod root immediately and reuse the same Steam library when deriving sibling DST paths.
    - Do not recursively scan unrelated directories when the workspace path already gives a clear answer.
+   - When a Workshop traceback appears, derive the Workshop root from the current workspace or the already-known game path before trying generic default Steam locations.
    - Once the game path is known, check for a sibling `Don't Starve Mod Tools` install under the same Steam `common` directory.
    - If Mod Tools is missing there, ask whether it exists in another location before falling back to non-official texture packing or animation compilation.
 3. Check whether `modinfo.lua` and the relevant root entry files such as `modmain.lua`, `modworldgenmain.lua`, or `modservercreationmain.lua` exist in the target mod folder.
@@ -155,10 +164,11 @@ python scripts/check_skill.py
 - For listen-host or shard runtime problems, also inspect `master_server_log.txt` and `caves_server_log.txt`.
 - Search for `LUA ERROR stack traceback:` first when the user reports a Lua exception.
 - If the stack contains a path such as `../mods/workshop-<workshop-id>/main/hook.lua:116`, treat `workshop-<workshop-id>` as a Steam Workshop mod id rather than a normal local mod folder.
-- For Workshop stacks, map the id to the installed mod source directory before guessing:
-  - Windows common path: `C:\Program Files (x86)\Steam\steamapps\workshop\content\322330\<workshop-id>`
-  - Linux common path: `~/.local/share/Steam/steamapps/workshop/content/322330/<workshop-id>`
-  - macOS common path: `~/Library/Application Support/Steam/steamapps/workshop/content/322330/<workshop-id>`
+- For Workshop stacks, resolve the installed mod source directory in this order before guessing:
+  - First derive the Workshop root from the current workspace path if the workspace already sits under `steamapps/workshop/content/322330/...`.
+  - Otherwise derive the Workshop root from the already-known DST game path by reusing the same Steam library under `steamapps`.
+  - Only then fall back to common default Workshop roots such as `C:\Program Files (x86)\Steam\steamapps\workshop\content\322330`, `~/.local/share/Steam/steamapps/workshop/content/322330`, or `~/Library/Application Support/Steam/steamapps/workshop/content/322330`.
+- After choosing the Workshop root, map the id to `<workshop-root>/<workshop-id>`.
 - After locating the Workshop mod root, inspect the matching Lua file under that directory, such as `main/hook.lua`, and explain the failure from the real source.
 - If the traceback points at a Workshop mod but the expected directory is missing, say that the crash appears related to that Workshop mod and ask the user to provide the installed path for the failing mod before proposing a code-level fix.
 - If the user already restarted the game, say that the active log may have been refreshed and ask whether `backup/` should be inspected instead.
