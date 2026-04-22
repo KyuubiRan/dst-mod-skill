@@ -30,7 +30,15 @@ Inspect official scripts before writing mod code and tie conclusions to concrete
 - If Mod Tools is not found in the usual Steam location, ask whether it is installed elsewhere.
 - If the user does not have Mod Tools installed, recommend installing Steam App ID `245850` before relying on atlas packing or `.scml` compilation workflows.
 - On Windows, the install prompt can be launched with `start steam://install/245850`.
-- When passing game paths into shell commands, quote or escape them correctly. Paths such as `Don't Starve Together` contain an apostrophe and can fail on the first command if the shell string is built carelessly.
+- When passing DST paths into PowerShell commands, do not emit naive single-quoted literals such as `'D:\...\Don't Starve Together\...'`.
+- These quoting rules are PowerShell-specific and apply on Windows, Linux, or macOS only when the active shell is PowerShell.
+- On PowerShell, prefer one of these safe patterns on the first try:
+  - use double-quoted path literals such as `"D:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together\mods\toolbox"`
+  - or escape apostrophes inside single-quoted literals by doubling them, such as `'D:\Program Files (x86)\Steam\steamapps\common\Don''t Starve Together\mods\toolbox'`
+  - or assign the path to a variable first and pass it through `-LiteralPath`
+- This rule also applies to PowerShell arrays such as `$mods=@(...)`; do not place `Don't Starve Together` paths inside unescaped single-quoted array items.
+- Prefer `-LiteralPath` over `-Path` when the command is reading one exact known file or directory.
+- If the active shell is `bash`, `zsh`, or another non-PowerShell shell, do not reuse the doubled-apostrophe single-quote pattern; use shell-appropriate quoting instead.
 - Treat official game files as authoritative. Do not learn default behavior from third-party mods unless the user explicitly asks for comparison.
 
 ## Follow This Workflow

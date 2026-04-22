@@ -5,17 +5,18 @@ Use this file as a compact decision tree.
 ## Before Coding
 
 1. Check whether `modinfo.lua` and the relevant root entry files such as `modmain.lua`, `modworldgenmain.lua`, or `modservercreationmain.lua` exist.
-2. If `modinfo.lua` exists, read `references/patterns/modinfo-patterns.md` when metadata, dependencies, or config layout may matter.
-3. If the task is mainly about which root file should own the feature, read `references/patterns/entrypoint-patterns.md`.
-4. If the task is mainly about bootstrap wiring, `PrefabFiles`, top-level assets, `modimport(...)`, or character registration, read `references/patterns/modmain-patterns.md`.
-5. If `modinfo.lua` exists, classify the mod as all-clients gameplay, client-only, or server-only from its flags before reading runtime APIs.
-6. If the task is runtime-side, read `references/patterns/runtime-globals.md` and decide whether it is authority logic, local UI, local input, or entity-query logic.
-7. Identify the smallest official file that already matches the feature shape.
-8. If you still need a concrete official starter, read `references/official-examples.md`.
-9. Inspect the exact hook or helper definition in official code.
-10. If the real question is patch-hook choice, read `references/patterns/hook-selection-patterns.md`.
-11. Check whether the behavior is server-only, client-only, or replicated.
-12. Keep the implementation smaller than the official source you inspected.
+2. If you are about to run a PowerShell command with a DST path, quote it safely on the first try; do not use unescaped single-quoted literals for `Don't Starve Together` paths.
+3. If `modinfo.lua` exists, read `references/patterns/modinfo-patterns.md` when metadata, dependencies, or config layout may matter.
+4. If the task is mainly about which root file should own the feature, read `references/patterns/entrypoint-patterns.md`.
+5. If the task is mainly about bootstrap wiring, `PrefabFiles`, top-level assets, `modimport(...)`, or character registration, read `references/patterns/modmain-patterns.md`.
+6. If `modinfo.lua` exists, classify the mod as all-clients gameplay, client-only, or server-only from its flags before reading runtime APIs.
+7. If the task is runtime-side, read `references/patterns/runtime-globals.md` and decide whether it is authority logic, local UI, local input, or entity-query logic.
+8. Identify the smallest official file that already matches the feature shape.
+9. If you still need a concrete official starter, read `references/official-examples.md`.
+10. Inspect the exact hook or helper definition in official code.
+11. If the real question is patch-hook choice, read `references/patterns/hook-selection-patterns.md`.
+12. Check whether the behavior is server-only, client-only, or replicated.
+13. Keep the implementation smaller than the official source you inspected.
 
 ## Edit `modinfo.lua`
 

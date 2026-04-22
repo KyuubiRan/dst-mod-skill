@@ -19,6 +19,28 @@ Use the local DST install as the source of truth.
 Use the real local install path when it is already known.
 Do not assume the common Windows path is correct on every machine.
 
+## PowerShell Path Quoting
+
+On Windows, DST paths often contain `Don't Starve Together`, which includes an apostrophe.
+Do not generate naive single-quoted PowerShell literals such as `'D:\...\Don't Starve Together\...'` because they break on parse before the real work starts.
+These quoting rules are for PowerShell specifically, including PowerShell running on Linux or macOS.
+Do not treat them as generic `bash` or `zsh` quoting rules.
+
+Prefer these safe patterns:
+
+- double-quoted literals:
+  - `"D:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together\mods\toolbox"`
+- single-quoted literals with doubled apostrophes:
+  - `'D:\Program Files (x86)\Steam\steamapps\common\Don''t Starve Together\mods\toolbox'`
+- variable plus `-LiteralPath`:
+  - `$modPath = "D:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together\mods\toolbox"`
+  - `Get-Content -LiteralPath $modPath`
+
+This also applies to arrays.
+For example, prefer `$mods=@("D:\...\Don't Starve Together\mods\toolbox","D:\...\3383078008")` over single-quoted array items that leave the apostrophe unescaped.
+
+If the active shell is not PowerShell, switch to that shell's own quoting rules rather than copying the doubled-apostrophe single-quote pattern.
+
 When a crash trace points at `../mods/workshop-<id>/...`, treat that id as a direct pointer to the Workshop source directory and inspect `steamapps/workshop/content/322330/<id>` before guessing about the cause.
 
 ## Infer The Game Root From The Workspace First
