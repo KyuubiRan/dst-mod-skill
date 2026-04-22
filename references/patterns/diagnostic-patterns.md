@@ -44,18 +44,16 @@ Fast rule:
 If the first mod-owned stack frame looks like `../mods/workshop-<workshop-id>/main/hook.lua:116`, treat it as a Workshop-installed mod:
 
 1. Extract the numeric workshop id from `workshop-<workshop-id>`.
-2. Resolve the Workshop root in this order:
-   - infer it from the current workspace if the workspace already sits under `steamapps/workshop/content/322330/...`
-   - otherwise derive it from the already-known game root under the same Steam library
-   - only then try common default Workshop roots for Windows, Linux, or macOS
-3. Map the id to `<workshop-root>/<workshop-id>`.
+2. Treat the Workshop source directory as the highest-priority source path.
+3. Map the id directly to `steamapps/workshop/content/322330/<workshop-id>`.
 4. Open the matching file inside that Workshop mod root, such as `main/hook.lua`.
 5. Read the surrounding function and nearby helpers before deciding whether the immediate line is the real cause.
-6. If the directory is missing, tell the user you detected a crash-related Workshop mod but could not find its install path, then ask for that path explicitly.
+6. If the directory is missing, tell the user you detected a crash-related Workshop mod but could not find its source directory, then ask for that path explicitly.
 7. Only after reading the real Workshop source should you explain the cause or propose a fix.
 
 Do not assume a `workshop-<id>` stack belongs to the current workspace mod.
 It often points at a separately installed dependency or another active Workshop mod.
+Do not first probe `common/Don't Starve Together/mods/workshop-<id>` when the Workshop id is already present in the stack.
 
 Common non-fatal noise examples:
 

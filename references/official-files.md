@@ -19,7 +19,7 @@ Use the local DST install as the source of truth.
 Use the real local install path when it is already known.
 Do not assume the common Windows path is correct on every machine.
 
-When a crash trace points at `../mods/workshop-<id>/...`, first derive the Workshop mod root from the current workspace path or the already-known game path, then map the id to a child directory under that Workshop root and inspect the real installed source there before guessing about the cause.
+When a crash trace points at `../mods/workshop-<id>/...`, treat that id as a direct pointer to the Workshop source directory and inspect `steamapps/workshop/content/322330/<id>` before guessing about the cause.
 
 ## Infer The Game Root From The Workspace First
 
@@ -36,22 +36,16 @@ Practical rule:
 - from that root, derive the script bundle as `data\databundles\scripts.zip`
 - do not recursively scan unrelated directories when the workspace path already points into the install tree
 
-## Infer The Workshop Root From The Workspace Or Game Root
+## Workshop Source Path Priority
 
-If the current workspace is already under a Steam Workshop DST mod directory, infer the Workshop root from that path before asking the user for another path.
-
-Examples:
-
-- workspace: `D:\SteamLibrary\steamapps\workshop\content\322330\<workshop-id>`
-- inferred Workshop root: `D:\SteamLibrary\steamapps\workshop\content\322330`
-- inferred current Workshop mod root: `D:\SteamLibrary\steamapps\workshop\content\322330\<workshop-id>`
+When a stack or `modimport` path already contains `workshop-<id>`, treat that id as the highest-priority locator for the Workshop source path.
 
 Practical rule:
 
-- if the workspace path contains `steamapps\workshop\content\322330\...`, treat the ancestor `steamapps\workshop\content\322330` directory as the likely Workshop root
-- if the game root is already known as `...\steamapps\common\Don't Starve Together`, derive the sibling Workshop root as `...\steamapps\workshop\content\322330`
-- when both the workspace and the known game root point at the same Steam library, prefer those inferred paths over generic default locations
-- only ask the user for the Workshop path after those inferred paths fail
+- map `workshop-<id>` directly to `steamapps/workshop/content/322330/<id>`
+- inspect that Workshop source directory before probing `common/Don't Starve Together/mods/workshop-<id>`
+- do not turn this into a broader code-analysis or bug-fixing task unless the user explicitly asks for that next step
+- only ask the user for another path when the Workshop source directory itself is missing
 
 ## Check For Mod Tools Beside The Game Install
 

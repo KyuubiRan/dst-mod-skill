@@ -40,8 +40,8 @@ Use this file as a compact decision tree.
 1. Read `references/patterns/diagnostic-patterns.md`.
 2. If the user reports an explicit error or crash, inspect the relevant log before touching code.
 3. Search for `LUA ERROR stack traceback:` first.
-4. If the failing stack contains `../mods/workshop-<id>/...`, treat it as a Steam Workshop mod and first derive the Workshop root from the current workspace or the already-known game path before falling back to generic default Steam locations.
-5. Map `<id>` to `<workshop-root>/<id>` and inspect the real installed source before guessing.
+4. If the failing stack contains `../mods/workshop-<id>/...`, treat it as a Steam Workshop mod and map `<id>` directly to `steamapps/workshop/content/322330/<id>` before guessing.
+5. Inspect the real Workshop source before probing `common/Don't Starve Together/mods/workshop-<id>`.
 6. If the expected Workshop directory is missing, ask the user for the installed path of the crash-related mod before proposing a file-level fix.
 7. If the current log is clean but the game has already been restarted, inspect `backup/`.
 8. Determine whether the user is only asking for the cause or is actively debugging the mod.
