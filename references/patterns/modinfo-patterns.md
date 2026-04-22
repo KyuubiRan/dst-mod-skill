@@ -31,7 +31,7 @@ Use:
 
 ```lua
 mod_dependencies = {
-    "workshop-1234567890",
+    "workshop-<dependency-id>",
 }
 ```
 

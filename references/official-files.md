@@ -6,15 +6,20 @@ Use the local DST install as the source of truth.
 
 - Common Windows game root: `C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together`
 - Common Windows script bundle: `C:\Program Files (x86)\Steam\steamapps\common\Don't Starve Together\data\databundles\scripts.zip`
+- Common Windows Workshop mod root: `C:\Program Files (x86)\Steam\steamapps\workshop\content\322330`
 - Common Linux game root: `~/.local/share/Steam/steamapps/common/Don't Starve Together`
 - Common Linux script bundle: `~/.local/share/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
+- Common Linux Workshop mod root: `~/.local/share/Steam/steamapps/workshop/content/322330`
 - Common macOS game root: `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together`
 - Common macOS script bundle: `~/Library/Application Support/Steam/steamapps/common/Don't Starve Together/data/databundles/scripts.zip`
+- Common macOS Workshop mod root: `~/Library/Application Support/Steam/steamapps/workshop/content/322330`
 - Version file: `version.txt`
 - Official mod note: `mods\MAKING_MODS.txt`
 
 Use the real local install path when it is already known.
 Do not assume the common Windows path is correct on every machine.
+
+When a crash trace points at `../mods/workshop-<id>/...`, map that id to a child directory under the Workshop mod root and inspect the real installed source there before guessing about the cause.
 
 ## Infer The Game Root From The Workspace First
 

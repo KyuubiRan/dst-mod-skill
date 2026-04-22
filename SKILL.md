@@ -154,6 +154,13 @@ python scripts/check_skill.py
 - Linux backup logs: `~/.klei/DoNotStarveTogether/backup/`
 - For listen-host or shard runtime problems, also inspect `master_server_log.txt` and `caves_server_log.txt`.
 - Search for `LUA ERROR stack traceback:` first when the user reports a Lua exception.
+- If the stack contains a path such as `../mods/workshop-<workshop-id>/main/hook.lua:116`, treat `workshop-<workshop-id>` as a Steam Workshop mod id rather than a normal local mod folder.
+- For Workshop stacks, map the id to the installed mod source directory before guessing:
+  - Windows common path: `C:\Program Files (x86)\Steam\steamapps\workshop\content\322330\<workshop-id>`
+  - Linux common path: `~/.local/share/Steam/steamapps/workshop/content/322330/<workshop-id>`
+  - macOS common path: `~/Library/Application Support/Steam/steamapps/workshop/content/322330/<workshop-id>`
+- After locating the Workshop mod root, inspect the matching Lua file under that directory, such as `main/hook.lua`, and explain the failure from the real source.
+- If the traceback points at a Workshop mod but the expected directory is missing, say that the crash appears related to that Workshop mod and ask the user to provide the installed path for the failing mod before proposing a code-level fix.
 - If the user already restarted the game, say that the active log may have been refreshed and ask whether `backup/` should be inspected instead.
 - Do not confuse warning noise such as missing default textures or shutdown-time unload messages with a real Lua stack trace.
 - After reading the stack, distinguish between two intents:

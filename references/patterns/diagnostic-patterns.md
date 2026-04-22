@@ -41,6 +41,21 @@ Fast rule:
 7. Explain the error first, then ask whether the user wants help fixing it.
 8. Do not edit code unless the user clearly confirms that they want a fix.
 
+If the first mod-owned stack frame looks like `../mods/workshop-<workshop-id>/main/hook.lua:116`, treat it as a Workshop-installed mod:
+
+1. Extract the numeric workshop id from `workshop-<workshop-id>`.
+2. Map it to the installed source directory under Steam Workshop content:
+   - Windows common path: `C:\Program Files (x86)\Steam\steamapps\workshop\content\322330\<workshop-id>`
+   - Linux common path: `~/.local/share/Steam/steamapps/workshop/content/322330/<workshop-id>`
+   - macOS common path: `~/Library/Application Support/Steam/steamapps/workshop/content/322330/<workshop-id>`
+3. Open the matching file inside that Workshop mod root, such as `main/hook.lua`.
+4. Read the surrounding function and nearby helpers before deciding whether the immediate line is the real cause.
+5. If the directory is missing, tell the user you detected a crash-related Workshop mod but could not find its install path, then ask for that path explicitly.
+6. Only after reading the real Workshop source should you explain the cause or propose a fix.
+
+Do not assume a `workshop-<id>` stack belongs to the current workspace mod.
+It often points at a separately installed dependency or another active Workshop mod.
+
 Common non-fatal noise examples:
 
 - missing default texture warnings

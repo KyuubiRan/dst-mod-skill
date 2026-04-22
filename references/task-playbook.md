@@ -40,18 +40,20 @@ Use this file as a compact decision tree.
 1. Read `references/patterns/diagnostic-patterns.md`.
 2. If the user reports an explicit error or crash, inspect the relevant log before touching code.
 3. Search for `LUA ERROR stack traceback:` first.
-4. If the current log is clean but the game has already been restarted, inspect `backup/`.
-5. Determine whether the user is only asking for the cause or is actively debugging the mod.
-6. If this is active debugging, confirm that the failing stack belongs to the current target mod.
-7. Explain the error first and ask whether the user wants help fixing it.
-8. Do not modify code unless the user clearly confirms that they want a fix.
-9. Classify the symptom before touching code:
+4. If the failing stack contains `../mods/workshop-<id>/...`, treat it as a Steam Workshop mod and map `<id>` to `steamapps/workshop/content/322330/<id>` before guessing.
+5. If the expected Workshop directory is missing, ask the user for the installed path of the crash-related mod before proposing a file-level fix.
+6. If the current log is clean but the game has already been restarted, inspect `backup/`.
+7. Determine whether the user is only asking for the cause or is actively debugging the mod.
+8. If this is active debugging, confirm whether the failing stack belongs to the current target mod.
+9. Explain the error first and ask whether the user wants help fixing it.
+10. Do not modify code unless the user clearly confirms that they want a fix.
+11. Classify the symptom before touching code:
    - missing registration
    - wrong runtime context
    - missing client replication
    - wrong UI or action wiring
-10. Use official console checks first when the symptom is "does this thing even exist right now?"
-11. Inspect the smallest official file that matches the failing subsystem.
+12. Use official console checks first when the symptom is "does this thing even exist right now?"
+13. Inspect the smallest official file that matches the failing subsystem.
 
 ### Decide Runtime Context
 
