@@ -3,4 +3,4 @@ interface:
   short_description: "Guide DST modding from official game scripts"
   default_prompt: "Use $dst-mod-development to inspect official DST scripts and implement a modding task."
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true

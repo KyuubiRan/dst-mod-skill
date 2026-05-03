@@ -1,6 +1,6 @@
 ---
 name: dst-mod-development
-description: Build, inspect, and debug Don't Starve Together mods using the official local DST installation and `data/databundles/scripts.zip`. Use when Codex needs to implement or explain DST mod code, inspect `modinfo.lua` or `modmain.lua`, trace hook APIs such as `AddPrefabPostInit` or `AddComponentPostInit`, look up prefab/component/stategraph behavior, inspect `TUNING` or constants, or verify asset, skin, wardrobe, recipe, RPC, and replica patterns. Prefer official game files as the source of truth and avoid learning behavior from third-party mods unless the user explicitly asks for that comparison.
+description: Build, inspect, and debug Don't Starve Together DST mods using the official local DST installation and `data/databundles/scripts.zip`. Use automatically for requests about DST modding, 饥荒联机版模组, 饥荒联机版 mod, `modinfo.lua`, `modmain.lua`, prefab, component, stategraph, `TUNING`, constants, assets, skins, wardrobe, recipes, RPC, replicas, hooks such as `AddPrefabPostInit` or `AddComponentPostInit`, or local Workshop mod crash logs. Prefer official game files as the source of truth and avoid learning behavior from third-party mods unless the user explicitly asks for that comparison.
 ---
 
 # DST Mod Development
