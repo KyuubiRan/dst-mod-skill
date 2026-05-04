@@ -142,13 +142,16 @@ class ZipContextCache:
         return entries
 
     def store_entry_names(self, entries: list[str]) -> None:
-        self._purge_stale_archives()
-        payload = {
-            "created_at": _now(),
-            "fingerprint": self.fingerprint,
-            "entries": entries,
-        }
-        self._write_json(self.index_path, payload)
+        try:
+            self._purge_stale_archives()
+            payload = {
+                "created_at": _now(),
+                "fingerprint": self.fingerprint,
+                "entries": entries,
+            }
+            self._write_json(self.index_path, payload)
+        except OSError:
+            return
 
     def load_text_lines(self, entry_name: str) -> list[str] | None:
         key = self._safe_entry_key(entry_name)
@@ -170,24 +173,36 @@ class ZipContextCache:
         return lines
 
     def store_text_lines(self, entry_name: str, lines: list[str]) -> None:
-        self._purge_stale_archives()
-        self.text_root.mkdir(parents=True, exist_ok=True)
-        payload = {
-            "created_at": _now(),
-            "entry_name": entry_name,
-            "fingerprint": self.fingerprint,
-            "lines": lines,
-        }
-        path = self.text_root / f"{self._safe_entry_key(entry_name)}.json"
-        self._write_json(path, payload)
-        self._trim_text_cache()
+        try:
+            self._purge_stale_archives()
+            self.text_root.mkdir(parents=True, exist_ok=True)
+            payload = {
+                "created_at": _now(),
+                "entry_name": entry_name,
+                "fingerprint": self.fingerprint,
+                "lines": lines,
+            }
+            path = self.text_root / f"{self._safe_entry_key(entry_name)}.json"
+            self._write_json(path, payload)
+            self._trim_text_cache()
+        except OSError:
+            return
 
     def _trim_text_cache(self) -> None:
         if self.max_text_entries <= 0 or not self.text_root.exists():
             return
-        files = [path for path in self.text_root.glob("*.json") if path.is_file()]
+        files: list[tuple[float, Path]] = []
+        for path in self.text_root.glob("*.json"):
+            try:
+                if path.is_file():
+                    files.append((path.stat().st_mtime, path))
+            except OSError:
+                continue
         if len(files) <= self.max_text_entries:
             return
-        files.sort(key=lambda path: path.stat().st_mtime, reverse=True)
-        for stale in files[self.max_text_entries :]:
-            stale.unlink(missing_ok=True)
+        files.sort(key=lambda item: item[0], reverse=True)
+        for _, stale in files[self.max_text_entries :]:
+            try:
+                stale.unlink(missing_ok=True)
+            except OSError:
+                continue

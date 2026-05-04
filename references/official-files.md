@@ -41,6 +41,19 @@ For example, prefer `$mods=@("D:\...\Don't Starve Together\mods\toolbox","D:\...
 
 If the active shell is not PowerShell, switch to that shell's own quoting rules rather than copying the doubled-apostrophe single-quote pattern.
 
+## PowerShell Regex Arguments
+
+When passing regex patterns to the `grep` subcommand of `scripts/dst_zip_tool.py` in PowerShell, prefer single-quoted arguments:
+
+```powershell
+python "C:\Users\Kitsune\Projects\AgentSkill\dst-mod\scripts\dst_zip_tool.py" grep 'PushEvent\("equip"' --path-glob 'scripts/components/*.lua'
+python "C:\Users\Kitsune\Projects\AgentSkill\dst-mod\scripts\dst_zip_tool.py" grep 'ListenForEvent\("equip"' --path-glob 'scripts/**/*.lua'
+```
+
+Backslashes in these patterns are Python regex escapes, not PowerShell escapes.
+Do not write Bash-style escaped double quotes such as `"PushEvent(\"equip\""` in PowerShell.
+Because `grep` uses Python regex, literal metacharacters must be escaped; for example, use `\(` for a literal opening parenthesis.
+
 When a crash trace points at `../mods/workshop-<id>/...`, treat that id as a direct pointer to the Workshop source directory and inspect `steamapps/workshop/content/322330/<id>` before guessing about the cause.
 
 ## Infer The Game Root From The Workspace First
@@ -109,6 +122,7 @@ Practical rule:
 - the cache is keyed by absolute zip path plus file size and `mtime_ns`
 - if the game updates and `scripts.zip` changes, the cache namespace changes automatically
 - the cache is intentionally short-lived and should be treated like request context, not a long-term extracted copy
+- if a broad `grep` reports a cache error under `.tmp\zip_cache`, switch to `show` for known files or `extract` the relevant official file and search it locally with `rg`
 
 ## Confirmed Mod Entry Points
 

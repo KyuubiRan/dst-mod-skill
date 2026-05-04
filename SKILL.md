@@ -57,6 +57,9 @@ Inspect official scripts before writing mod code and tie conclusions to concrete
 8. Implement the change with the narrowest safe hook.
 9. Re-check server/client boundaries, replica usage, RPC direction, and file placement.
 10. When the user reports an error, crash, red text, or "it broke", inspect the relevant DST log before guessing.
+11. Do not validate DST mod Lua by running local `lua`, `luac`, or generic Lua syntax compilers.
+    DST uses Klei's modified Lua runtime, so local Lua compiler availability is not a useful verification result.
+    Do not end with notes such as "local lua/luac is missing"; use DST logs, in-game checks, targeted source inspection, and repository checks instead.
 
 ## Classify Existing Mods Early
 
@@ -90,9 +93,20 @@ Search for a symbol or string:
 python scripts/dst_zip_tool.py grep AddPrefabPostInit --path-glob "scripts/*.lua"
 ```
 
+PowerShell regex arguments need shell-specific quoting.
+Prefer single-quoted regex patterns, and escape regex metacharacters for Python regex rather than for PowerShell:
+```powershell
+python "C:\Users\Kitsune\Projects\AgentSkill\dst-mod\scripts\dst_zip_tool.py" grep 'PushEvent\("equip"' --path-glob 'scripts/components/*.lua'
+python "C:\Users\Kitsune\Projects\AgentSkill\dst-mod\scripts\dst_zip_tool.py" grep 'ListenForEvent\("equip"' --path-glob 'scripts/**/*.lua'
+```
+
+Do not write Bash-style escaped double quotes such as `"PushEvent(\"equip\""` in PowerShell.
+`dst_zip_tool.py grep` uses Python regex, so a literal `(` must be written as `\(`.
+
 `dst_zip_tool.py` keeps a short-lived local cache for archive entry lists and recently-read text files.
 The cache is keyed by zip path plus file size and `mtime`, so a game update invalidates it automatically.
 Treat it like a short context cache, not a persistent extraction mirror.
+If a broad `grep` reports a cache error under `.tmp\zip_cache`, use `show` for known files or `extract` one official file and search it locally with `rg` instead of repeatedly retrying the same broad search.
 
 Read a section with line numbers:
 ```bash
@@ -261,6 +275,8 @@ python scripts/check_skill.py
 - Do not use `ThePlayer` or HUD globals without guarding local-client availability.
 - Do not copy large official files when a post-init, helper, or smaller override is enough.
 - Do not treat `modmain.lua` like a prefab constructor; keep it focused on registration, routing, and startup glue.
+- Do not run local `lua` or `luac` to compile-check DST mod files, and do not report their absence as a verification gap.
+  DST uses a modified Lua runtime, so generic Lua compiler results can be misleading.
 - Do not modify the user's animation asset files by default, especially `.scml`.
 - In animation-related work, default to inspection, explanation, routing, validation, or compile-flow guidance unless the user explicitly asks for an animation asset edit.
 - For plain animation rebuild tasks, prefer calling official Mod Tools to regenerate the compiled zip rather than editing `.scml` or compiled outputs.

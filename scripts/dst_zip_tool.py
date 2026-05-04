@@ -199,7 +199,14 @@ def command_grep(
     max_results: int,
 ) -> int:
     flags = re.IGNORECASE if ignore_case else 0
-    regex = re.compile(pattern, flags)
+    try:
+        regex = re.compile(pattern, flags)
+    except re.error as exc:
+        raise ValueError(
+            f"Invalid Python regex pattern: {pattern!r}. "
+            "Escape literal regex metacharacters, for example use "
+            "'PushEvent\\(\"equip\"' for a literal '(' in PowerShell."
+        ) from exc
     results = 0
     for entry_name in get_entry_names(zip_path, cache):
         if not is_text_entry(entry_name):

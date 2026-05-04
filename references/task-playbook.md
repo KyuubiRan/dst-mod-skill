@@ -339,4 +339,6 @@ If the prefab is a creature or NPC, also route through brain and SG placement ea
 - Check that engine globals such as `GLOBAL`, `TheSim`, `TheNet`, `TheShard`, `TheInput`, `TheFrontEnd`, `TheWorld`, and `ThePlayer` were not overwritten or rebound.
 - Check that shared registries such as `TUNING`, `STRINGS`, `ACTIONS`, and mod RPC registries were extended narrowly instead of being replaced wholesale.
 - Check that the final implementation still matches the official pattern you inspected.
+- Do not run local `lua`, `luac`, or generic Lua syntax compilers for DST mod validation.
+- Do not report missing local `lua/luac` as a skipped verification step; DST uses Klei's modified Lua runtime, so verify with DST logs, in-game checks, targeted source inspection, and repository checks instead.
 - Run `python scripts/check_skill.py` after documentation or helper-script refactors.
