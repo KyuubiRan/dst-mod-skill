@@ -1,6 +1,6 @@
 # Animation Build Patterns
 
-Read this page when the task is about compiling `.scml`, rebuilding `anim/*.zip`, or understanding the `exported/<name>/` animation workspace produced by Don't Starve Mod Tools.
+Read this page when the task is about compiling `.scml`, rebuilding `anim/*.zip`, recovering a compiled animation zip into `.scml`, or understanding the `exported/<name>/` animation workspace produced by Don't Starve Mod Tools.
 
 ## Prefer Official Mod Tools
 
@@ -18,6 +18,7 @@ Practical rule:
 - prefer official Mod Tools over third-party animation packers
 - treat `build.bin`, `anim.bin`, and `atlas-*.tex` as compiled outputs, not hand-edited source
 - when the task is only "rebuild the animation", compile first and edit `.scml` only if the user explicitly wants asset changes
+- when original source `.scml` is missing and the user needs inspection or recovery, decompile the compiled zip with `scripts/anim_scml_tool.py`
 
 ## The Official Build Chain
 
@@ -45,6 +46,36 @@ The final compiled zip contains files such as:
 - `build.bin`
 - `atlas-0.tex`
 - `atlas-1.tex`
+
+## Recover A Compiled Animation Zip
+
+Use `scripts/anim_scml_tool.py` when the user has a compiled `anim/<name>.zip` and wants to inspect or recover it as a Spriter project.
+
+Example:
+
+```bash
+python scripts/anim_scml_tool.py decompile anim/huohuo.zip --output-dir .tmp/exported/huohuo_recovered --force
+```
+
+The script reads:
+
+- `build.bin`
+- `anim.bin`
+- `atlas-*.tex`
+
+It writes:
+
+- `<buildname>.scml`
+- symbol PNG folders referenced by the SCML
+
+Practical rules:
+
+- this is a recovery/decompilation workflow, not the preferred source workflow
+- the input zip must contain both `build.bin` and `anim.bin`; some character build zips contain only `build.bin` plus atlases and are not standalone animations
+- recovered SCML can lose fidelity because Spriter cannot express every DST-native transform such as shear
+- prefer the user's original exported `.scml` and PNG folders when they exist
+- use recovered output for inspection, small edits, or rebuilding a missing source workspace
+- after editing recovered SCML, compile through `scripts/scml_build_tool.py build`, not by editing `anim.bin` or `build.bin`
 
 ## Important CLI Detail
 

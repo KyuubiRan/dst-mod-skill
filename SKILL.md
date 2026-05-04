@@ -1,6 +1,6 @@
 ---
 name: dst-mod-development
-description: Build, inspect, and debug Don't Starve Together DST mods using the official local DST installation and `data/databundles/scripts.zip`. Use automatically for requests about DST modding, 饥荒联机版模组, 饥荒联机版 mod, `modinfo.lua`, `modmain.lua`, prefab, component, stategraph, `TUNING`, constants, assets, skins, wardrobe, recipes, RPC, replicas, hooks such as `AddPrefabPostInit` or `AddComponentPostInit`, or local Workshop mod crash logs. Prefer official game files as the source of truth and avoid learning behavior from third-party mods unless the user explicitly asks for that comparison.
+description: Build, inspect, and debug Don't Starve Together DST mods using the official local DST installation and `data/databundles/scripts.zip`. Use automatically for requests about DST modding, 饥荒联机版模组, 饥荒联机版 mod, `modinfo.lua`, `modmain.lua`, prefab, component, stategraph, `TUNING`, constants, assets, animation zips, recovered SCML, skins, wardrobe, recipes, RPC, replicas, hooks such as `AddPrefabPostInit` or `AddComponentPostInit`, or local Workshop mod crash logs. Prefer official game files as the source of truth and avoid learning behavior from third-party mods unless the user explicitly asks for that comparison.
 ---
 
 # DST Mod Development
@@ -139,6 +139,14 @@ python scripts/scml_build_tool.py compile .tmp/exported/huohuo/huohuo.zip --outp
 
 Only use the intermediate zip compile path when the user already has a valid exported zip and explicitly wants the narrower rebuild loop.
 If the intermediate zip is locked by an archive viewer or editor, explain that `scml.exe` is trying to regenerate its own intermediate file rather than treating the lock as evidence that the animation data is invalid.
+
+Recover one compiled `anim/*.zip` into a Spriter `.scml` project for inspection or editing:
+```bash
+python scripts/anim_scml_tool.py decompile path/to/anim.zip --output-dir .tmp/exported/recovered_anim --force
+```
+
+Treat recovered `.scml` as approximate.
+Compiled DST animation transforms can include data that Spriter cannot represent perfectly, so prefer official source `.scml` when it exists.
 
 If Mod Tools is missing and texture packing accuracy matters, install it from Steam:
 ```bash
